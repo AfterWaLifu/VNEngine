@@ -1,7 +1,10 @@
 #include <iostream>
 
-#include "factorial.h"
+#include "VNEngine.h"
 
 int main() {
-	std::cout << "factorial of 5 is a: " << factorial(5) << std::endl;
+	VNEngine::Logger logger;
+	std::cout << "Logger working? " << std::endl;
+	logger.AreYouWorking();
+	return 0;
 }
