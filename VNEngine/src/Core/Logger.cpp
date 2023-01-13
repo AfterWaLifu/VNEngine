@@ -1,12 +1,30 @@
 #include "Logger.h"
-
 #include "vnepch.h"
 
 namespace VNEngine {
 
-	void Logger::AreYouWorking()
+	Logger::Logger(std::string NameOfLogFile)
 	{
-		std::cout << "yees" << std::endl;
+		logs = new std::ofstream(NameOfLogFile);
+		if (!logs) exit(1);
 	}
 
+	Logger::~Logger()
+	{
+		if (logs) {
+			logs->close();
+		}
+	}
+
+	void Logger::setMeta(std::string newMeta)
+	{
+		meta = "[" + newMeta + "]";
+	}
+
+	std::string Logger::getMeta()
+	{
+		return meta;
+	}
+
+	static Logger& logger = *(new Logger("logs.txt"));
 }

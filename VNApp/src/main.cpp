@@ -2,9 +2,11 @@
 
 #include "VNEngine.h"
 
-int main() {
-	VNEngine::Logger logger;
-	std::cout << "Logger working? " << std::endl;
-	logger.AreYouWorking();
+int main(int argc, char* argv[]) {
+	
+	VNEngine::Window* window = new VNEngine::Window();
+	window->Run(3000);
+	delete window;
+
 	return 0;
 }

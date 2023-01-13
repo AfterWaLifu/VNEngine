@@ -20,11 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Core\Logger.h" />
+    <ClInclude Include="src\Graphic\Window.h" />
     <ClInclude Include="src\VNEngine.h" />
     <ClInclude Include="src\vnepch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Logger.cpp" />
+    <ClCompile Include="src\Graphic\Window.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -91,7 +93,7 @@
     <VcpkgUseStatic>true</VcpkgUseStatic>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <VcpkgAdditionalInstallOptions>$(VcpkgRoot)\installed</VcpkgAdditionalInstallOptions>
+    <VcpkgAdditionalInstallOptions>$(VcpkgRoot)\installed\</VcpkgAdditionalInstallOptions>
     <VcpkgUseStatic>true</VcpkgUseStatic>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -141,6 +143,10 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>imagehlp.lib;dinput8.lib;dxguid.lib;user32.lib;gdi32.lib;winmm.lib;imm32.lib;ole32.lib;oleaut32.lib;shell32.lib;version.lib;uuid.lib;Setupapi.lib;SDL2maind.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(VcpkgRoot)\installed\x64-windows-static\debug\lib\manual-link\</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -165,6 +171,10 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalDependencies>imagehlp.lib;dinput8.lib;dxguid.lib;user32.lib;gdi32.lib;winmm.lib;imm32.lib;ole32.lib;oleaut32.lib;shell32.lib;version.lib;uuid.lib;Setupapi.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(VcpkgRoot)\installed\x64-windows-static\lib\manual-link\</AdditionalLibraryDirectories>
+    </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
