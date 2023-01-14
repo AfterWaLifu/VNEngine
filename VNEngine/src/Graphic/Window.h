@@ -2,6 +2,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <string>
+
 namespace VNEngine{
 
 	class Window {
@@ -10,7 +12,7 @@ namespace VNEngine{
 		SDL_Renderer* g_pRenderer;
 
 	public:
-		Window();
+		Window(std::string title, int width, int height, bool fullscreen);
 		~Window();
 
 		void Run(unsigned int ms);
