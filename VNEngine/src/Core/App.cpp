@@ -13,6 +13,8 @@ namespace VNEngine {
 			defaultAppInfo.Fullscreen
 		);
 
+		m_AudioPlayer = std::make_unique<AudioPlayer>();
+
 		m_IsRunning = true;
 	}
 

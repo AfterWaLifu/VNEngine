@@ -10,5 +10,6 @@ Libs needed (API not included):
 *	(for Windows it includes ALL the libs used by SDL2, because of static linking)
 *	SDL_image (not yet needed, planed)
 *	ImGui (probably some commits may use it as for debuging/testing features)
-*	OpenAL (not yet needed, planed)
+*	OpenAL - audio api
+*	sndfile - small lib to read audio files
 *	*to be added*
