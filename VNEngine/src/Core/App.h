@@ -17,15 +17,16 @@ namespace VNEngine {
 	class App {
 		std::unique_ptr<Window> m_Window;
 
-		int Update();
-		int HandleEvents();
-		int Draw();
-		int m_WorkResult;
+		void Update();
+		void HandleEvents();
+		void Draw();
+
+		bool m_IsRunning;
 
 	public:
 		App(AppInfo& defaultAppInfo);
 		~App();
 
-		int Run();
+		void Run();
 	};
 }

@@ -4,7 +4,7 @@
 namespace VNEngine {
 
 	App::App(AppInfo& defaultAppInfo)
-		:m_Window(nullptr), m_WorkResult(0)
+		:m_Window(nullptr), m_IsRunning(false)
 	{
 		
 		m_Window = std::make_unique<Window>(
@@ -12,31 +12,34 @@ namespace VNEngine {
 			defaultAppInfo.Width, defaultAppInfo.Height,
 			defaultAppInfo.Fullscreen
 		);
+
+		m_IsRunning = true;
 	}
 
 	App::~App() {
 		
 	}
 	
-	int App::Run() {
-		m_WorkResult += Update();
-		m_WorkResult += HandleEvents();
-		m_WorkResult += Draw();
-		return m_WorkResult;
+	void App::Run() {
+		while (m_IsRunning) {
+			Update();
+			HandleEvents();
+			Draw();
+		}
 	}
 
-	int App::Update()
-	{
-		return 0;
+	void App::Update() {
+		SDL_Delay(20);
 	}
 
-	int App::HandleEvents()
-	{
-		return 0;
+	void App::HandleEvents() {
+		SDL_Event event;
+		SDL_PollEvent(&event);
+
+		if (event.type == SDL_QUIT) m_IsRunning = false;
 	}
 
-	int App::Draw()
-	{
-		return 0;
+	void App::Draw() {
+
 	}
 }
