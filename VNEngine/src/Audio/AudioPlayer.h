@@ -12,7 +12,11 @@ namespace VNEngine {
 		~AudioPlayer();
 
 		void PlayMusic(const std::string& trackName);
+		void PauseMusic();
+		void ResumeMusic();
+		void StopMusic();
 		void PlaySound(const std::string& trackName);
+		void StopSound();
 
 		void AddAudio(std::string filename, std::string key);
 		void RemoveAudio(std::string key);

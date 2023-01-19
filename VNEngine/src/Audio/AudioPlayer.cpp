@@ -82,6 +82,50 @@ namespace VNEngine {
 		alSourcePlay(m_MusicSource);
 	}
 
+	void AudioPlayer::PauseMusic() {
+		int state = AL_STOPPED;
+		alGetSourcei(m_MusicSource, AL_SOURCE_STATE, &state);
+		if (state == AL_PLAYING) {
+			alSourcePause(m_MusicSource);
+		}
+		else {
+			logs.setMeta("WARNING");
+			logs << "Attempted to pause music, but it is not playing";
+			logs.setMeta("INFO");
+		}
+	}
+
+	void AudioPlayer::ResumeMusic() {
+		int state = AL_STOPPED;
+		alGetSourcei(m_MusicSource, AL_SOURCE_STATE, &state);
+		if (state == AL_PAUSED) {
+			alSourcePlay(m_MusicSource);
+		}
+		else if (state == AL_STOPPED){
+			logs.setMeta("WARNING");
+			logs << "Attempted to resume music, but it is stopped";
+			logs.setMeta("INFO");
+		}
+		else {
+			logs.setMeta("WARNING");
+			logs << "Attempted to resume music, but it is not paused";
+			logs.setMeta("INFO");
+		}
+	}
+
+	void AudioPlayer::StopMusic() {
+		int state = AL_STOPPED;
+		alGetSourcei(m_MusicSource, AL_SOURCE_STATE, &state);
+		if (state == AL_PLAYING) {
+			alSourceStop(m_MusicSource);
+		}
+		else {
+			logs.setMeta("WARNING");
+			logs << "Attempted to stop music, but it is not playing";
+			logs.setMeta("INFO");
+		}
+	}
+
 	void AudioPlayer::PlaySound(const std::string& trackName) {
 		uint32_t buffer = m_AudioList.GetAudio(trackName);
 
@@ -97,6 +141,19 @@ namespace VNEngine {
 			alSourcei(m_SoundSource, AL_BUFFER, (int)m_SoundBuffer);
 		}
 		alSourcePlay(m_SoundSource);
+	}
+
+	void AudioPlayer::StopSound() {
+		int state = AL_STOPPED;
+		alGetSourcei(m_SoundSource, AL_SOURCE_STATE, &state);
+		if (state == AL_PLAYING) {
+			alSourceStop(m_SoundSource);
+		}
+		else {
+			logs.setMeta("WARNING");
+			logs << "Attempted to stop music, but it is not playing";
+			logs.setMeta("INFO");
+		}
 	}
 
 	void AudioPlayer::AddAudio(std::string filename, std::string key) {
