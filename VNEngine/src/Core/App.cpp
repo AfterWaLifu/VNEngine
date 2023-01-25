@@ -16,6 +16,9 @@ namespace VNEngine {
 		m_AudioPlayer = std::make_unique<AudioPlayer>();
 
 		m_IsRunning = true;
+
+		m_AudioPlayer->AddAudio("rickroll.wav", "r");
+		m_AudioPlayer->PlayMusic("r");
 	}
 
 	App::~App() {
@@ -32,6 +35,11 @@ namespace VNEngine {
 
 	void App::Update() {
 		SDL_Delay(20);
+		if (up) volume += 0.005f;
+		else volume -= 0.005f;
+		if (volume <= 0.0f) up = true;
+		else if (volume >= 1.0f) up = false;
+		m_AudioPlayer->SetMusicVolume(volume);
 	}
 
 	void App::HandleEvents() {
@@ -42,6 +50,6 @@ namespace VNEngine {
 	}
 
 	void App::Draw() {
-
+		m_Window->Run();
 	}
 }

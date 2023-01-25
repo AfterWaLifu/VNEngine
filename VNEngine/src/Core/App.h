@@ -16,6 +16,7 @@ namespace VNEngine {
 	};
 
 	class App {
+	private:
 		std::unique_ptr<Window> m_Window;
 		std::unique_ptr<AudioPlayer> m_AudioPlayer;
 
@@ -24,6 +25,9 @@ namespace VNEngine {
 		void Draw();
 
 		bool m_IsRunning;
+
+		float volume = 1.0f;
+		bool up = false;
 
 	public:
 		App(AppInfo& defaultAppInfo);

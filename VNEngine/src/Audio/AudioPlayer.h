@@ -21,6 +21,11 @@ namespace VNEngine {
 		void AddAudio(std::string filename, std::string key);
 		void RemoveAudio(std::string key);
 
+		void SetMusicVolume(float volume);
+		void SetSoundVolume(float volume);
+		float GetMusicVolume();
+		float GetSoundVolume();
+
 	private:
 		AudioList m_AudioList;
 
@@ -32,5 +37,8 @@ namespace VNEngine {
 
 		uint32_t m_MusicBuffer;
 		uint32_t m_SoundBuffer;
+
+		float m_MusicVolume;
+		float m_SoundVolume;
 	};
 }

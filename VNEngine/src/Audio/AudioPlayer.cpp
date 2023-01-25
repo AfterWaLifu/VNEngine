@@ -11,6 +11,7 @@ namespace VNEngine {
 		: m_pDevice(nullptr), m_pContext(nullptr),
 		m_MusicSource(0), m_SoundSource(0),
 		m_MusicBuffer(0), m_SoundBuffer(0),
+		m_MusicVolume(1.0f), m_SoundVolume(1.0f),
 		m_AudioList()
 	{
 		m_pDevice = alcOpenDevice(nullptr);
@@ -43,8 +44,8 @@ namespace VNEngine {
 
 		alSourcef(m_MusicSource, AL_PITCH, 1.0f);
 		alSourcef(m_SoundSource, AL_PITCH, 1.0f);
-		alSourcef(m_MusicSource, AL_GAIN, 1.0f);
-		alSourcef(m_SoundSource, AL_GAIN, 1.0f);
+		alSourcef(m_MusicSource, AL_GAIN, m_MusicVolume);
+		alSourcef(m_SoundSource, AL_GAIN, m_SoundVolume);
 		alSource3f(m_MusicSource, AL_POSITION, 0.0f, 0.0f, 0.0f);
 		alSource3f(m_SoundSource, AL_POSITION, 0.0f, 0.0f, 0.0f);
 		alSource3f(m_MusicSource, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
@@ -176,6 +177,24 @@ namespace VNEngine {
 			logs << "Audio removing '" << key << "' error";
 			logs.setMeta("INFO");
 		}
+	}
+
+	void AudioPlayer::SetMusicVolume(float volume) {
+		if (volume != m_MusicVolume) alSourcef(m_MusicSource, AL_GAIN, volume);
+		m_MusicVolume = volume;
+	}
+
+	void AudioPlayer::SetSoundVolume(float volume) {
+		if (volume != m_SoundVolume) alSourcef(m_SoundSource, AL_GAIN, volume);
+		m_SoundVolume = volume;
+	}
+
+	float AudioPlayer::GetMusicVolume() {
+		return m_MusicVolume;
+	}
+
+	float AudioPlayer::GetSoundVolume() {
+		return m_SoundVolume;
 	}
 
 }
