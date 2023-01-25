@@ -44,10 +44,9 @@ namespace VNEngine {
 		logs << "window deleting succes";
 	}
 
-	void Window::Run(unsigned int ms) {
+	void Window::Run() {
 		SDL_SetRenderDrawColor(g_pRenderer, 200, 100, 100, 255);
 		SDL_RenderClear(g_pRenderer);
 		SDL_RenderPresent(g_pRenderer);
-		SDL_Delay(ms);
 	}
 }

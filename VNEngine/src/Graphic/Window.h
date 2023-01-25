@@ -15,6 +15,6 @@ namespace VNEngine{
 		Window(std::string title, int width, int height, bool fullscreen);
 		~Window();
 
-		void Run(unsigned int ms);
+		void Run();
 	};
 }
