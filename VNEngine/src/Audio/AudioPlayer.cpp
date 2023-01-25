@@ -12,7 +12,7 @@ namespace VNEngine {
 		m_MusicSource(0), m_SoundSource(0),
 		m_MusicBuffer(0), m_SoundBuffer(0),
 		m_MusicVolume(1.0f), m_SoundVolume(1.0f),
-		m_AudioList()
+		m_AudioList(), m_Mute(false)
 	{
 		m_pDevice = alcOpenDevice(nullptr);
 		if (!m_pDevice) {
@@ -180,13 +180,19 @@ namespace VNEngine {
 	}
 
 	void AudioPlayer::SetMusicVolume(float volume) {
-		if (volume != m_MusicVolume) alSourcef(m_MusicSource, AL_GAIN, volume);
-		m_MusicVolume = volume;
+		if (m_Mute) return;
+		if (volume != m_MusicVolume) {
+			alSourcef(m_MusicSource, AL_GAIN, volume);
+			m_MusicVolume = volume;
+		}
 	}
 
 	void AudioPlayer::SetSoundVolume(float volume) {
-		if (volume != m_SoundVolume) alSourcef(m_SoundSource, AL_GAIN, volume);
-		m_SoundVolume = volume;
+		if (m_Mute) return;
+		if (volume != m_SoundVolume) {
+			alSourcef(m_SoundSource, AL_GAIN, volume);
+			m_SoundVolume = volume;
+		}
 	}
 
 	float AudioPlayer::GetMusicVolume() {
@@ -195,6 +201,18 @@ namespace VNEngine {
 
 	float AudioPlayer::GetSoundVolume() {
 		return m_SoundVolume;
+	}
+
+	void AudioPlayer::Mute() {
+		m_Mute = true;
+		alSourcef(m_MusicSource, AL_GAIN, 0.0f);
+		alSourcef(m_SoundSource, AL_GAIN, 0.0f);
+	}
+
+	void AudioPlayer::Unmute() {
+		m_Mute = false;
+		alSourcef(m_MusicSource, AL_GAIN, m_MusicVolume);
+		alSourcef(m_SoundSource, AL_GAIN, m_SoundVolume);
 	}
 
 }

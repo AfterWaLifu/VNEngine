@@ -26,6 +26,9 @@ namespace VNEngine {
 		float GetMusicVolume();
 		float GetSoundVolume();
 
+		void Mute();
+		void Unmute();
+
 	private:
 		AudioList m_AudioList;
 
@@ -40,5 +43,6 @@ namespace VNEngine {
 
 		float m_MusicVolume;
 		float m_SoundVolume;
+		bool m_Mute;
 	};
 }
