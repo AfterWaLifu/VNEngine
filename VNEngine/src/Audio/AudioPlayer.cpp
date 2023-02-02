@@ -16,19 +16,19 @@ namespace VNEngine {
 	{
 		m_pDevice = alcOpenDevice(nullptr);
 		if (!m_pDevice) {
-			logs.setMeta("Warning");
-			logs << "Audio device is not found";
+			VN_LOGS_WARNING("Audio device is not found");
+			return;
 		}
 
 		m_pContext = alcCreateContext(m_pDevice, nullptr);
 		if (!m_pContext) {
-			if (logs.getMeta().c_str() != "Warning") logs.setMeta("Warning");
-			logs << "Audio context creation error";
+			VN_LOGS_WARNING("Audio context creation error");
+			return;
 		}
 
 		if (!alcMakeContextCurrent(m_pContext)) {
-			if (logs.getMeta().c_str() != "Warning") logs.setMeta("Warning");
-			logs << "Audio context 'make current' error";
+			VN_LOGS_WARNING("Audio context 'make current' error");
+			return;
 		}
 
 		uint32_t tempSources[2] = { 0,0 };
@@ -38,8 +38,8 @@ namespace VNEngine {
 			m_SoundSource = tempSources[1];
 		}
 		else {
-			if (logs.getMeta().c_str() != "Warning") logs.setMeta("Warning");
-			logs << "Audio sources creation error";
+			VN_LOGS_WARNING("Audio sources creation error");
+			return;
 		}
 
 		alSourcef(m_MusicSource, AL_PITCH, 1.0f);
@@ -55,7 +55,7 @@ namespace VNEngine {
 		alSourcei(m_MusicSource, AL_BUFFER, m_MusicBuffer);
 		alSourcei(m_SoundSource, AL_BUFFER, m_SoundBuffer);
 
-		if (logs.getMeta() != "INFO") 	logs.setMeta("INFO");
+		VN_LOGS_INFO("Audio Player initialized successfully");
 	}
 
 	AudioPlayer::~AudioPlayer() {
@@ -64,15 +64,15 @@ namespace VNEngine {
 		alcMakeContextCurrent(nullptr);
 		alcDestroyContext(m_pContext);
 		alcCloseDevice(m_pDevice);
+
+		VN_LOGS_INFO("Audio Player deinitialized successfully");
 	}
 
 	void AudioPlayer::PlayMusic(const std::string& trackName) {
 		uint32_t buffer = m_AudioList.GetAudio(trackName);
 
 		if (buffer == UINT32_MAX) {
-			logs.setMeta("Warning");
-			logs << "Audio '" << trackName << "' is not found (make it sure to add it)";
-			logs.setMeta("INFO");
+			VN_LOGS_WARNING( "Audiofile '" + trackName + "' is not found (make it sure to add it)");
 			return;
 		}
 
@@ -90,9 +90,7 @@ namespace VNEngine {
 			alSourcePause(m_MusicSource);
 		}
 		else {
-			logs.setMeta("WARNING");
-			logs << "Attempted to pause music, but it is not playing";
-			logs.setMeta("INFO");
+			VN_LOGS_WARNING("Attempted to pause music, but it is not playing");
 		}
 	}
 
@@ -103,14 +101,10 @@ namespace VNEngine {
 			alSourcePlay(m_MusicSource);
 		}
 		else if (state == AL_STOPPED){
-			logs.setMeta("WARNING");
-			logs << "Attempted to resume music, but it is stopped";
-			logs.setMeta("INFO");
+			VN_LOGS_WARNING("Attempted to resume music, but it is stopped");
 		}
 		else {
-			logs.setMeta("WARNING");
-			logs << "Attempted to resume music, but it is not paused";
-			logs.setMeta("INFO");
+			VN_LOGS_WARNING("Attempted to resume music, but it is not paused");
 		}
 	}
 
@@ -121,9 +115,7 @@ namespace VNEngine {
 			alSourceStop(m_MusicSource);
 		}
 		else {
-			logs.setMeta("WARNING");
-			logs << "Attempted to stop music, but it is not playing";
-			logs.setMeta("INFO");
+			VN_LOGS_WARNING("Attempted to stop music, but it is not playing");
 		}
 	}
 
@@ -131,9 +123,7 @@ namespace VNEngine {
 		uint32_t buffer = m_AudioList.GetAudio(trackName);
 
 		if (buffer == UINT32_MAX) {
-			logs.setMeta("Warning");
-			logs << "Audio '" << trackName << "' is not found (make it sure to add it)";
-			logs.setMeta("INFO");
+			VN_LOGS_WARNING("Audiofile '" + trackName + "' is not found (make it sure to add it)");
 			return;
 		}
 
@@ -151,31 +141,25 @@ namespace VNEngine {
 			alSourceStop(m_SoundSource);
 		}
 		else {
-			logs.setMeta("WARNING");
-			logs << "Attempted to stop music, but it is not playing";
-			logs.setMeta("INFO");
+			VN_LOGS_WARNING("Attempted to stop music, but it is not playing");
 		}
 	}
 
 	void AudioPlayer::AddAudio(std::string filename, std::string key) {
 		if (m_AudioList.AddAudio(filename, key)) {
-			logs << "Audio '" << key << "' has been added";
+			VN_LOGS_INFO("Audio '" + key + "' has been added");
 		}
 		else {
-			logs.setMeta("Warning");
-			logs << "Audio adding '" << key << "' error";
-			logs.setMeta("INFO");
+			VN_LOGS_WARNING("Audio adding '" + key + "' error");
 		}
 	}
 
 	void AudioPlayer::RemoveAudio(std::string key) {
 		if (m_AudioList.RemoveAudio(key)) {
-			logs << "Audio '" << key << "' has been removed";
+			VN_LOGS_INFO("Audio '" + key + "' has been removed");
 		}
 		else {
-			logs.setMeta("Warning");
-			logs << "Audio removing '" << key << "' error";
-			logs.setMeta("INFO");
+			VN_LOGS_WARNING("Audio removing '" + key + "' error");
 		}
 	}
 

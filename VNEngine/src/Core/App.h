@@ -26,9 +26,6 @@ namespace VNEngine {
 
 		bool m_IsRunning;
 
-		float volume = 1.0f;
-		bool up = false;
-
 	public:
 		App(AppInfo& defaultAppInfo);
 		~App();

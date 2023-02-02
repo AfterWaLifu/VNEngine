@@ -3,7 +3,10 @@
 
 namespace VNEngine {
 
+	Logger* Logger::s_pInstance = nullptr;
+
 	Logger::Logger(std::string NameOfLogFile)
+		: rawTime(0), notRawTime({})
 	{
 		logs = new std::ofstream(NameOfLogFile);
 		if (!logs) exit(1);
@@ -26,5 +29,8 @@ namespace VNEngine {
 		return meta;
 	}
 
-	static Logger& logger = *(new Logger("logs.txt"));
+	Logger& Logger::Instance()
+	{
+		return s_pInstance ? *s_pInstance : *(s_pInstance = new Logger("logs.txt"));
+	}
 }

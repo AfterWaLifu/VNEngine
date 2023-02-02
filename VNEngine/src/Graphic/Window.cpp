@@ -10,8 +10,7 @@ namespace VNEngine {
 	{
 
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
-			logs.setMeta("ERROR");
-			logs << "SDL initialization error";
+			VN_LOGS_ERROR("SDL initialization error");
 			return;
 		}
 
@@ -26,14 +25,13 @@ namespace VNEngine {
 			flags
 		);
 		if (g_pWindow == nullptr) {
-			logs.setMeta("ERROR");
-			logs << "Window creation error";
+			VN_LOGS_ERROR("Window creation error");
 			return;
 		}
 
 		g_pRenderer = SDL_CreateRenderer(g_pWindow, -1, 0);
 
-		logs << "window creation succes";
+		VN_LOGS_INFO("Window creation succes");
 	}
 
 	Window::~Window() {
@@ -41,7 +39,7 @@ namespace VNEngine {
 		SDL_DestroyWindow(g_pWindow);
 		SDL_Quit();
 
-		logs << "window deleting succes";
+		VN_LOGS_INFO("Window deleting succes");
 	}
 
 	void Window::Run() {
