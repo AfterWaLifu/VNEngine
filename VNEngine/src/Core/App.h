@@ -3,7 +3,7 @@
 #include <string>
 
 #include "Core/Logger.h"
-#include "Graphic/Window.h"
+#include "Graphic/Artist.h"
 #include "Audio/AudioPlayer.h"
 
 namespace VNEngine {
@@ -16,8 +16,8 @@ namespace VNEngine {
 	};
 
 	class App {
-	private:
-		std::unique_ptr<Window> m_Window;
+	protected:
+		std::unique_ptr<Artist> m_Drawer;
 		std::unique_ptr<AudioPlayer> m_AudioPlayer;
 
 		void Update();
@@ -28,7 +28,7 @@ namespace VNEngine {
 
 	public:
 		App(AppInfo& defaultAppInfo);
-		~App();
+		virtual ~App();
 
 		void Run();
 	};

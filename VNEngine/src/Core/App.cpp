@@ -4,16 +4,9 @@
 namespace VNEngine {
 
 	App::App(AppInfo& defaultAppInfo)
-		:m_Window(nullptr), m_IsRunning(false)
+		:m_Drawer(nullptr), m_IsRunning(false)
 	{
-		VN_LOGS_INFO("0");
-		VN_LOGS_INFO("1");
-		VN_LOGS_INFO("2");
-		VN_LOGS_INFO("3");
-		VN_LOGS_INFO("4");
-		VN_LOGS_INFO("5");
-		
-		m_Window = std::make_unique<Window>(
+		m_Drawer = std::make_unique<Artist>(
 			defaultAppInfo.WindowTitle,
 			defaultAppInfo.Width, defaultAppInfo.Height,
 			defaultAppInfo.Fullscreen
@@ -48,6 +41,6 @@ namespace VNEngine {
 	}
 
 	void App::Draw() {
-		m_Window->Run();
+		m_Drawer->Perform();
 	}
 }
