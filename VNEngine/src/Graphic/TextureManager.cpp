@@ -16,7 +16,7 @@ namespace VNEngine {
 		m_Textures.clear();
 	}
 
-	inline void TextureManager::addTexture(const std::string& key, const std::string& path)
+	void TextureManager::addTexture(const std::string& key, const std::string& path)
 	{
 		SDL_Surface* tempSurface = IMG_Load(path.c_str());
 		SDL_Texture* tempTexture = SDL_CreateTextureFromSurface(m_Renderer, tempSurface);
@@ -24,12 +24,12 @@ namespace VNEngine {
 		m_Textures[key] = tempTexture;
 	}
 
-	inline SDL_Texture* TextureManager::getTexture(const std::string& key)
+	SDL_Texture* TextureManager::getTexture(const std::string& key)
 	{
 		return m_Textures[key];
 	}
 
-	inline void TextureManager::delTexture(const std::string& key)
+	void TextureManager::delTexture(const std::string& key)
 	{
 		SDL_DestroyTexture(m_Textures[key]);
 		m_Textures.erase(key);
