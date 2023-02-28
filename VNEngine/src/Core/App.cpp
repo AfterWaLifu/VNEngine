@@ -13,7 +13,8 @@ namespace VNEngine {
 		);
 
 		m_AudioPlayer = std::make_unique<AudioPlayer>();
-
+		m_Drawer->AddTexture("m", "masyunya.png");
+		m_Drawer->Draw("m");
 		m_IsRunning = true;
 	}
 

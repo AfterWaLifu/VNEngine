@@ -50,16 +50,21 @@ namespace VNEngine {
 	void Artist::Perform() {
 		SDL_SetRenderDrawColor(m_pRenderer, 200, 100, 100, 255);
 		SDL_RenderClear(m_pRenderer);
-		// drawing everything in QUEUEUEUEUE
+		
+		for (auto pair : m_Queue) {
+			auto texture = pair.second;
+			SDL_RenderCopy(m_pRenderer, texture, nullptr, new SDL_Rect({0,0,200,200}));
+		}
+
 		SDL_RenderPresent(m_pRenderer);
 	}
 
 	void Artist::Draw(const std::string& key) {
-		// adding to QUEUEUEUE
+		m_Queue[key] = m_TextureManager->getTexture(key);
 	}
 
 	void Artist::StopDrawing(const std::string& key) {
-		// removing from QUEUEUEUEUE
+		m_Queue.erase(key);
 	}
 
 	void Artist::AddTexture(const std::string& key, const std::string& path) {
