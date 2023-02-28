@@ -23,7 +23,8 @@
     <ClInclude Include="src\Audio\AudioPlayer.h" />
     <ClInclude Include="src\Core\App.h" />
     <ClInclude Include="src\Core\Logger.h" />
-    <ClInclude Include="src\Graphic\Window.h" />
+    <ClInclude Include="src\Graphic\Artist.h" />
+    <ClInclude Include="src\Graphic\TextureManager.h" />
     <ClInclude Include="src\VNEngine.h" />
     <ClInclude Include="src\vnepch.h" />
   </ItemGroup>
@@ -32,7 +33,8 @@
     <ClCompile Include="src\Audio\AudioPlayer.cpp" />
     <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Core\Logger.cpp" />
-    <ClCompile Include="src\Graphic\Window.cpp" />
+    <ClCompile Include="src\Graphic\Artist.cpp" />
+    <ClCompile Include="src\Graphic\TextureManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
