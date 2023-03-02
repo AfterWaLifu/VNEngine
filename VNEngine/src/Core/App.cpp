@@ -13,8 +13,7 @@ namespace VNEngine {
 		);
 
 		m_AudioPlayer = std::make_unique<AudioPlayer>();
-		m_Drawer->AddTexture("m", "masyunya.png");
-		m_Drawer->Draw("m");
+
 		m_IsRunning = true;
 	}
 
@@ -32,6 +31,7 @@ namespace VNEngine {
 
 	void App::Update() {
 		SDL_Delay(20);
+
 	}
 
 	void App::HandleEvents() {
