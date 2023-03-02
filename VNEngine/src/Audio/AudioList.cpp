@@ -67,7 +67,7 @@ namespace VNEngine {
         {
             VN_LOGS_WARNING("Unsupported channel count: " << sfinfo.channels << "(" << filename << ")");
             sf_close(sndfile);
-            return 0;
+            return false;
         }
 
         membuf = static_cast<short*>(malloc((size_t)(sfinfo.frames * sfinfo.channels) * sizeof(short)));
@@ -97,7 +97,7 @@ namespace VNEngine {
             VN_LOGS_WARNING(message + error);
             if (buffer && alIsBuffer(buffer))
                 alDeleteBuffers(1, &buffer);
-            return 0;
+            return false;
         }
 
         m_SoundBufferList[key] = buffer;
