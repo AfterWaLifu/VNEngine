@@ -16,8 +16,8 @@ namespace VNEngine {
 		TextureManager(SDL_Renderer* renderer);
 		~TextureManager();
 
-		void addTexture(const std::string& key, const std::string& path);
+		bool addTexture(const std::string& key, const std::string& path);
 		SDL_Texture* getTexture(const std::string& key);
-		void delTexture(const std::string& key);
+		bool delTexture(const std::string& key);
 	};
 }
