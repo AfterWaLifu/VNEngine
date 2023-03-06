@@ -27,7 +27,8 @@ namespace VNEngine {
 	}
 
 	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
-		: g_pWindow(nullptr), m_pRenderer(nullptr), m_TextureManager(nullptr)
+		: g_pWindow(nullptr), m_pRenderer(nullptr), m_TextureManager(nullptr),
+		m_DrawId(0)
 	{
 
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -78,13 +79,18 @@ namespace VNEngine {
 
 		SDL_RenderPresent(m_pRenderer);
 	}
-
+	//todo
 	void Artist::Draw(const std::string& key, int tileNum, Rect destination) {
-		//todo
+		
+	}
+	void Artist::Draw(const std::string& key, int row, int collumn, Rect destination) {
 	}
 
 	void Artist::StopDrawing(const std::string& key) {
-		m_Queue.erase(key);
+		
+	}
+	void Artist::StopDrawing(const unsigned int id) {
+
 	}
 
 	void Artist::AddTexture(const std::string& key, const std::string& path, int rows, int collumns) {
@@ -95,4 +101,7 @@ namespace VNEngine {
 		m_TextureManager->delTexture(key);
 	}
 
+	unsigned int Artist::FindFirstEmptyId() {
+		//todo
+	}
 }

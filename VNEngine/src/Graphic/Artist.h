@@ -23,7 +23,10 @@ namespace VNEngine{
 
 		TextureManager* m_TextureManager;
 
-		std::unordered_map<std::string, DrawnData> m_Queue;
+		std::unordered_map<unsigned int, DrawnData> m_Queue;
+		unsigned int m_DrawId;
+
+		unsigned int FindFirstEmptyId();
 
 	public:
 		Artist(const std::string& title, int width, int height, bool fullscreen);
@@ -32,7 +35,9 @@ namespace VNEngine{
 		void Perform();
 
 		void Draw(const std::string& key, int tileNum = 0, Rect destination = {0,0,100,100});
+		void Draw(const std::string& key, int row = 0, int collumn = 0, Rect destination = { 0,0,100,100 });
 		void StopDrawing(const std::string& key);
+		void StopDrawing(const unsigned int id);
 
 		void AddTexture(const std::string& key, const std::string& path, int rows = 1, int collumns = 1);
 		void DeleteTexture(const std::string& key);
