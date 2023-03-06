@@ -10,7 +10,7 @@ namespace VNEngine{
 
 	typedef SDL_Rect Rect;
 
-	struct DrawnPair {
+	struct DrawnData {
 		Texture texture;
 		int tileNumber;
 		Rect destination;
@@ -23,7 +23,7 @@ namespace VNEngine{
 
 		TextureManager* m_TextureManager;
 
-		std::unordered_map<std::string, DrawnPair> m_Queue;
+		std::unordered_map<std::string, DrawnData> m_Queue;
 
 	public:
 		Artist(const std::string& title, int width, int height, bool fullscreen);
