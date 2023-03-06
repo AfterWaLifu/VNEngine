@@ -15,6 +15,8 @@ namespace VNEngine {
 		m_AudioPlayer = std::make_unique<AudioPlayer>();
 
 		m_IsRunning = true;
+
+		Load();
 	}
 
 	App::~App() {
@@ -29,9 +31,30 @@ namespace VNEngine {
 		}
 	}
 
+	void App::Load()
+	{
+		m_Drawer->AddTexture("m", "masyunya.png");
+		m_Drawer->AddTexture("n", "neverhood.png");
+	}
+
+	static int a = 0;
+	static char texture[] = "m";
 	void App::Update() {
 		SDL_Delay(20);
-
+		++a;
+		if (a == 50) {
+			if (texture[0] == 'm') {
+				m_Drawer->StopDrawing("m");
+				m_Drawer->Draw("n");
+				texture[0] = 'n';
+			}
+			else {
+				m_Drawer->StopDrawing("n");
+				m_Drawer->Draw("m");
+				texture[0] = 'm';
+			}
+			a = 0;
+		}
 	}
 
 	void App::HandleEvents() {
