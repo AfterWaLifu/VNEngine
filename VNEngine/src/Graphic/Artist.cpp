@@ -52,23 +52,22 @@ namespace VNEngine {
 		SDL_RenderClear(m_pRenderer);
 		
 		for (auto pair : m_Queue) {
-			auto texture = pair.second;
-			SDL_RenderCopy(m_pRenderer, texture, nullptr, new SDL_Rect({0,0,200,200}));
+			//todo
 		}
 
 		SDL_RenderPresent(m_pRenderer);
 	}
 
-	void Artist::Draw(const std::string& key) {
-		m_Queue[key] = m_TextureManager->getTexture(key);
+	void Artist::Draw(const std::string& key, int tileNum, SDL_Rect destination) {
+		//todo
 	}
 
 	void Artist::StopDrawing(const std::string& key) {
 		m_Queue.erase(key);
 	}
 
-	void Artist::AddTexture(const std::string& key, const std::string& path) {
-		m_TextureManager->addTexture(key, path);
+	void Artist::AddTexture(const std::string& key, const std::string& path, int rows, int collumns) {
+		m_TextureManager->addTexture(key, path, rows, collumns);
 	}
 
 	void Artist::DeleteTexture(const std::string& key) {

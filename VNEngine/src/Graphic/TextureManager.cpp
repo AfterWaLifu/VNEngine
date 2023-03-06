@@ -14,11 +14,11 @@ namespace VNEngine {
 
 	TextureManager::~TextureManager()
 	{
-		for (auto texture : m_Textures) SDL_DestroyTexture(texture.second);
+		for (auto texture : m_Textures) SDL_DestroyTexture(texture.second->sdl_texture);
 		m_Textures.clear();
 	}
 
-	bool TextureManager::addTexture(const std::string& key, const std::string& path)
+	bool TextureManager::addTexture(const std::string& key, const std::string& path, int rows, int collumns)
 	{
 		SDL_Surface* tempSurface = IMG_Load(path.c_str());
 		if (tempSurface == nullptr) {
@@ -27,17 +27,25 @@ namespace VNEngine {
 		}
 		SDL_Texture* tempTexture = SDL_CreateTextureFromSurface(m_Renderer, tempSurface);
 		SDL_FreeSurface(tempSurface);
+
 		if (tempTexture) {
-			m_Textures[key] = tempTexture;
+			int w = 0, h = 0;
+			SDL_QueryTexture(tempTexture, nullptr, nullptr, &w, &h);
+
+			if (w == 0 || h == 0) {
+				VN_LOGS_ERROR("Something went wrong on getting width&height of texture");
+				SDL_DestroyTexture(tempTexture);
+				return false;
+			}
+
+			m_Textures[key] = new Texture({tempTexture, w, h, rows, collumns});
 			return true;
 		}
-		else {
-			VN_LOGS_ERROR("Something went wrong on creating texture '" << key << "'");
-			return false;
-		}
+		VN_LOGS_ERROR("Something went wrong on creating texture '" << key << "'");
+		return false;
 	}
 
-	SDL_Texture* TextureManager::getTexture(const std::string& key)
+	Texture* TextureManager::getTexture(const std::string& key)
 	{
 		if (m_Textures[key]) return m_Textures[key];
 		else {
@@ -48,7 +56,7 @@ namespace VNEngine {
 
 	bool TextureManager::delTexture(const std::string& key)
 	{
-		SDL_DestroyTexture(m_Textures[key]);
+		SDL_DestroyTexture(m_Textures[key]->sdl_texture);
 		m_Textures.erase(key);
 		if (SDL_GetError()) {
 			VN_LOGS_ERROR("Something went wrong on deleting texture '" << key << "'");

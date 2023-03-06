@@ -8,6 +8,14 @@
 
 namespace VNEngine{
 
+	typedef SDL_Rect Rect;
+
+	struct DrawnPair {
+		Texture texture;
+		int tileNumber;
+		Rect destination;
+	};
+
 	class Artist {
 	private:
 		SDL_Window* g_pWindow;
@@ -15,7 +23,7 @@ namespace VNEngine{
 
 		TextureManager* m_TextureManager;
 
-		std::unordered_map<std::string, SDL_Texture*> m_Queue;
+		std::unordered_map<std::string, DrawnPair> m_Queue;
 
 	public:
 		Artist(const std::string& title, int width, int height, bool fullscreen);
@@ -23,10 +31,10 @@ namespace VNEngine{
 
 		void Perform();
 
-		void Draw(const std::string& key);
+		void Draw(const std::string& key, int tileNum = 0, Rect destination = {0,0,100,100});
 		void StopDrawing(const std::string& key);
 
-		void AddTexture(const std::string& key, const std::string& path);
+		void AddTexture(const std::string& key, const std::string& path, int rows = 1, int collumns = 1);
 		void DeleteTexture(const std::string& key);
 	};
 }
