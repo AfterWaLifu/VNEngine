@@ -5,6 +5,27 @@
 
 namespace VNEngine {
 
+	Rect& GetTileRect(const Texture& t, const int tile) {
+		Rect source = { 0,0,1,1 };
+		if (t.r * t.c > tile) {
+			source.w = t.w / t.c;
+			source.h = t.h / t.r;
+			source.x = source.w * (tile%t.c);
+			source.y = source.h * (tile/t.c);
+		}
+		return source;
+	}
+	Rect& GetTileRect(const Texture& t, const int row, const int collumn) {
+		Rect source = { 0,0,1,1 };
+		if (t.r > row || t.c > collumn) {
+			source.w = t.w / t.c;
+			source.h = t.h / t.r;
+			source.x = source.w * collumn;
+			source.y = source.h * row;
+		}
+		return source;
+	}
+
 	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
 		: g_pWindow(nullptr), m_pRenderer(nullptr), m_TextureManager(nullptr)
 	{
@@ -58,7 +79,7 @@ namespace VNEngine {
 		SDL_RenderPresent(m_pRenderer);
 	}
 
-	void Artist::Draw(const std::string& key, int tileNum, SDL_Rect destination) {
+	void Artist::Draw(const std::string& key, int tileNum, Rect destination) {
 		//todo
 	}
 
