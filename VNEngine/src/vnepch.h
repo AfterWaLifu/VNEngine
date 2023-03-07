@@ -4,3 +4,4 @@
 #include <vector>
 #include <memory>
 #include <map>
+#include <stdint.h>

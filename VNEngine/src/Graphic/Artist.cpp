@@ -89,7 +89,7 @@ namespace VNEngine {
 	void Artist::StopDrawing(const std::string& key) {
 		
 	}
-	void Artist::StopDrawing(const unsigned int id) {
+	void Artist::StopDrawing(const uint32_t id) {
 
 	}
 
@@ -101,7 +101,17 @@ namespace VNEngine {
 		m_TextureManager->delTexture(key);
 	}
 
-	unsigned int Artist::FindFirstEmptyId() {
-		//todo
+	void Artist::FindFirstEmptyId() {
+		if (m_Queue.empty()) m_DrawId = 0;
+
+		uint32_t guess = 0;
+		auto search = m_Queue.find(guess);
+
+		while (search != m_Queue.end()) {
+			++guess;
+			search = m_Queue.find(guess);
+		}
+
+		m_DrawId = guess;
 	}
 }
