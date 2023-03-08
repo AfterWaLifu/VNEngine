@@ -5,7 +5,7 @@
 
 namespace VNEngine {
 
-	Rect& GetTileRect(const Texture* t, const int tile, const std::string& key) {
+	Rect GetTileRect(const Texture* t, const int tile, const std::string& key) {
 		Rect source = { 0,0,1,1 };
 		if (t->r * t->c > tile) {
 			source.w = t->w / t->c;
@@ -18,7 +18,7 @@ namespace VNEngine {
 		}
 		return source;
 	}
-	Rect& GetTileRect(const Texture* t, const int row, const int collumn, const std::string& key) {
+	Rect GetTileRect(const Texture* t, const int row, const int collumn, const std::string& key) {
 		Rect source = { 0,0,1,1 };
 		if (t->r > row || t->c > collumn) {
 			source.w = t->w / t->c;
@@ -86,21 +86,21 @@ namespace VNEngine {
 		SDL_RenderPresent(m_pRenderer);
 	}
 
-	int Artist::Draw(const std::string& key, int tileNum, Rect destination) {
+	uint32_t Artist::Draw(const std::string& key, int tileNum, Rect destination) {
 		FindFirstEmptyId();
 
 		Texture* tempTexture = m_TextureManager->getTexture(key);
-		if (tempTexture == nullptr) return;
+		if (tempTexture == nullptr) return UINT32_MAX;
 		Rect tempSourceRect = GetTileRect(tempTexture, tileNum, key);
 		m_Queue[m_DrawId] = {tempTexture, tempSourceRect, destination};
 
 		return m_DrawId;
 	}
-	int Artist::Draw(const std::string& key, int row, int collumn, Rect destination) {
+	uint32_t Artist::Draw(const std::string& key, int row, int collumn, Rect destination) {
 		FindFirstEmptyId();
 
 		Texture* tempTexture = m_TextureManager->getTexture(key);
-		if (tempTexture == nullptr) return;
+		if (tempTexture == nullptr) return UINT32_MAX;
 		Rect tempSourceRect = GetTileRect(tempTexture, row, collumn, key);
 		m_Queue[m_DrawId] = { tempTexture, tempSourceRect, destination };
 
