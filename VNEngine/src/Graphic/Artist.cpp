@@ -5,23 +5,29 @@
 
 namespace VNEngine {
 
-	Rect& GetTileRect(const Texture& t, const int tile) {
+	Rect& GetTileRect(const Texture* t, const int tile, const std::string& key) {
 		Rect source = { 0,0,1,1 };
-		if (t.r * t.c > tile) {
-			source.w = t.w / t.c;
-			source.h = t.h / t.r;
-			source.x = source.w * (tile%t.c);
-			source.y = source.h * (tile/t.c);
+		if (t->r * t->c > tile) {
+			source.w = t->w / t->c;
+			source.h = t->h / t->r;
+			source.x = source.w * (tile%t->c);
+			source.y = source.h * (tile/t->c);
+		}
+		else {
+			VN_LOGS_WARNING("Attemp to get a nonexisting tile of texture '" << key << "'");
 		}
 		return source;
 	}
-	Rect& GetTileRect(const Texture& t, const int row, const int collumn) {
+	Rect& GetTileRect(const Texture* t, const int row, const int collumn, const std::string& key) {
 		Rect source = { 0,0,1,1 };
-		if (t.r > row || t.c > collumn) {
-			source.w = t.w / t.c;
-			source.h = t.h / t.r;
+		if (t->r > row || t->c > collumn) {
+			source.w = t->w / t->c;
+			source.h = t->h / t->r;
 			source.x = source.w * collumn;
 			source.y = source.h * row;
+		}
+		else {
+			VN_LOGS_WARNING("Attemp to get a nonexisting tile of texture '" << key << "'");
 		}
 		return source;
 	}
@@ -73,24 +79,63 @@ namespace VNEngine {
 		SDL_SetRenderDrawColor(m_pRenderer, 200, 100, 100, 255);
 		SDL_RenderClear(m_pRenderer);
 		
-		for (auto pair : m_Queue) {
+		for (const std::pair<uint32_t, DrawnData>& pair : m_Queue) {
 			//todo
 		}
 
 		SDL_RenderPresent(m_pRenderer);
 	}
-	//todo
-	void Artist::Draw(const std::string& key, int tileNum, Rect destination) {
-		
+
+	int Artist::Draw(const std::string& key, int tileNum, Rect destination) {
+		FindFirstEmptyId();
+
+		Texture* tempTexture = m_TextureManager->getTexture(key);
+		if (tempTexture == nullptr) return;
+		Rect tempSourceRect = GetTileRect(tempTexture, tileNum, key);
+		m_Queue[m_DrawId] = {tempTexture, tempSourceRect, destination};
+
+		return m_DrawId;
 	}
-	void Artist::Draw(const std::string& key, int row, int collumn, Rect destination) {
+	int Artist::Draw(const std::string& key, int row, int collumn, Rect destination) {
+		FindFirstEmptyId();
+
+		Texture* tempTexture = m_TextureManager->getTexture(key);
+		if (tempTexture == nullptr) return;
+		Rect tempSourceRect = GetTileRect(tempTexture, row, collumn, key);
+		m_Queue[m_DrawId] = { tempTexture, tempSourceRect, destination };
+
+		return m_DrawId;
 	}
 
 	void Artist::StopDrawing(const std::string& key) {
-		
+		int counter = 0;
+		Texture* goalTexture = m_TextureManager->getTexture(key);
+		if (goalTexture == nullptr) return;
+
+		for (const std::pair<uint32_t, DrawnData>& pair : m_Queue) {
+			if (pair.second.texture == goalTexture) {
+				++counter;
+				m_Queue.erase(pair.first);
+			}
+		}
+
+		if (counter == 0) {
+			VN_LOGS_WARNING("While stopping drawing by key '" << key <<
+				"', not a single texture stopped drawing");
+		}
+		else if (counter > 1) {
+			VN_LOGS_WARNING("While stopping drawing by key '" << key <<
+						"', has been stoped " << counter << " textures");
+		}
 	}
 	void Artist::StopDrawing(const uint32_t id) {
-
+		auto find = m_Queue.find(id);
+		if (find != m_Queue.end()) {
+			m_Queue.erase(id);
+		}
+		else {
+			VN_LOGS_WARNING("Attemp to stop drawing a non-drawn texture w/ id '" << id << "'");
+		}
 	}
 
 	void Artist::AddTexture(const std::string& key, const std::string& path, int rows, int collumns) {

@@ -12,8 +12,8 @@ namespace VNEngine{
 	typedef SDL_Rect Rect;
 
 	struct DrawnData {
-		Texture texture;
-		int tileNumber;
+		Texture* texture;
+		Rect source;
 		Rect destination;
 	};
 
@@ -35,8 +35,8 @@ namespace VNEngine{
 
 		void Perform();
 
-		void Draw(const std::string& key, int tileNum = 0, Rect destination = {0,0,100,100});
-		void Draw(const std::string& key, int row = 0, int collumn = 0, Rect destination = { 0,0,100,100 });
+		int Draw(const std::string& key, int tileNum = 0, Rect destination = {0,0,100,100});
+		int Draw(const std::string& key, int row = 0, int collumn = 0, Rect destination = { 0,0,100,100 });
 		void StopDrawing(const std::string& key);
 		void StopDrawing(const uint32_t id);
 
