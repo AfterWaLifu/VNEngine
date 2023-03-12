@@ -2,12 +2,20 @@
 
 #include "VNEngine.h"
 
+class Game : public VNEngine::App {
+public:
+	Game(VNEngine::AppInfo info) : VNEngine::App(info) { Load(); }
+private:
+	void Load() override {
+		m_Drawer->SetBackgroundColor({0,0,0,255});
+	}
+};
+
 int main(int argc, char* argv[]) {
 	
 	VNEngine::AppInfo info = { "VNApp", 1280, 720, false };
-	VNEngine::App* app = new VNEngine::App(info);
-	app->Run();
-	delete app;
+	Game game(info);
+	game.Run();
 
 	return 0;
 }

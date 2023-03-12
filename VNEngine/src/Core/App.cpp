@@ -31,11 +31,7 @@ namespace VNEngine {
 		}
 	}
 
-	void App::Load()
-	{
-		m_Drawer->AddTexture("m", "masyunya.png");
-		m_Drawer->AddTexture("n", "neverhood.png");
-	}
+	void App::Load() {}
 
 	void App::Update() {
 		SDL_Delay(20);
