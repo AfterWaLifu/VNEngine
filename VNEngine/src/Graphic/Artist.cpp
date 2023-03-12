@@ -33,8 +33,8 @@ namespace VNEngine {
 	}
 
 	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
-		: g_pWindow(nullptr), m_pRenderer(nullptr), m_TextureManager(nullptr),
-		m_DrawId(0)
+		: m_pWindow(nullptr), m_pRenderer(nullptr), m_TextureManager(nullptr),
+		m_DrawId(0), m_BackGroundColor({ 200, 100, 100, 255 })
 	{
 
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -46,18 +46,18 @@ namespace VNEngine {
 		if (fullscreen) flags = SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN;
 		else flags = SDL_WINDOW_SHOWN;
 
-		g_pWindow = SDL_CreateWindow(
+		m_pWindow = SDL_CreateWindow(
 			title.c_str(),
 			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 			width, height,
 			flags
 		);
-		if (g_pWindow == nullptr) {
+		if (m_pWindow == nullptr) {
 			VN_LOGS_ERROR("Window creation error");
 			return;
 		}
 
-		m_pRenderer = SDL_CreateRenderer(g_pWindow, -1, 0);
+		m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
 		
 		m_TextureManager = new TextureManager(m_pRenderer);
 		m_Queue.clear();
@@ -69,21 +69,32 @@ namespace VNEngine {
 		m_Queue.clear();
 		delete m_TextureManager;
 		SDL_DestroyRenderer(m_pRenderer);
-		SDL_DestroyWindow(g_pWindow);
+		SDL_DestroyWindow(m_pWindow);
 		SDL_Quit();
 
 		VN_LOGS_INFO("Window deleting succes");
 	}
 
 	void Artist::Perform() {
-		SDL_SetRenderDrawColor(m_pRenderer, 200, 100, 100, 255);
+		SDL_SetRenderDrawColor(m_pRenderer, m_BackGroundColor.r,
+			m_BackGroundColor.g, m_BackGroundColor.b, m_BackGroundColor.a);
 		SDL_RenderClear(m_pRenderer);
 		
 		for (const std::pair<uint32_t, DrawnData>& pair : m_Queue) {
-			//todo
+			auto d = &(pair.second);
+			SDL_RenderCopy(m_pRenderer, d->texture->sdl_texture,
+				&d->source, &d->destination);
 		}
 
 		SDL_RenderPresent(m_pRenderer);
+	}
+
+	void Artist::SetBackgroundColor(vec4u8 color) {
+		m_BackGroundColor = color;
+	}
+
+	vec4u8 Artist::GetBackgroundColor() {
+		return m_BackGroundColor;
 	}
 
 	uint32_t Artist::Draw(const std::string& key, int tileNum, Rect destination) {

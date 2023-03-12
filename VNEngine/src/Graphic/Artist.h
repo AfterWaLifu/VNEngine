@@ -17,15 +17,21 @@ namespace VNEngine{
 		Rect destination;
 	};
 
+	struct vec4u8 {
+		uint8_t r, g, b, a;
+	};
+
 	class Artist {
 	private:
-		SDL_Window* g_pWindow;
+		SDL_Window* m_pWindow;
 		SDL_Renderer* m_pRenderer;
 
 		TextureManager* m_TextureManager;
 
 		std::unordered_map<uint32_t, DrawnData> m_Queue;
 		uint32_t m_DrawId;
+
+		vec4u8 m_BackGroundColor;
 
 		void FindFirstEmptyId();
 
@@ -34,6 +40,9 @@ namespace VNEngine{
 		~Artist();
 
 		void Perform();
+
+		void SetBackgroundColor(vec4u8 color = { 0, 0, 0, 255 });
+		vec4u8 GetBackgroundColor();
 
 		uint32_t Draw(const std::string& key, int tileNum = 0, Rect destination = {0,0,100,100});
 		uint32_t Draw(const std::string& key, int row = 0, int collumn = 0, Rect destination = { 0,0,100,100 });
