@@ -21,6 +21,12 @@ namespace VNEngine{
 		uint8_t r, g, b, a;
 	};
 
+	enum Stretching : uint8_t {
+		CENTERED,
+		FULLSCREENED,
+		STRETCHED
+	};
+
 	class Artist {
 	private:
 		SDL_Window* m_pWindow;
@@ -31,9 +37,16 @@ namespace VNEngine{
 		std::unordered_map<uint32_t, DrawnData> m_Queue;
 		uint32_t m_DrawId;
 
-		vec4u8 m_BackGroundColor;
-
 		void FindFirstEmptyId();
+
+		struct {
+			vec4u8 backgroundColor;
+			Texture* ptexture;
+			std::string textureKey;
+			bool pictureOrColor;	//true if picture
+			
+			Stretching stretchState;
+		} m_Background;
 
 	public:
 		Artist(const std::string& title, int width, int height, bool fullscreen);
@@ -41,8 +54,15 @@ namespace VNEngine{
 
 		void Perform();
 
-		void SetBackgroundColor(vec4u8 color = { 0, 0, 0, 255 });
-		vec4u8 GetBackgroundColor();
+		void SetBackground(vec4u8 color = { 0, 0, 0, 255 });
+		void SetBackground(const std::string& key);
+		void SetStretchingState(Stretching state);
+		void SetDrawingPicture(bool picture = true);
+
+		vec4u8		GetBackgroundColor();
+		std::string	GetBackgroundPic();
+		Stretching	GetStretchingState();
+		bool		GetDrawingPictureOrColor();
 
 		uint32_t Draw(const std::string& key, int tileNum = 0, Rect destination = {0,0,100,100});
 		uint32_t Draw(const std::string& key, int row = 0, int collumn = 0, Rect destination = { 0,0,100,100 });

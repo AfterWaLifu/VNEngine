@@ -34,7 +34,7 @@ namespace VNEngine {
 
 	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
 		: m_pWindow(nullptr), m_pRenderer(nullptr), m_TextureManager(nullptr),
-		m_DrawId(0), m_BackGroundColor({ 200, 100, 100, 255 })
+		m_DrawId(0), m_Background({})
 	{
 
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -62,6 +62,14 @@ namespace VNEngine {
 		m_TextureManager = new TextureManager(m_pRenderer);
 		m_Queue.clear();
 
+		m_Background = {
+			{0,0,0,255},
+			nullptr,
+			"",
+			false,
+			Stretching::FULLSCREENED
+		};
+
 		VN_LOGS_INFO("Window creation succes");
 	}
 
@@ -76,8 +84,8 @@ namespace VNEngine {
 	}
 
 	void Artist::Perform() {
-		SDL_SetRenderDrawColor(m_pRenderer, m_BackGroundColor.r,
-			m_BackGroundColor.g, m_BackGroundColor.b, m_BackGroundColor.a);
+		SDL_SetRenderDrawColor(m_pRenderer, m_Background.backgroundColor.r,
+			m_Background.backgroundColor.g, m_Background.backgroundColor.b, m_Background.backgroundColor.a);
 		SDL_RenderClear(m_pRenderer);
 		
 		for (const std::pair<uint32_t, DrawnData>& pair : m_Queue) {
@@ -89,12 +97,46 @@ namespace VNEngine {
 		SDL_RenderPresent(m_pRenderer);
 	}
 
-	void Artist::SetBackgroundColor(vec4u8 color) {
-		m_BackGroundColor = color;
+	void Artist::SetBackground(vec4u8 color) {
+		m_Background.backgroundColor = color;
+	}
+
+	void Artist::SetBackground(const std::string& key) {
+		m_Background.ptexture = nullptr;
+		m_Background.ptexture = m_TextureManager->getTexture(key);
+		if (m_Background.ptexture == nullptr) { 
+			VN_LOGS_WARNING("Attemp to make a non added pic a " <<
+				"background '" << key <<"'");
+			return; 
+		}
+		m_Background.textureKey = key;
+	}
+
+	void Artist::SetStretchingState(Stretching state) {
+		m_Background.stretchState = state;
+	}
+
+	void Artist::SetDrawingPicture(bool picture) {
+		m_Background.pictureOrColor = picture;
 	}
 
 	vec4u8 Artist::GetBackgroundColor() {
-		return m_BackGroundColor;
+		return m_Background.backgroundColor;
+	}
+
+	std::string Artist::GetBackgroundPic()
+	{
+		return m_Background.textureKey;
+	}
+
+	Stretching Artist::GetStretchingState()
+	{
+		return m_Background.stretchState;
+	}
+
+	bool Artist::GetDrawingPictureOrColor()
+	{
+		return m_Background.pictureOrColor;
 	}
 
 	uint32_t Artist::Draw(const std::string& key, int tileNum, Rect destination) {

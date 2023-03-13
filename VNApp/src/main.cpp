@@ -7,7 +7,7 @@ public:
 	Game(VNEngine::AppInfo info) : VNEngine::App(info) { Load(); }
 private:
 	void Load() override {
-		m_Drawer->SetBackgroundColor({255,105,180,255});
+
 	}
 };
 
