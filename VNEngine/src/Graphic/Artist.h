@@ -32,6 +32,8 @@ namespace VNEngine{
 		SDL_Window* m_pWindow;
 		SDL_Renderer* m_pRenderer;
 
+		int WIDTH, HEIGHT;
+
 		TextureManager* m_TextureManager;
 
 		std::unordered_map<uint32_t, DrawnData> m_Queue;
@@ -43,7 +45,9 @@ namespace VNEngine{
 			vec4u8 backgroundColor;
 			Texture* ptexture;
 			std::string textureKey;
-			bool pictureOrColor;	//true if picture
+			bool drawBackPic;
+			bool colorChanged;
+			Rect dest;
 			
 			Stretching stretchState;
 		} m_Background;
@@ -57,7 +61,7 @@ namespace VNEngine{
 		void SetBackground(vec4u8 color = { 0, 0, 0, 255 });
 		void SetBackground(const std::string& key);
 		void SetStretchingState(Stretching state);
-		void SetDrawingPicture(bool picture = true);
+		void SetUsingBackgroundPic(bool picture = true);
 
 		vec4u8		GetBackgroundColor();
 		std::string	GetBackgroundPic();

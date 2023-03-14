@@ -34,7 +34,7 @@ namespace VNEngine {
 
 	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
 		: m_pWindow(nullptr), m_pRenderer(nullptr), m_TextureManager(nullptr),
-		m_DrawId(0), m_Background({})
+		m_DrawId(0), m_Background({}), WIDTH(width), HEIGHT(height)
 	{
 
 		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -49,7 +49,7 @@ namespace VNEngine {
 		m_pWindow = SDL_CreateWindow(
 			title.c_str(),
 			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-			width, height,
+			WIDTH, HEIGHT,
 			flags
 		);
 		if (m_pWindow == nullptr) {
@@ -67,6 +67,8 @@ namespace VNEngine {
 			nullptr,
 			"",
 			false,
+			false,
+			{-1,-1,1,1},
 			Stretching::FULLSCREENED
 		};
 
@@ -84,9 +86,22 @@ namespace VNEngine {
 	}
 
 	void Artist::Perform() {
-		SDL_SetRenderDrawColor(m_pRenderer, m_Background.backgroundColor.r,
-			m_Background.backgroundColor.g, m_Background.backgroundColor.b, m_Background.backgroundColor.a);
+
+		if (m_Background.colorChanged) {
+			if (SDL_SetRenderDrawColor(m_pRenderer, m_Background.backgroundColor.r,
+				m_Background.backgroundColor.g, m_Background.backgroundColor.b,
+				m_Background.backgroundColor.a) == 0) m_Background.colorChanged = false;
+			else {
+				VN_LOGS_WARNING("Error on changing background color");
+			}
+		}
 		SDL_RenderClear(m_pRenderer);
+
+		if (m_Background.drawBackPic) {
+			Rect source = {0,0,m_Background.ptexture->w,m_Background.ptexture->h};
+			SDL_RenderCopy(m_pRenderer, m_Background.ptexture->sdl_texture,
+				&source, &(m_Background.dest));
+		}
 		
 		for (const std::pair<uint32_t, DrawnData>& pair : m_Queue) {
 			auto d = &(pair.second);
@@ -110,14 +125,46 @@ namespace VNEngine {
 			return; 
 		}
 		m_Background.textureKey = key;
+		m_Background.drawBackPic = true;;
+
+		SetStretchingState(GetStretchingState());
 	}
 
 	void Artist::SetStretchingState(Stretching state) {
 		m_Background.stretchState = state;
+		if (m_Background.ptexture != nullptr) {
+			Rect source = { 0,0,m_Background.ptexture->w,m_Background.ptexture->h };
+			switch (m_Background.stretchState) {
+			case CENTERED:
+				m_Background.dest = source;
+				m_Background.dest.x = (WIDTH - m_Background.dest.w) / 2;
+				m_Background.dest.y = (HEIGHT - m_Background.dest.h) / 2;
+				break;
+			case STRETCHED:
+				if (HEIGHT / source.h > WIDTH / source.w) {
+					int imageAspectRation = source.h / source.w;
+					m_Background.dest.h = source.h + ((WIDTH - source.w) * imageAspectRation);
+					m_Background.dest.w = WIDTH;
+					m_Background.dest.x = 0;
+					m_Background.dest.y = (HEIGHT - m_Background.dest.h) / 2;
+				}
+				else {
+					int imageAspectRation = source.h / source.w;
+					m_Background.dest.w = source.w + ((HEIGHT - source.h) * imageAspectRation);
+					m_Background.dest.h = HEIGHT;
+					m_Background.dest.x = (WIDTH - m_Background.dest.w) / 2;
+					m_Background.dest.y = 0;
+				}
+				break;
+			case FULLSCREENED:
+			default:
+				m_Background.dest = { 0,0,WIDTH, HEIGHT };
+			}
+		}
 	}
 
-	void Artist::SetDrawingPicture(bool picture) {
-		m_Background.pictureOrColor = picture;
+	void Artist::SetUsingBackgroundPic(bool picture) {
+		m_Background.drawBackPic = picture;
 	}
 
 	vec4u8 Artist::GetBackgroundColor() {
@@ -136,7 +183,7 @@ namespace VNEngine {
 
 	bool Artist::GetDrawingPictureOrColor()
 	{
-		return m_Background.pictureOrColor;
+		return m_Background.drawBackPic;
 	}
 
 	uint32_t Artist::Draw(const std::string& key, int tileNum, Rect destination) {
