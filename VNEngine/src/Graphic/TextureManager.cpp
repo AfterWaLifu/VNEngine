@@ -10,10 +10,17 @@ namespace VNEngine {
 	TextureManager::TextureManager(SDL_Renderer* renderer)
 		: m_Renderer(renderer)
 	{
+		int flags = IMG_INIT_JPG | IMG_INIT_PNG | IMG_INIT_WEBP | IMG_INIT_TIF;
+		int init = IMG_Init(flags);
+		if ((flags & init) != flags) {
+			VN_LOGS_WARNING("Failed to init required image formats");
+			VN_LOGS_ERROR(IMG_GetError());
+		}
 	}
 
 	TextureManager::~TextureManager()
 	{
+		IMG_Quit();
 		for (auto texture : m_Textures) SDL_DestroyTexture(texture.second->sdl_texture);
 		m_Textures.clear();
 	}
@@ -22,7 +29,8 @@ namespace VNEngine {
 	{
 		SDL_Surface* tempSurface = IMG_Load(path.c_str());
 		if (tempSurface == nullptr) {
-			VN_LOGS_ERROR("Image file not found '" << path << "'");
+			VN_LOGS_WARNING("Image file not found '" << path << "', check error below");
+			VN_LOGS_WARNING(IMG_GetError());
 			return false;
 		}
 		SDL_Texture* tempTexture = SDL_CreateTextureFromSurface(m_Renderer, tempSurface);
@@ -33,7 +41,7 @@ namespace VNEngine {
 			SDL_QueryTexture(tempTexture, nullptr, nullptr, &w, &h);
 
 			if (w == 0 || h == 0) {
-				VN_LOGS_ERROR("Something went wrong on getting width&height of texture");
+				VN_LOGS_WARNING("Something went wrong on getting width&height of texture");
 				SDL_DestroyTexture(tempTexture);
 				return false;
 			}
@@ -41,7 +49,7 @@ namespace VNEngine {
 			m_Textures[key] = new Texture({tempTexture, w, h, rows, collumns});
 			return true;
 		}
-		VN_LOGS_ERROR("Something went wrong on creating texture '" << key << "'");
+		VN_LOGS_WARNING("Something went wrong on creating texture '" << key << "'");
 		return false;
 	}
 
@@ -49,7 +57,7 @@ namespace VNEngine {
 	{
 		if (m_Textures[key]) return m_Textures[key];
 		else {
-			VN_LOGS_ERROR("Attemp to get non-existing texture with key '" << key << "'");
+			VN_LOGS_WARNING("Attemp to get non-existing texture with key '" << key << "'");
 			return nullptr;
 		}
 	}
@@ -59,7 +67,7 @@ namespace VNEngine {
 		SDL_DestroyTexture(m_Textures[key]->sdl_texture);
 		m_Textures.erase(key);
 		if (SDL_GetError()) {
-			VN_LOGS_ERROR("Something went wrong on deleting texture '" << key << "'");
+			VN_LOGS_WARNING("Something went wrong on deleting texture '" << key << "'");
 		}
 		return true;
 	}

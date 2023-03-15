@@ -23,6 +23,7 @@ namespace VNEngine {
 		std::string getMeta();
 
 		static Logger& Instance();
+		static void Terminate();
 
 		template <class type>				//template method for logging like into casual stream
 		Logger& operator<<(type logIt) {
@@ -36,5 +37,7 @@ namespace VNEngine {
 }
 
 #define VN_LOGS_INFO(x)		if (Logger::Instance().getMeta() != "INFO")		Logger::Instance().setMeta("INFO"); Logger::Instance() << x;
-#define VN_LOGS_ERROR(x)	if (Logger::Instance().getMeta() != "ERROR")	Logger::Instance().setMeta("ERROR"); Logger::Instance() << x;
+#define VN_LOGS_ERROR(x)	if (Logger::Instance().getMeta() != "ERROR")\
+							Logger::Instance().setMeta("ERROR"); Logger::Instance() << x;\
+							Logger::Terminate();
 #define VN_LOGS_WARNING(x)	if (Logger::Instance().getMeta() != "WARNING")	Logger::Instance().setMeta("WARNING"); Logger::Instance() << x;

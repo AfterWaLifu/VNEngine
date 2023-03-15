@@ -33,4 +33,9 @@ namespace VNEngine {
 	{
 		return s_pInstance ? *s_pInstance : *(s_pInstance = new Logger("logs.txt"));
 	}
+	void Logger::Terminate()
+	{
+		Logger* logs = &Logger::Instance();
+		logs->logs->close();
+	}
 }

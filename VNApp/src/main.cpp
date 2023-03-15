@@ -7,7 +7,9 @@ public:
 	Game(VNEngine::AppInfo info) : VNEngine::App(info) { Load(); }
 private:
 	void Load() override {
-
+		m_Drawer->AddTexture("back", "back.jpg");
+		m_Drawer->SetBackground("back");
+		m_Drawer->SetStretchingState(VNEngine::STRETCHED);
 	}
 };
 
