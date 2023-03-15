@@ -5,11 +5,10 @@ ______________________________________
 For development vcpkg (with global settings) is used
 All the libs (as posible) is x64 and static
 
-Libs needed (API not included):
+Libs needed:
 *	SDL2
 *	(for Windows it includes ALL the libs used by SDL2, because of static linking)
-*	SDL_image (not yet needed, planed)
-*	ImGui (probably some commits may use it as for debuging/testing features)
+*	SDL_image (including JPG PNG TIF WEBP libs)
 *	OpenAL - audio api
 *	sndfile - small lib to read audio files
 *	*to be added*
