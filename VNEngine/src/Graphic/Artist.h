@@ -75,5 +75,7 @@ namespace VNEngine{
 
 		void AddTexture(const std::string& key, const std::string& path, int rows = 1, int collumns = 1);
 		void DeleteTexture(const std::string& key);
+
+		void WindowResized();
 	};
 }

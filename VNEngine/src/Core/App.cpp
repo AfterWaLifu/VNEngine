@@ -14,6 +14,8 @@ namespace VNEngine {
 
 		m_AudioPlayer = std::make_unique<AudioPlayer>();
 
+		m_InputHandler = std::make_unique<InputHandler>();
+
 		m_IsRunning = true;
 
 		Load();
@@ -38,10 +40,9 @@ namespace VNEngine {
 	}
 
 	void App::HandleEvents() {
-		SDL_Event event;
-		SDL_PollEvent(&event);
-
-		if (event.type == SDL_QUIT) m_IsRunning = false;
+		m_InputHandler->Update();
+		m_IsRunning = m_InputHandler->getIfRunning();
+		if (m_InputHandler->getIfWindowResized()) m_Drawer->WindowResized();
 	}
 
 	void App::Draw() {

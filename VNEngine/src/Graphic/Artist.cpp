@@ -43,8 +43,8 @@ namespace VNEngine {
 		}
 
 		int flags = 0;
-		if (fullscreen) flags = SDL_WINDOW_SHOWN | SDL_WINDOW_FULLSCREEN;
-		else flags = SDL_WINDOW_SHOWN;
+		if (fullscreen) flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN;
+		else flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
 
 		m_pWindow = SDL_CreateWindow(
 			title.c_str(),
@@ -258,5 +258,10 @@ namespace VNEngine {
 		}
 
 		m_DrawId = guess;
+	}
+
+	void Artist::WindowResized() {
+		SDL_GetWindowSize(m_pWindow, &WIDTH, &HEIGHT );
+		SetStretchingState(GetStretchingState());
 	}
 }

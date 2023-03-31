@@ -5,6 +5,7 @@
 #include "Core/Logger.h"
 #include "Graphic/Artist.h"
 #include "Audio/AudioPlayer.h"
+#include "Controls/InputHandler.h"
 
 namespace VNEngine {
 
@@ -19,6 +20,7 @@ namespace VNEngine {
 	protected:
 		std::unique_ptr<Artist> m_Drawer;
 		std::unique_ptr<AudioPlayer> m_AudioPlayer;
+		std::unique_ptr<InputHandler> m_InputHandler;
 
 		virtual void Load();
 

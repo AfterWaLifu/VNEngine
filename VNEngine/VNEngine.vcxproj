@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClInclude Include="src\Audio\AudioList.h" />
     <ClInclude Include="src\Audio\AudioPlayer.h" />
+    <ClInclude Include="src\Controls\InputHandler.h" />
     <ClInclude Include="src\Core\App.h" />
     <ClInclude Include="src\Core\Logger.h" />
     <ClInclude Include="src\Graphic\Artist.h" />
@@ -31,6 +32,7 @@
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioList.cpp" />
     <ClCompile Include="src\Audio\AudioPlayer.cpp" />
+    <ClCompile Include="src\Controls\InputHandler.cpp" />
     <ClCompile Include="src\Core\App.cpp" />
     <ClCompile Include="src\Core\Logger.cpp" />
     <ClCompile Include="src\Graphic\Artist.cpp" />
