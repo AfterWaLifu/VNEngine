@@ -22,6 +22,7 @@
     <ClInclude Include="src\Audio\AudioList.h" />
     <ClInclude Include="src\Audio\AudioPlayer.h" />
     <ClInclude Include="src\Controls\InputHandler.h" />
+    <ClInclude Include="src\Controls\Keys.h" />
     <ClInclude Include="src\Core\App.h" />
     <ClInclude Include="src\Core\Logger.h" />
     <ClInclude Include="src\Graphic\Artist.h" />

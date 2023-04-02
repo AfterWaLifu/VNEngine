@@ -4,6 +4,8 @@
 
 #include <vector>
 
+#include "Keys.h"
+
 namespace VNEngine {
 
 	struct vec2 {
@@ -12,7 +14,7 @@ namespace VNEngine {
 
 	class InputHandler {
 		
-		bool isRunning;
+		bool* m_isRunningPointer;
 		std::vector<bool> m_mouseButtonStates;
 		vec2 mousePos;
 		uint8_t* m_keystates;
@@ -25,7 +27,7 @@ namespace VNEngine {
 		void onWindowEvent(SDL_Event& event);
 
 	public:
-		InputHandler();
+		InputHandler(bool* isRunning);
 		~InputHandler();
 
 		void Update();
@@ -36,7 +38,6 @@ namespace VNEngine {
 			RIGHT = 2
 		};
 
-		bool getIfRunning();
 		bool getMouseButtonState(MouseButtons button);
 		const vec2& getMousePos();
 		bool isKeyDown(SDL_Scancode key);

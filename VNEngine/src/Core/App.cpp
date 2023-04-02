@@ -14,7 +14,7 @@ namespace VNEngine {
 
 		m_AudioPlayer = std::make_unique<AudioPlayer>();
 
-		m_InputHandler = std::make_unique<InputHandler>();
+		m_InputHandler = std::make_unique<InputHandler>(&m_IsRunning);
 
 		m_IsRunning = true;
 
@@ -41,8 +41,6 @@ namespace VNEngine {
 
 	void App::HandleEvents() {
 		m_InputHandler->Update();
-		m_IsRunning = m_InputHandler->getIfRunning();
-		if (m_InputHandler->getIfWindowResized()) m_Drawer->WindowResized();
 	}
 
 	void App::Draw() {

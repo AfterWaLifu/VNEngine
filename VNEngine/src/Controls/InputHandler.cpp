@@ -3,8 +3,8 @@
 
 namespace VNEngine {
 
-	InputHandler::InputHandler()
-		: isRunning(true), m_keystates(nullptr),
+	InputHandler::InputHandler(bool* isRunning)
+		: m_isRunningPointer(isRunning), m_keystates(nullptr),
 		mousePos({0,0}), windowResized(false)
 	{
 		for (int i = 0; i < 3; i++) m_mouseButtonStates.push_back(false);
@@ -19,7 +19,7 @@ namespace VNEngine {
 
 		switch (event.type) {
 		case SDL_QUIT:
-			isRunning = false;
+			*m_isRunningPointer = false;
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			onMouseButtonDown(event);
@@ -38,11 +38,6 @@ namespace VNEngine {
 		default:
 			break;
 		}
-	}
-
-	bool InputHandler::getIfRunning()
-	{
-		return isRunning;
 	}
 
 	bool InputHandler::getMouseButtonState(MouseButtons button)
