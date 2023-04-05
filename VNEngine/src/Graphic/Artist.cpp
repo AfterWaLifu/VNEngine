@@ -37,7 +37,7 @@ namespace VNEngine {
 		m_DrawId(0), m_Background({}), WIDTH(width), HEIGHT(height)
 	{
 
-		if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
 			VN_LOGS_ERROR("SDL initialization error");
 			return;
 		}

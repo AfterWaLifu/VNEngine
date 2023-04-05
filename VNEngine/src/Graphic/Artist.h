@@ -6,6 +6,7 @@
 #include <stdint.h>
 
 #include "Graphic/TextureManager.h"
+#include "Widgets/Vectors.h"
 
 namespace VNEngine{
 
@@ -15,10 +16,6 @@ namespace VNEngine{
 		Texture* texture;
 		Rect source;
 		Rect destination;
-	};
-
-	struct vec4u8 {
-		uint8_t r, g, b, a;
 	};
 
 	enum Stretching : uint8_t {
