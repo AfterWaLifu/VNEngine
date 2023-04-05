@@ -1,6 +1,12 @@
 #pragma once
 
+#include <stdint.h>
+
 namespace VNEngine {
+
+	struct vec2 {
+		int x, y;
+	};
 
 	union vec3 {
 		struct { int x, y, z; };
@@ -8,7 +14,7 @@ namespace VNEngine {
 	};
 
 	union vec4 {
-		struct { int x, y, z, w; };
+		struct { int x, y, w, h; };
 		struct { int r, g, b, a; };
 	};
 

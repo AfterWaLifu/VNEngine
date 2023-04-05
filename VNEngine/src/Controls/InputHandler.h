@@ -5,12 +5,9 @@
 #include <vector>
 
 #include "Keys.h"
+#include "Widgets/Vectors.h"
 
 namespace VNEngine {
-
-	struct vec2 {
-		int x, y;
-	};
 
 	class InputHandler {
 		

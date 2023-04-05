@@ -45,7 +45,13 @@
     <ClInclude Include="src\Controls\Keys.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="src\Widgets\Geometry.h">
+    <ClInclude Include="src\Widgets\Vectors.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Widgets\Widget.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Widgets\Text.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>
@@ -69,6 +75,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\Controls\InputHandler.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Widgets\Text.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,6 +1,8 @@
 #include "App.h"
 #include "vnepch.h"
 
+#include "Widgets/Text.h"
+
 namespace VNEngine {
 
 	App::App(AppInfo& defaultAppInfo)
@@ -9,7 +11,8 @@ namespace VNEngine {
 		m_Drawer = std::make_unique<Artist>(
 			defaultAppInfo.WindowTitle,
 			defaultAppInfo.Width, defaultAppInfo.Height,
-			defaultAppInfo.Fullscreen
+			defaultAppInfo.Fullscreen,
+			&m_Widgets
 		);
 
 		m_AudioPlayer = std::make_unique<AudioPlayer>();
@@ -33,7 +36,7 @@ namespace VNEngine {
 		}
 	}
 
-	void App::Load() {}
+	void App::Load() { }
 
 	void App::Update() {
 		SDL_Delay(20);

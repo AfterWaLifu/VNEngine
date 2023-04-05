@@ -2,6 +2,12 @@
 #include "vnepch.h"
 
 #include "Core/Logger.h"
+#include "Widgets/Widget.h"
+#include "Widgets/Text.h"
+
+#include <typeinfo>
+
+#include <SDL2/SDL_ttf.h>
 
 namespace VNEngine {
 
@@ -32,9 +38,9 @@ namespace VNEngine {
 		return source;
 	}
 
-	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
+	Artist::Artist(const std::string& title, int width, int height, bool fullscreen, std::vector<Widget*>* widgetsPointer)
 		: m_pWindow(nullptr), m_pRenderer(nullptr), m_TextureManager(nullptr),
-		m_DrawId(0), m_Background({}), WIDTH(width), HEIGHT(height)
+		m_DrawId(0), m_Background({}), WIDTH(width), HEIGHT(height), m_WidgetsPointer(widgetsPointer)
 	{
 
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
@@ -57,7 +63,13 @@ namespace VNEngine {
 			return;
 		}
 
+		if (TTF_Init() != 0) {
+			VN_LOGS_ERROR("Fonts can't be initialized");
+			return;
+		}
+
 		m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
+		Widget::TurnOnWidgets(m_pRenderer);
 		
 		m_TextureManager = new TextureManager(m_pRenderer);
 		m_Queue.clear();
@@ -107,6 +119,14 @@ namespace VNEngine {
 			auto d = &(pair.second);
 			SDL_RenderCopy(m_pRenderer, d->texture->sdl_texture,
 				&d->source, &d->destination);
+		}
+
+		for ( Widget* widget: *m_WidgetsPointer) {
+			widget->Draw();
+			//if (!strcmp(typeid(widget).name(), "Text*")) {
+			//	dynamic_cast<Text*>(widget);
+			//	widget->Draw();
+			//}
 		}
 
 		SDL_RenderPresent(m_pRenderer);

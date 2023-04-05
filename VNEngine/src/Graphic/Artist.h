@@ -7,6 +7,7 @@
 
 #include "Graphic/TextureManager.h"
 #include "Widgets/Vectors.h"
+#include "Widgets/Widget.h"
 
 namespace VNEngine{
 
@@ -36,6 +37,8 @@ namespace VNEngine{
 		std::unordered_map<uint32_t, DrawnData> m_Queue;
 		uint32_t m_DrawId;
 
+		std::vector<Widget*>* m_WidgetsPointer;
+
 		void FindFirstEmptyId();
 
 		struct {
@@ -50,7 +53,7 @@ namespace VNEngine{
 		} m_Background;
 
 	public:
-		Artist(const std::string& title, int width, int height, bool fullscreen);
+		Artist(const std::string& title, int width, int height, bool fullscreen, std::vector<Widget*>* widgetsPointer);
 		~Artist();
 
 		void Perform();

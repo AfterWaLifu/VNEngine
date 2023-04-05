@@ -10,6 +10,7 @@ private:
 		m_Drawer->AddTexture("back", "back.jpg");
 		m_Drawer->SetBackground("back");
 		m_Drawer->SetStretchingState(VNEngine::STRETCHED);
+		m_Widgets.push_back( (VNEngine::Widget*) new VNEngine::Text({0,0}, L"TEXT"));
 	}
 };
 

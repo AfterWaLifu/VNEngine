@@ -1,11 +1,13 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "Core/Logger.h"
 #include "Graphic/Artist.h"
 #include "Audio/AudioPlayer.h"
 #include "Controls/InputHandler.h"
+#include "Widgets/Widget.h"
 
 namespace VNEngine {
 
@@ -21,6 +23,8 @@ namespace VNEngine {
 		std::unique_ptr<Artist> m_Drawer;
 		std::unique_ptr<AudioPlayer> m_AudioPlayer;
 		std::unique_ptr<InputHandler> m_InputHandler;
+
+		std::vector<Widget*> m_Widgets;
 
 		virtual void Load();
 

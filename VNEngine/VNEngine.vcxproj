@@ -29,7 +29,9 @@
     <ClInclude Include="src\Graphic\TextureManager.h" />
     <ClInclude Include="src\VNEngine.h" />
     <ClInclude Include="src\vnepch.h" />
-    <ClInclude Include="src\Widgets\Geometry.h" />
+    <ClInclude Include="src\Widgets\Text.h" />
+    <ClInclude Include="src\Widgets\Vectors.h" />
+    <ClInclude Include="src\Widgets\Widget.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Audio\AudioList.cpp" />
@@ -39,6 +41,7 @@
     <ClCompile Include="src\Core\Logger.cpp" />
     <ClCompile Include="src\Graphic\Artist.cpp" />
     <ClCompile Include="src\Graphic\TextureManager.cpp" />
+    <ClCompile Include="src\Widgets\Text.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

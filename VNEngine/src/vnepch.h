@@ -5,3 +5,4 @@
 #include <memory>
 #include <map>
 #include <stdint.h>
+#include <typeinfo>
