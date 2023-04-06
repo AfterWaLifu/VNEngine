@@ -74,8 +74,11 @@ namespace VNEngine {
 	void Text::SetFont(FontInfo fontInfo) {
 		m_Font.info = fontInfo;
 		m_Font.font = TTF_OpenFont(m_Font.info.fontName, m_Font.info.fontSize);
-		if (!m_Font.font) VN_LOGS_ERROR("Can't load font '" <<
-			fontInfo.fontName << "', check other errors or fonts files location");
+		if (!m_Font.font) {
+			VN_LOGS_ERROR("Can't load font '" <<
+				fontInfo.fontName << "', check other errors or fonts files location");
+			return;
+		}
 		if (!m_Text.empty()) SetText(m_Text);
 	}
 
