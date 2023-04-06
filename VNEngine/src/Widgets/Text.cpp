@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL_ttf.h>
 
+#include "Core/Logger.h"
+
 namespace VNEngine {
 
 	Text::Text(vec2 coords, const wchar_t* text, SDL_Color textColor, FontInfo fontInfo)
@@ -14,6 +16,8 @@ namespace VNEngine {
 
 		m_TextTexture = nullptr;
 		m_Font = TTF_OpenFont(fontInfo.fontName, fontInfo.fontSize);
+		if (!m_Font) VN_LOGS_ERROR("Can't load font '" << 
+			fontInfo.fontName <<"', check other errors or fonts files location");
 		m_TextColor = textColor;
 
 		if (text && text[0] != '\0') {
@@ -40,7 +44,16 @@ namespace VNEngine {
 			m_Font, reinterpret_cast<Uint16 const*>(text), 
 			m_TextColor);
 
+		if (!textSurface) {
+			VN_LOGS_WARNING("Can't create text label '" << text << "'");
+			return;
+		}
+
 		m_TextTexture = SDL_CreateTextureFromSurface(Widget::sRenderer, textSurface);
+		if (!m_TextTexture) {
+			VN_LOGS_WARNING("Can't create text texture '" << text << "'");
+			return;
+		}
 
 		m_Geometry.w = textSurface->w;
 		m_Geometry.h = textSurface->h;

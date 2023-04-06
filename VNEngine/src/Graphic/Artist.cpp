@@ -5,8 +5,6 @@
 #include "Widgets/Widget.h"
 #include "Widgets/Text.h"
 
-#include <typeinfo>
-
 #include <SDL2/SDL_ttf.h>
 
 namespace VNEngine {
@@ -69,6 +67,9 @@ namespace VNEngine {
 		}
 
 		m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, 0);
+		if (!m_pRenderer) {
+			VN_LOGS_ERROR("WHO HAVE BROKEN MY RENDERER!?");
+		}
 		Widget::TurnOnWidgets(m_pRenderer);
 		
 		m_TextureManager = new TextureManager(m_pRenderer);
