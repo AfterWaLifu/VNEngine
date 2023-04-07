@@ -71,4 +71,22 @@ namespace VNEngine {
 		}
 		return true;
 	}
+	
+	void TextureManager::TextureManagerInit(SDL_Renderer* renderer) {
+		if (renderer == nullptr) return;
+		s_pInstance ? 0 : s_pInstance = new TextureManager(renderer);
+	}
+
+	void TextureManager::TextureManagerTerminate() {
+		delete s_pInstance;
+	}
+
+	TextureManager& TextureManager::Instance() {
+		if (s_pInstance) return *s_pInstance;
+		else {
+			VN_LOGS_ERROR("Attemp to use Texture Manager before initialization, please init it correctly");
+			TextureManagerInit(nullptr);
+		}
+		return *s_pInstance;
+	}
 }

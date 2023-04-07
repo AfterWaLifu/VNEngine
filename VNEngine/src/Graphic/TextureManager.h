@@ -18,12 +18,20 @@ namespace VNEngine {
 		std::unordered_map<std::string, Texture*> m_Textures;
 		SDL_Renderer* m_Renderer;
 
-	public:
 		TextureManager(SDL_Renderer* renderer);
 		~TextureManager();
+
+		static inline TextureManager* s_pInstance;
+	public:
 
 		bool addTexture(const std::string& key, const std::string& path, int rows, int collumns);
 		Texture* getTexture(const std::string& key);
 		bool delTexture(const std::string& key);
+
+		static void TextureManagerInit(SDL_Renderer* renderer);
+		static void TextureManagerTerminate();
+		static TextureManager& Instance();
 	};
+
+#define TM_INSTANCE TextureManager::Instance()
 }

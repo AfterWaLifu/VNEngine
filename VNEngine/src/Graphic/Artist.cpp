@@ -37,8 +37,8 @@ namespace VNEngine {
 	}
 
 	Artist::Artist(const std::string& title, int width, int height, bool fullscreen, std::vector<Widget*>* widgetsPointer)
-		: m_pWindow(nullptr), m_pRenderer(nullptr), m_TextureManager(nullptr),
-		m_DrawId(0), m_Background({}), WIDTH(width), HEIGHT(height), m_WidgetsPointer(widgetsPointer)
+		: m_pWindow(nullptr), m_pRenderer(nullptr), m_DrawId(0), m_Background({}),
+		WIDTH(width), HEIGHT(height), m_WidgetsPointer(widgetsPointer)
 	{
 
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
@@ -72,7 +72,7 @@ namespace VNEngine {
 		}
 		Widget::TurnOnWidgets(m_pRenderer);
 		
-		m_TextureManager = new TextureManager(m_pRenderer);
+		TextureManager::TextureManagerInit(m_pRenderer);
 		m_Queue.clear();
 
 		m_Background = {
@@ -90,7 +90,7 @@ namespace VNEngine {
 
 	Artist::~Artist() {
 		m_Queue.clear();
-		delete m_TextureManager;
+		TextureManager::TextureManagerTerminate();
 		SDL_DestroyRenderer(m_pRenderer);
 		SDL_DestroyWindow(m_pWindow);
 		SDL_Quit();
@@ -130,7 +130,7 @@ namespace VNEngine {
 
 	void Artist::SetBackground(const std::string& key) {
 		m_Background.ptexture = nullptr;
-		m_Background.ptexture = m_TextureManager->getTexture(key);
+		m_Background.ptexture = TM_INSTANCE.getTexture(key);
 		if (m_Background.ptexture == nullptr) { 
 			VN_LOGS_WARNING("Attemp to make a non added pic a " <<
 				"background '" << key <<"'");
@@ -201,7 +201,7 @@ namespace VNEngine {
 	uint32_t Artist::Draw(const std::string& key, int tileNum, Rect destination) {
 		FindFirstEmptyId();
 
-		Texture* tempTexture = m_TextureManager->getTexture(key);
+		Texture* tempTexture = TM_INSTANCE.getTexture(key);
 		if (tempTexture == nullptr) return UINT32_MAX;
 		Rect tempSourceRect = GetTileRect(tempTexture, tileNum, key);
 		m_Queue[m_DrawId] = {tempTexture, tempSourceRect, destination};
@@ -211,7 +211,7 @@ namespace VNEngine {
 	uint32_t Artist::Draw(const std::string& key, int row, int collumn, Rect destination) {
 		FindFirstEmptyId();
 
-		Texture* tempTexture = m_TextureManager->getTexture(key);
+		Texture* tempTexture = TM_INSTANCE.getTexture(key);
 		if (tempTexture == nullptr) return UINT32_MAX;
 		Rect tempSourceRect = GetTileRect(tempTexture, row, collumn, key);
 		m_Queue[m_DrawId] = { tempTexture, tempSourceRect, destination };
@@ -221,7 +221,7 @@ namespace VNEngine {
 
 	void Artist::StopDrawing(const std::string& key) {
 		int counter = 0;
-		Texture* goalTexture = m_TextureManager->getTexture(key);
+		Texture* goalTexture = TM_INSTANCE.getTexture(key);
 		if (goalTexture == nullptr) return;
 
 		for (const std::pair<uint32_t, DrawnData>& pair : m_Queue) {
@@ -251,11 +251,11 @@ namespace VNEngine {
 	}
 
 	void Artist::AddTexture(const std::string& key, const std::string& path, int rows, int collumns) {
-		m_TextureManager->addTexture(key, path, rows, collumns);
+		TM_INSTANCE.addTexture(key, path, rows, collumns);
 	}
 
 	void Artist::DeleteTexture(const std::string& key) {
-		m_TextureManager->delTexture(key);
+		TM_INSTANCE.delTexture(key);
 	}
 
 	void Artist::FindFirstEmptyId() {

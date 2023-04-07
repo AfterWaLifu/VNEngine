@@ -32,8 +32,6 @@ namespace VNEngine{
 
 		int WIDTH, HEIGHT;
 
-		TextureManager* m_TextureManager;
-
 		std::unordered_map<uint32_t, DrawnData> m_Queue;
 		uint32_t m_DrawId;
 
