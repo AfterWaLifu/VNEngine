@@ -160,14 +160,16 @@ namespace VNEngine {
 	void Text::Draw() {
 		if (!m_IsShown) return;
 
-		if (m_Image) {
-			SDL_RenderCopy(Widget::sRenderer, m_Image->sdl_texture,
-				nullptr, (SDL_Rect*)&m_Geometry);
-		}
-		else if (m_BackgroundTurned && m_BackgroundColor.a != 0) {
-			SDL_SetRenderDrawColor(Widget::sRenderer, m_BackgroundColor.r,
-				m_BackgroundColor.g, m_BackgroundColor.b, m_BackgroundColor.a);
-			SDL_RenderFillRect(Widget::sRenderer, (SDL_Rect*)&m_Geometry);
+		if (m_BackgroundTurned) {
+			if (m_Image) {
+				SDL_RenderCopy(Widget::sRenderer, m_Image->sdl_texture,
+					nullptr, (SDL_Rect*)&m_Geometry);
+			}
+			else if (m_BackgroundColor.a != 0) {
+				SDL_SetRenderDrawColor(Widget::sRenderer, m_BackgroundColor.r,
+					m_BackgroundColor.g, m_BackgroundColor.b, m_BackgroundColor.a);
+				SDL_RenderFillRect(Widget::sRenderer, (SDL_Rect*)&m_Geometry);
+			}
 		}
 
 		SDL_RenderCopy(Widget::sRenderer, m_TextTexture,

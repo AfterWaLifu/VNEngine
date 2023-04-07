@@ -26,6 +26,7 @@ namespace VNEngine {
 		vec4u8 m_BackgroundColor;
 		Alignment m_Alignment;
 		bool m_IsShown;
+		bool m_BackgroundTurned;
 
 		Widget() 
 			: m_Geometry({}), m_Image(nullptr), m_BackgroundColor({}),

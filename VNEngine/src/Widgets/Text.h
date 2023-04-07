@@ -28,8 +28,6 @@ namespace VNEngine {
 		vec4u8 m_TextColor;
 		std::wstring m_Text;
 
-		bool m_BackgroundTurned;
-
 		void freeTexture();
 
 	public:
