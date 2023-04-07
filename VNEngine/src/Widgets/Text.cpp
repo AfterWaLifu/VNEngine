@@ -21,7 +21,6 @@ namespace VNEngine {
 		m_TextDestination = { 0,0,0,0 };
 		SetFont(fontInfo);
 		m_TextColor = textColor;
-		m_BackgroundTurned = true;
 
 		if (!text.empty()) {
 			SetText(text);

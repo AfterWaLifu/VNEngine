@@ -30,7 +30,7 @@ namespace VNEngine {
 
 		Widget() 
 			: m_Geometry({}), m_Image(nullptr), m_BackgroundColor({}),
-			  m_Alignment((Alignment)2), m_IsShown(true) {}
+			  m_Alignment((Alignment)2), m_IsShown(true), m_BackgroundTurned(true) {}
 		virtual ~Widget() = default;
 
 	public:
@@ -39,5 +39,7 @@ namespace VNEngine {
 		}
 
 		virtual void Draw() = 0;
+
+		void SetGeometry(vec4 geometry) { m_Geometry = geometry; }
 	};
 }
