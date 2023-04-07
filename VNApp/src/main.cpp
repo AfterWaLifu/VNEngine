@@ -8,14 +8,14 @@ public:
 private:
 	void Load() override {
 		m_Drawer->AddTexture("back", "back.jpg");
-		m_Drawer->AddTexture("m", "masyunya.png");
 		m_Drawer->SetBackground("back");
 		m_Drawer->SetStretchingState(VNEngine::STRETCHED);
-		VNEngine::Text* t1 = new VNEngine::Text({ 100,100,100,100 },
-			L"HI", { 255,0,0,255 }, { "Roboto.ttf", 36 });
-		t1->SetAlign(VNEngine::ALIGN_CENTER);
-		t1->SetBackImage("m");
-		m_Widgets.push_back(t1);
+
+		VNEngine::Button* b1 = new VNEngine::Button({ 100,100,100,100 },
+			[]() {exit(0); });
+		b1->SetText(L"EXIT BUTTON");
+		b1->SetFont({"Roboco.ttf", 36});
+		m_Widgets.push_back(b1);
 	}
 };
 

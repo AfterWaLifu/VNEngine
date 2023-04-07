@@ -2,6 +2,7 @@
 #include "vnepch.h"
 
 #include "Widgets/Text.h"
+#include "Widgets/Button.h"
 
 namespace VNEngine {
 
@@ -44,6 +45,15 @@ namespace VNEngine {
 
 	void App::HandleEvents() {
 		m_InputHandler->Update();
+
+		if (m_InputHandler->getMouseButtonState(InputHandler::MouseButtons::LEFT)) {
+			for (auto w : m_Widgets) {
+				if (strcmp(typeid(*w).name(), "Button")) {
+					auto b = dynamic_cast<Button*>(w);
+					b->Check(m_InputHandler->getMousePos());
+				}
+			}
+		}
 	}
 
 	void App::Draw() {

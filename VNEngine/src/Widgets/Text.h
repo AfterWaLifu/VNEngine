@@ -33,7 +33,7 @@ namespace VNEngine {
 	public:
 		Text(vec4 geometry, std::wstring text = L"", vec4u8 textColor = {0,0,0,255},
 			FontInfo fontInfo = { "Roboto.ttf", 16 });
-		~Text();
+		virtual ~Text();
 
 		void SetText(std::wstring text);
 		std::wstring GetText();

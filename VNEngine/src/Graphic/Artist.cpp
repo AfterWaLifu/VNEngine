@@ -75,6 +75,8 @@ namespace VNEngine {
 		TextureManager::TextureManagerInit(m_pRenderer);
 		m_Queue.clear();
 
+		SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_BLEND);
+
 		m_Background = {
 			{0,0,0,255},
 			nullptr,

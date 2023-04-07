@@ -9,3 +9,4 @@
 #include <typeinfo>
 #include <locale>
 #include <codecvt>
+#include <functional>
