@@ -14,6 +14,7 @@ namespace VNEngine {
 	{
 		m_Geometry = geometry;
 		m_BackgroundColor = { 0,0,0,0 };
+		m_Image = nullptr;
 
 		m_TextTexture = nullptr;
 		m_TextNativeGeometry = {0,0,0,0};
@@ -152,17 +153,25 @@ namespace VNEngine {
 		return m_Alignment;
 	}
 
+	void Text::SetBackImage(std::string key) {
+		m_Image = TM_INSTANCE.getTexture(key);
+	}
+
 	void Text::Draw() {
-		if (m_IsShown && m_BackgroundTurned) {
-			if (m_BackgroundColor.a != 0) {
-				SDL_SetRenderDrawColor(Widget::sRenderer, m_BackgroundColor.r,
-								m_BackgroundColor.g, m_BackgroundColor.b, m_BackgroundColor.a);
-				SDL_RenderFillRect(Widget::sRenderer, (SDL_Rect*)&m_Geometry);
-			}
-			
-			SDL_RenderCopy(Widget::sRenderer, m_TextTexture,
-				(SDL_Rect*)&m_TextNativeGeometry, (SDL_Rect*)&m_TextDestination);
+		if (!m_IsShown) return;
+
+		if (m_Image) {
+			SDL_RenderCopy(Widget::sRenderer, m_Image->sdl_texture,
+				nullptr, (SDL_Rect*)&m_Geometry);
 		}
+		else if (m_BackgroundTurned && m_BackgroundColor.a != 0) {
+			SDL_SetRenderDrawColor(Widget::sRenderer, m_BackgroundColor.r,
+				m_BackgroundColor.g, m_BackgroundColor.b, m_BackgroundColor.a);
+			SDL_RenderFillRect(Widget::sRenderer, (SDL_Rect*)&m_Geometry);
+		}
+
+		SDL_RenderCopy(Widget::sRenderer, m_TextTexture,
+			(SDL_Rect*)&m_TextNativeGeometry, (SDL_Rect*)&m_TextDestination);
 	}
 
 }

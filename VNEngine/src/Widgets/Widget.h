@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "Widgets/Vectors.h"
+#include "Graphic/TextureManager.h"
 
 #include <SDL2/SDL.h>
 
@@ -21,7 +22,7 @@ namespace VNEngine {
 		inline static SDL_Renderer* sRenderer;
 
 		vec4 m_Geometry;
-		SDL_Texture* m_Image;
+		Texture* m_Image;
 		vec4u8 m_BackgroundColor;
 		Alignment m_Alignment;
 		bool m_IsShown;

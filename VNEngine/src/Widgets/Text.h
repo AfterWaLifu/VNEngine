@@ -52,7 +52,7 @@ namespace VNEngine {
 		vec4u8 GetBackgroundColor();
 		void SetAlign(Alignment alignment);
 		Alignment GetAlign();
-		void SetBackImage();
+		void SetBackImage(std::string key);
 
 		void Draw() override;
 	};
