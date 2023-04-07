@@ -100,14 +100,9 @@ namespace VNEngine {
 
 	void Artist::Perform() {
 
-		if (m_Background.colorChanged) {
-			if (SDL_SetRenderDrawColor(m_pRenderer, m_Background.backgroundColor.r,
-				m_Background.backgroundColor.g, m_Background.backgroundColor.b,
-				m_Background.backgroundColor.a) == 0) m_Background.colorChanged = false;
-			else {
-				VN_LOGS_WARNING("Error on changing background color");
-			}
-		}
+		SDL_SetRenderDrawColor(m_pRenderer, m_Background.backgroundColor.r,
+			m_Background.backgroundColor.g, m_Background.backgroundColor.b,
+			m_Background.backgroundColor.a);
 		SDL_RenderClear(m_pRenderer);
 
 		if (m_Background.drawBackPic) {
@@ -124,10 +119,6 @@ namespace VNEngine {
 
 		for ( Widget* widget: *m_WidgetsPointer) {
 			widget->Draw();
-			//if (!strcmp(typeid(widget).name(), "Text*")) {
-			//	dynamic_cast<Text*>(widget);
-			//	widget->Draw();
-			//}
 		}
 
 		SDL_RenderPresent(m_pRenderer);

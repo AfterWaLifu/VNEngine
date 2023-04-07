@@ -22,13 +22,13 @@ namespace VNEngine {
 
 		vec4 m_Geometry;
 		SDL_Texture* m_Image;
-		vec4 m_BackgroundColor;
+		vec4u8 m_BackgroundColor;
 		Alignment m_Alignment;
 		bool m_IsShown;
 
 		Widget() 
 			: m_Geometry({}), m_Image(nullptr), m_BackgroundColor({}),
-			  m_Alignment((Alignment)0), m_IsShown(true) {}
+			  m_Alignment((Alignment)2), m_IsShown(true) {}
 		virtual ~Widget() = default;
 
 	public:

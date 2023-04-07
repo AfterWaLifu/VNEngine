@@ -7,12 +7,12 @@
 
 #include <string>
 
-struct FontInfo {
-	const char* fontName;
-	int fontSize;
-};
-
 namespace VNEngine {
+
+	struct FontInfo {
+		const char* fontName;
+		int fontSize;
+	};
 
 	class Text : public Widget {
 
@@ -21,14 +21,19 @@ namespace VNEngine {
 			FontInfo info;
 			TTF_Font* font;
 		} m_Font;
+		
+		vec4 m_TextNativeGeometry;
+		vec4 m_TextDestination;
 
 		vec4u8 m_TextColor;
 		std::wstring m_Text;
 
+		bool m_BackgroundTurned;
+
 		void freeTexture();
 
 	public:
-		Text(vec2 coords, std::wstring text = L"", vec4u8 textColor = {0,0,0,255},
+		Text(vec4 geometry, std::wstring text = L"", vec4u8 textColor = {0,0,0,255},
 			FontInfo fontInfo = { "Roboto.ttf", 16 });
 		~Text();
 
@@ -41,6 +46,13 @@ namespace VNEngine {
 		bool IsItShown();
 		void SetTextColor(vec4u8 color);
 		vec4u8 GetTextColor();
+		void TurnOnBack();
+		void TurnOffBack();
+		void SetBackgroundColor(vec4u8 color);
+		vec4u8 GetBackgroundColor();
+		void SetAlign(Alignment alignment);
+		Alignment GetAlign();
+		void SetBackImage();
 
 		void Draw() override;
 	};

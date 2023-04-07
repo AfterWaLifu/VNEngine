@@ -9,15 +9,18 @@
 
 namespace VNEngine {
 
-	Text::Text(vec2 coords, std::wstring text, vec4u8 textColor, FontInfo fontInfo)
+	Text::Text(vec4 geometry, std::wstring text, vec4u8 textColor, FontInfo fontInfo)
 		: Widget()
 	{
-		m_Geometry = {coords.x,coords.y,0,0};
+		m_Geometry = geometry;
 		m_BackgroundColor = { 0,0,0,0 };
 
 		m_TextTexture = nullptr;
+		m_TextNativeGeometry = {0,0,0,0};
+		m_TextDestination = { 0,0,0,0 };
 		SetFont(fontInfo);
 		m_TextColor = textColor;
+		m_BackgroundTurned = true;
 
 		if (!text.empty()) {
 			SetText(text);
@@ -61,8 +64,9 @@ namespace VNEngine {
 			return;
 		}
 
-		m_Geometry.w = textSurface->w;
-		m_Geometry.h = textSurface->h;
+		m_TextNativeGeometry = {0,0, textSurface->w, textSurface->h};
+
+		SetAlign(m_Alignment);
 
 		SDL_FreeSurface(textSurface);
 	}
@@ -107,10 +111,57 @@ namespace VNEngine {
 		return m_TextColor;
 	}
 
+	void Text::TurnOnBack() {
+		m_BackgroundTurned = true;
+	}
+
+	void Text::TurnOffBack() {
+		m_BackgroundTurned = false;
+	}
+
+	void Text::SetBackgroundColor(vec4u8 color) {
+		m_BackgroundColor = color;
+	}
+
+	vec4u8 Text::GetBackgroundColor() {
+		return m_BackgroundColor;
+	}
+
+	void Text::SetAlign(Alignment alignment) {
+
+		m_Alignment = alignment;
+
+		m_TextDestination.y = m_Geometry.y + (m_Geometry.h - m_TextNativeGeometry.h+4) / 2;
+		m_TextDestination.w = m_Geometry.w >= m_TextNativeGeometry.w ? m_TextNativeGeometry.w : m_Geometry.w;
+		m_TextDestination.h = m_Geometry.h >= m_TextNativeGeometry.h ? m_TextNativeGeometry.h : m_Geometry.h;
+
+		switch (m_Alignment) {
+		case ALIGN_LEFT:
+			m_TextDestination.x = m_Geometry.x;
+			break;
+		case ALIGN_RIGHT:
+			m_TextDestination.x = m_Geometry.x + m_Geometry.w-m_TextNativeGeometry.w;
+			break;
+		case ALIGN_CENTER:
+			m_TextDestination.x = m_Geometry.x + (m_Geometry.w - m_TextNativeGeometry.w) / 2;
+			break;
+		}
+	}
+
+	Alignment Text::GetAlign() {
+		return m_Alignment;
+	}
+
 	void Text::Draw() {
-		if (m_IsShown) {
+		if (m_IsShown && m_BackgroundTurned) {
+			if (m_BackgroundColor.a != 0) {
+				SDL_SetRenderDrawColor(Widget::sRenderer, m_BackgroundColor.r,
+								m_BackgroundColor.g, m_BackgroundColor.b, m_BackgroundColor.a);
+				SDL_RenderFillRect(Widget::sRenderer, (SDL_Rect*)&m_Geometry);
+			}
+			
 			SDL_RenderCopy(Widget::sRenderer, m_TextTexture,
-						nullptr, (SDL_Rect*)&m_Geometry);
+				(SDL_Rect*)&m_TextNativeGeometry, (SDL_Rect*)&m_TextDestination);
 		}
 	}
 
