@@ -35,15 +35,16 @@ namespace VNEngine {
 		if (m_TextTexture) {
 			SDL_DestroyTexture(m_TextTexture);
 			m_TextTexture = nullptr;
-			m_Geometry = {};
 		}
 	}
 
 	void Text::SetText(std::wstring text) {
 		freeTexture();
 
-		m_Text.clear();
-		m_Text = text;
+		if (text != m_Text) {
+			m_Text = L"";
+			m_Text = text;
+		}
 
 		SDL_Surface* textSurface = TTF_RenderUNICODE_Blended(
 			m_Font.font, reinterpret_cast<Uint16 const*>(m_Text.c_str()),
@@ -90,6 +91,15 @@ namespace VNEngine {
 		return m_Font.info;
 	}
 
+	void Text::SetFontSize(int size) {
+		m_Font.info.fontSize = size;
+		SetFont(m_Font.info);
+	}
+
+	int Text::GetFontSize() {
+		return m_Font.info.fontSize;
+	}
+
 	void Text::Show() {
 		m_IsShown = true;
 	}
@@ -105,6 +115,7 @@ namespace VNEngine {
 
 	void Text::SetTextColor(vec4u8 color) {
 		m_TextColor = color;
+		SetText(m_Text);
 	}
 
 	vec4u8 Text::GetTextColor() {
@@ -154,6 +165,17 @@ namespace VNEngine {
 
 	void Text::SetBackImage(std::string key) {
 		m_Image = TM_INSTANCE.getTexture(key);
+	}
+
+	void Text::SetGeometry(vec4 geometry)
+	{
+		m_Geometry = geometry;
+		SetAlign(m_Alignment);
+	}
+
+	vec4 Text::GetGeometry()
+	{
+		return m_Geometry;
 	}
 
 	void Text::Draw() {

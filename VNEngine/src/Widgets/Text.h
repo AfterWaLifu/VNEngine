@@ -39,6 +39,8 @@ namespace VNEngine {
 		std::wstring GetText();
 		void SetFont(FontInfo fontInfo);
 		FontInfo GetFont();
+		void SetFontSize(int size);
+		int GetFontSize();
 		void Show();
 		void Hide();
 		bool IsItShown();
@@ -51,6 +53,8 @@ namespace VNEngine {
 		void SetAlign(Alignment alignment);
 		Alignment GetAlign();
 		void SetBackImage(std::string key);
+		void SetGeometry(vec4 geometry) override;
+		vec4 GetGeometry();
 
 		void Draw() override;
 	};

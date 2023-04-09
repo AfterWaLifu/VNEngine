@@ -40,6 +40,6 @@ namespace VNEngine {
 
 		virtual void Draw() = 0;
 
-		void SetGeometry(vec4 geometry) { m_Geometry = geometry; }
+		virtual void SetGeometry(vec4 geometry) = 0;
 	};
 }

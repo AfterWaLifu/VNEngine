@@ -14,7 +14,9 @@ private:
 		VNEngine::Button* b1 = new VNEngine::Button({ 100,100,100,100 },
 			[]() {exit(0); });
 		b1->SetText(L"EXIT BUTTON");
-		b1->SetFont({"Roboco.ttf", 36});
+		b1->SetFontSize(36);
+		b1->SetGeometry({ 300,100,400,50 });
+		b1->SetTextColor({255,0,0,255});
 		m_Widgets.push_back(b1);
 	}
 };
