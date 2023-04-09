@@ -19,6 +19,8 @@ namespace VNEngine {
 		m_TextTexture = nullptr;
 		m_TextNativeGeometry = {0,0,0,0};
 		m_TextDestination = { 0,0,0,0 };
+		m_IndentHorizontal = 3;
+		m_IndentVertical = 3;
 		SetFont(fontInfo);
 		m_TextColor = textColor;
 
@@ -149,23 +151,42 @@ namespace VNEngine {
 		m_TextDestination.h = m_Geometry.h >= m_TextNativeGeometry.h ? m_TextNativeGeometry.h : m_Geometry.h;
 
 		if (m_Alignment & ALIGN_LEFT )
-			m_TextDestination.x = m_Geometry.x;
+			m_TextDestination.x = m_Geometry.x + m_IndentHorizontal;
 		else if (m_Alignment & ALIGN_RIGHT)
-			m_TextDestination.x = m_Geometry.x + m_Geometry.w - m_TextNativeGeometry.w;
+			m_TextDestination.x = m_Geometry.x + m_Geometry.w - m_TextNativeGeometry.w -
+				m_IndentHorizontal;
 		else
 			m_TextDestination.x = m_Geometry.x + (m_Geometry.w - m_TextNativeGeometry.w) / 2;
 		if (m_Alignment & ALIGN_UP)
 			m_TextDestination.y = m_Geometry.y -
-			(m_TextNativeGeometry.h - m_Font.info.fontSize);
+			(m_TextNativeGeometry.h - m_Font.info.fontSize) + m_IndentVertical;
 		else if (m_Alignment & ALIGN_DOWN)	
 			m_TextDestination.y = m_Geometry.y + m_Geometry.h - m_TextNativeGeometry.h +
-			(m_TextNativeGeometry.h - m_Font.info.fontSize);
+			(m_TextNativeGeometry.h - m_Font.info.fontSize) - m_IndentVertical;
 		else 
 			m_TextDestination.y = m_Geometry.y + (m_Geometry.h - m_TextNativeGeometry.h) / 2;
 	}
 
 	Alignment Text::GetAlign() {
 		return m_Alignment;
+	}
+
+	void Text::SetVerticalIndent(int indent) {
+		m_IndentVertical = indent;
+		SetAlign(m_Alignment);
+	}
+
+	void Text::SetHorizontalIndent(int indent) {
+		m_IndentHorizontal = indent;
+		SetAlign(m_Alignment);
+	}
+
+	int Text::GetVerticalIndent() {
+		return m_IndentVertical;
+	}
+
+	int Text::GetHorizontalIndent() {
+		return m_IndentHorizontal;
 	}
 
 	void Text::SetBackImage(std::string key) {

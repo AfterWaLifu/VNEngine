@@ -2,6 +2,7 @@ build/
 build-int/
 logs.txt
 *.ini
+*.ttf
 
 # Prerequisites
 *.d

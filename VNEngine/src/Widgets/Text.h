@@ -24,6 +24,7 @@ namespace VNEngine {
 		
 		vec4 m_TextNativeGeometry;
 		vec4 m_TextDestination;
+		int m_IndentVertical, m_IndentHorizontal;
 
 		vec4u8 m_TextColor;
 		std::wstring m_Text;
@@ -52,6 +53,10 @@ namespace VNEngine {
 		vec4u8 GetBackgroundColor();
 		void SetAlign(Alignment alignment);
 		Alignment GetAlign();
+		void SetVerticalIndent(int indent);
+		void SetHorizontalIndent(int indent);
+		int GetVerticalIndent();
+		int GetHorizontalIndent();
 		void SetBackImage(std::string key);
 		void SetGeometry(vec4 geometry) override;
 		vec4 GetGeometry();
