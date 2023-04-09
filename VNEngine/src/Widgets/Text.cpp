@@ -49,9 +49,18 @@ namespace VNEngine {
 			m_Text = text;
 		}
 
-		SDL_Surface* textSurface = TTF_RenderUNICODE_Blended(
-			m_Font.font, reinterpret_cast<Uint16 const*>(m_Text.c_str()),
-			{m_TextColor.r,m_TextColor.g ,m_TextColor.b ,m_TextColor.a });
+		SDL_Surface* textSurface = nullptr;
+		if (m_Wraped) {
+			textSurface = TTF_RenderUNICODE_Blended_Wrapped(
+				m_Font.font, reinterpret_cast<Uint16 const*>(m_Text.c_str()),
+				{ m_TextColor.r,m_TextColor.g ,m_TextColor.b ,m_TextColor.a }, m_WrapWidth);
+		}
+		else {
+			textSurface = TTF_RenderUNICODE_Blended(
+				m_Font.font, reinterpret_cast<Uint16 const*>(m_Text.c_str()),
+				{m_TextColor.r,m_TextColor.g ,m_TextColor.b ,m_TextColor.a });
+		}
+		
 
 		if (!textSurface) {
 			size_t length = m_Text.length();
@@ -133,6 +142,20 @@ namespace VNEngine {
 
 	void Text::TurnOffBack() {
 		m_BackgroundTurned = false;
+	}
+
+	void Text::SetWraped(bool isWraped, int wrapWidth) {
+		m_Wraped = isWraped;
+		m_WrapWidth = wrapWidth;
+		SetText(m_Text);
+	}
+
+	bool Text::GetWraped() {
+		return m_Wraped;
+	}
+
+	int Text::GetWrapWidth() {
+		return m_WrapWidth;
 	}
 
 	void Text::SetBackgroundColor(vec4u8 color) {
