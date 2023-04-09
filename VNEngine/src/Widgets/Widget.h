@@ -10,9 +10,12 @@
 namespace VNEngine {
 
 	enum Alignment : uint8_t {
-		ALIGN_LEFT = 0,
-		ALIGN_RIGHT = 1,
-		ALIGN_CENTER = 2
+		ALIGN_LEFT		= 1 << 0,
+		ALIGN_RIGHT		= 1 << 1,
+		ALIGN_HCENTER	= 1 << 2,
+		ALIGN_VCENTER	= 1 << 3,
+		ALIGN_UP		= 1 << 4,
+		ALIGN_DOWN		= 1 << 5
 	};
 
 	class Widget {
@@ -30,7 +33,7 @@ namespace VNEngine {
 
 		Widget() 
 			: m_Geometry({}), m_Image(nullptr), m_BackgroundColor({}),
-			  m_Alignment((Alignment)2), m_IsShown(true), m_BackgroundTurned(true) {}
+			  m_Alignment((Alignment)(ALIGN_HCENTER | ALIGN_VCENTER)), m_IsShown(true), m_BackgroundTurned(true) {}
 		virtual ~Widget() = default;
 
 	public:

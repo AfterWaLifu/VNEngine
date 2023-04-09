@@ -41,6 +41,7 @@ namespace VNEngine {
 	void Text::SetText(std::wstring text) {
 		freeTexture();
 
+		if (text.empty()) return;
 		if (text != m_Text) {
 			m_Text = L"";
 			m_Text = text;
@@ -51,16 +52,18 @@ namespace VNEngine {
 			{m_TextColor.r,m_TextColor.g ,m_TextColor.b ,m_TextColor.a });
 
 		if (!textSurface) {
-			char* temp = (char*) malloc(m_Text.length());
-			wcstombs_s(nullptr, temp, m_Text.length(), m_Text.c_str(), m_Text.length() * sizeof(wchar_t));
+			size_t length = m_Text.length();
+			char* temp = (char*) malloc(length * 2);
+			wcstombs_s(&length, temp, length*2, m_Text.c_str(), m_Text.size());
 			VN_LOGS_WARNING("Can't create text label '" << temp << "'");
 			return;
 		}
 
 		m_TextTexture = SDL_CreateTextureFromSurface(Widget::sRenderer, textSurface);
 		if (!m_TextTexture) {
+			size_t length = m_Text.length();
 			char* temp = (char*)malloc(m_Text.length());
-			wcstombs_s(nullptr, temp, m_Text.length(), m_Text.c_str(), m_Text.length() * sizeof(wchar_t));
+			wcstombs_s(&length, temp, length * 2, m_Text.c_str(), m_Text.size());
 			VN_LOGS_WARNING("Can't create text texture '" << temp << "'");
 			return;
 		}
@@ -142,21 +145,23 @@ namespace VNEngine {
 
 		m_Alignment = alignment;
 
-		m_TextDestination.y = m_Geometry.y + (m_Geometry.h - m_TextNativeGeometry.h+4) / 2;
 		m_TextDestination.w = m_Geometry.w >= m_TextNativeGeometry.w ? m_TextNativeGeometry.w : m_Geometry.w;
 		m_TextDestination.h = m_Geometry.h >= m_TextNativeGeometry.h ? m_TextNativeGeometry.h : m_Geometry.h;
 
-		switch (m_Alignment) {
-		case ALIGN_LEFT:
+		if (m_Alignment & ALIGN_LEFT )
 			m_TextDestination.x = m_Geometry.x;
-			break;
-		case ALIGN_RIGHT:
-			m_TextDestination.x = m_Geometry.x + m_Geometry.w-m_TextNativeGeometry.w;
-			break;
-		case ALIGN_CENTER:
+		else if (m_Alignment & ALIGN_RIGHT)
+			m_TextDestination.x = m_Geometry.x + m_Geometry.w - m_TextNativeGeometry.w;
+		else
 			m_TextDestination.x = m_Geometry.x + (m_Geometry.w - m_TextNativeGeometry.w) / 2;
-			break;
-		}
+		if (m_Alignment & ALIGN_UP)
+			m_TextDestination.y = m_Geometry.y -
+			(m_TextNativeGeometry.h - m_Font.info.fontSize);
+		else if (m_Alignment & ALIGN_DOWN)	
+			m_TextDestination.y = m_Geometry.y + m_Geometry.h - m_TextNativeGeometry.h +
+			(m_TextNativeGeometry.h - m_Font.info.fontSize);
+		else 
+			m_TextDestination.y = m_Geometry.y + (m_Geometry.h - m_TextNativeGeometry.h) / 2;
 	}
 
 	Alignment Text::GetAlign() {

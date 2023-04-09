@@ -48,7 +48,7 @@ namespace VNEngine {
 
 		if (m_InputHandler->getMouseButtonState(InputHandler::MouseButtons::LEFT)) {
 			for (auto w : m_Widgets) {
-				if (strcmp(typeid(*w).name(), "Button")) {
+				if (!strcmp(typeid(*w).name(), "class VNEngine::Button")) {
 					auto b = dynamic_cast<Button*>(w);
 					b->Check(m_InputHandler->getMousePos());
 				}
