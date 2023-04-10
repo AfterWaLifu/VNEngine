@@ -26,7 +26,6 @@ namespace VNEngine {
 		vec4 m_TextDestination;
 		int m_IndentVertical, m_IndentHorizontal;
 		bool m_Wraped;
-		int m_WrapWidth;
 
 		vec4u8 m_TextColor;
 		std::wstring m_Text;
@@ -51,9 +50,8 @@ namespace VNEngine {
 		vec4u8 GetTextColor();
 		void TurnOnBack();
 		void TurnOffBack();
-		void SetWraped(bool isWraped, int wrapWidth = 0);
+		void SetWraped(bool isWraped);
 		bool GetWraped();
-		int GetWrapWidth();
 		void SetBackgroundColor(vec4u8 color);
 		vec4u8 GetBackgroundColor();
 		void SetAlign(Alignment alignment);

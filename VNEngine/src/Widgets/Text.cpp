@@ -53,7 +53,8 @@ namespace VNEngine {
 		if (m_Wraped) {
 			textSurface = TTF_RenderUNICODE_Blended_Wrapped(
 				m_Font.font, reinterpret_cast<Uint16 const*>(m_Text.c_str()),
-				{ m_TextColor.r,m_TextColor.g ,m_TextColor.b ,m_TextColor.a }, m_WrapWidth);
+				{ m_TextColor.r,m_TextColor.g ,m_TextColor.b ,m_TextColor.a },
+				(m_Geometry.w - ( m_IndentVertical > m_IndentHorizontal ? m_IndentVertical : m_IndentHorizontal ) ) );
 		}
 		else {
 			textSurface = TTF_RenderUNICODE_Blended(
@@ -144,18 +145,13 @@ namespace VNEngine {
 		m_BackgroundTurned = false;
 	}
 
-	void Text::SetWraped(bool isWraped, int wrapWidth) {
+	void Text::SetWraped(bool isWraped) {
 		m_Wraped = isWraped;
-		m_WrapWidth = wrapWidth;
 		SetText(m_Text);
 	}
 
 	bool Text::GetWraped() {
 		return m_Wraped;
-	}
-
-	int Text::GetWrapWidth() {
-		return m_WrapWidth;
 	}
 
 	void Text::SetBackgroundColor(vec4u8 color) {
