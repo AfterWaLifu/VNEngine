@@ -22,7 +22,6 @@ namespace VNEngine {
 	protected:
 		std::unique_ptr<Artist> m_Drawer;
 		std::unique_ptr<AudioPlayer> m_AudioPlayer;
-		std::unique_ptr<InputHandler> m_InputHandler;
 
 		std::vector<Widget*> m_Widgets;
 

@@ -11,6 +11,8 @@ namespace VNEngine {
 
 	class InputHandler {
 		
+		static inline InputHandler* s_pInstance;
+
 		bool* m_isRunningPointer;
 		std::vector<bool> m_mouseButtonStates;
 		vec2 mousePos;
@@ -22,10 +24,12 @@ namespace VNEngine {
 		void onMouseButtonUp(SDL_Event& event);
 		void onMouseButtonDown(SDL_Event& event);
 		void onWindowEvent(SDL_Event& event);
-
-	public:
+		
 		InputHandler(bool* isRunning);
 		~InputHandler();
+	public:
+		static InputHandler& Instance();
+		static void InputHandlerInit(bool* isRunning);
 
 		void Update();
 
@@ -40,4 +44,6 @@ namespace VNEngine {
 		bool isKeyDown(SDL_Scancode key);
 		bool getIfWindowResized();
 	};
+
+#define IH_INSTANCE InputHandler::Instance()
 }

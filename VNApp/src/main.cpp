@@ -8,13 +8,6 @@ public:
 private:
 	void Load() override {
 
-		VNEngine::Button* b1 = new VNEngine::Button({ 100,100,100,100 }, []() {exit(0); });
-		b1->SetFontSize(36);
-		b1->SetText(L"Long text very long");
-		b1->SetTextColor({255,0,0,255});
-		b1->SetGeometry({ 300,100,400,200 });
-		b1->SetWraped(true, 150);
-		m_Widgets.push_back(b1);
 	}
 };
 

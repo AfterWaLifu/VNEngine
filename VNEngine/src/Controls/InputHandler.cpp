@@ -12,6 +12,21 @@ namespace VNEngine {
 	
 	InputHandler::~InputHandler() {
 	}
+
+	InputHandler& InputHandler::Instance()
+	{
+		if (s_pInstance) return *s_pInstance;
+		else {
+			VN_LOGS_ERROR("Attemp to use Texture Manager before initialization, please init it correctly");
+			InputHandler(nullptr);
+		}
+		return *s_pInstance;
+	}
+
+	void InputHandler::InputHandlerInit(bool* isRunning) {
+		if (isRunning == nullptr) return;
+		s_pInstance ? 0 : s_pInstance = new InputHandler(isRunning);
+	}
 	
 	void InputHandler::Update() {
 		SDL_Event event;

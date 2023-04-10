@@ -18,7 +18,7 @@ namespace VNEngine {
 
 		m_AudioPlayer = std::make_unique<AudioPlayer>();
 
-		m_InputHandler = std::make_unique<InputHandler>(&m_IsRunning);
+		InputHandler::InputHandlerInit(&m_IsRunning);
 
 		m_IsRunning = true;
 
@@ -44,16 +44,8 @@ namespace VNEngine {
 	}
 
 	void App::HandleEvents() {
-		m_InputHandler->Update();
+		IH_INSTANCE.Update();
 
-		if (m_InputHandler->getMouseButtonState(InputHandler::MouseButtons::LEFT)) {
-			for (auto w : m_Widgets) {
-				if (!strcmp(typeid(*w).name(), "class VNEngine::Button")) {
-					auto b = dynamic_cast<Button*>(w);
-					b->Check(m_InputHandler->getMousePos());
-				}
-			}
-		}
 	}
 
 	void App::Draw() {
