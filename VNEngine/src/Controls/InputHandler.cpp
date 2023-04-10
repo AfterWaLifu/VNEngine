@@ -5,7 +5,7 @@ namespace VNEngine {
 
 	InputHandler::InputHandler(bool* isRunning)
 		: m_isRunningPointer(isRunning), m_keystates(nullptr),
-		mousePos({0,0}), windowResized(false)
+		mousePos({0,0}), windowResized(false), m_keyHolding(false)
 	{
 		for (int i = 0; i < 3; i++) m_mouseButtonStates.push_back(false);
 	}
@@ -18,7 +18,7 @@ namespace VNEngine {
 		if (s_pInstance) return *s_pInstance;
 		else {
 			VN_LOGS_ERROR("Attemp to use Texture Manager before initialization, please init it correctly");
-			InputHandler(nullptr);
+			InputHandlerInit(nullptr);
 		}
 		return *s_pInstance;
 	}
@@ -48,6 +48,9 @@ namespace VNEngine {
 		case SDL_KEYDOWN:
 			onKeyDown();
 			break;
+		case SDL_KEYUP:
+			onKeyUp();
+			break;
 		case SDL_WINDOWEVENT:
 			onWindowEvent(event);
 		default:
@@ -65,11 +68,25 @@ namespace VNEngine {
 		return mousePos;
 	}
 
-	bool InputHandler::isKeyDown(SDL_Scancode key)
+	bool InputHandler::isKeyDown(std::string key)
 	{
+		using namespace Keys;
+		auto scancode = getScancodeFromKey(key.c_str());
+		if (scancode == SDL_SCANCODE_UNKNOWN) {
+			VN_LOGS_WARNING("Attemp to check non-existing button " << key);
+			return false;
+		}
 		if (m_keystates == nullptr) return false;
+		if (m_keyHolding && (
+			scancode != SDL_SCANCODE_LCTRL &&
+			scancode != SDL_SCANCODE_RCTRL &&
+			scancode != SDL_SCANCODE_LALT  &&
+			scancode != SDL_SCANCODE_RALT  &&
+			scancode != SDL_SCANCODE_LSHIFT&&
+			scancode != SDL_SCANCODE_RSHIFT
+			)) return false;
 
-		return !!(m_keystates[key]);
+		return !!(m_keystates[K[key]]);
 	}
 
 	bool InputHandler::getIfWindowResized() {
@@ -82,6 +99,11 @@ namespace VNEngine {
 
 	void InputHandler::onKeyDown() {
 		m_keystates = (uint8_t*)SDL_GetKeyboardState(0);
+		m_keyHolding = true;
+	}
+
+	void InputHandler::onKeyUp() {
+		m_keyHolding = false;
 	}
 
 	void InputHandler::onMouseMove(SDL_Event& event) {

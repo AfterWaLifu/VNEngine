@@ -17,9 +17,11 @@ namespace VNEngine {
 		std::vector<bool> m_mouseButtonStates;
 		vec2 mousePos;
 		uint8_t* m_keystates;
+		bool m_keyHolding;
 		bool windowResized;
 
 		void onKeyDown();
+		void onKeyUp();
 		void onMouseMove(SDL_Event& event);
 		void onMouseButtonUp(SDL_Event& event);
 		void onMouseButtonDown(SDL_Event& event);
@@ -41,7 +43,7 @@ namespace VNEngine {
 
 		bool getMouseButtonState(MouseButtons button);
 		const vec2& getMousePos();
-		bool isKeyDown(SDL_Scancode key);
+		bool isKeyDown(std::string key);
 		bool getIfWindowResized();
 	};
 

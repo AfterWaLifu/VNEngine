@@ -11,7 +11,7 @@ namespace VNEngine {
 
 	namespace Keys {
 
-		inline std::map<std::string, SDL_Scancode> KEYS = {
+		inline std::map<std::string, SDL_Scancode> K = {
 			{"a", SDL_SCANCODE_A},
 			{"b", SDL_SCANCODE_B},
 			{"c", SDL_SCANCODE_C},
@@ -90,19 +90,19 @@ namespace VNEngine {
 			{"left",		SDL_SCANCODE_LEFT},
 			{"down",		SDL_SCANCODE_DOWN},
 			{"up",			SDL_SCANCODE_UP},
-			{"leftctrl",	SDL_SCANCODE_LCTRL},
-			{"leftshift",	SDL_SCANCODE_LSHIFT},
-			{"leftalt",		SDL_SCANCODE_LALT},
-			{"leftwindows",	SDL_SCANCODE_LGUI},
-			{"rightctrl",	SDL_SCANCODE_RCTRL},
-			{"rightshift",	SDL_SCANCODE_RSHIFT},
-			{"rightalt",	SDL_SCANCODE_RALT},
-			{"rightwindows",SDL_SCANCODE_RGUI}
+			{"lctrl",		SDL_SCANCODE_LCTRL},
+			{"lshift",		SDL_SCANCODE_LSHIFT},
+			{"lalt",		SDL_SCANCODE_LALT},
+			{"lwindows",	SDL_SCANCODE_LGUI},
+			{"rctrl",		SDL_SCANCODE_RCTRL},
+			{"rshift",		SDL_SCANCODE_RSHIFT},
+			{"ralt",		SDL_SCANCODE_RALT},
+			{"rwindows",	SDL_SCANCODE_RGUI}
 		};
 
 		inline SDL_Scancode getScancodeFromKey(const char* key) {
-			auto search = KEYS.find(key);
-			if (search != KEYS.end()) return KEYS[key];
+			auto search = K.find(key);
+			if (search != K.end()) return K[key];
 			else {
 				VN_LOGS_WARNING("Can't find key '" << key << "'");
 				return SDL_SCANCODE_UNKNOWN;
