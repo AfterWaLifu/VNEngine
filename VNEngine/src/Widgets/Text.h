@@ -16,6 +16,7 @@ namespace VNEngine {
 
 	class Text : public Widget {
 
+	protected:
 		SDL_Texture* m_TextTexture;
 		struct {
 			FontInfo info;
@@ -63,6 +64,7 @@ namespace VNEngine {
 		void SetBackImage(std::string key);
 		void SetGeometry(vec4 geometry) override;
 		vec4 GetGeometry();
+		void Move(vec2 coords);
 
 		void Draw() override;
 	};

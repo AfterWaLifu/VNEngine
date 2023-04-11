@@ -223,6 +223,10 @@ namespace VNEngine {
 		return m_Geometry;
 	}
 
+	void Text::Move(vec2 coords) {
+		SetGeometry({coords.x, coords.y, m_Geometry.w, m_Geometry.h});
+	}
+
 	void Text::Draw() {
 		if (!m_IsShown) return;
 

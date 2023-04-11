@@ -19,7 +19,7 @@ namespace VNEngine {
 		virtual ~Button();
 
 		void Bind(std::function<void(void)> onClick);
-		void Check(vec2 mousePos);
+		void Check();
 		void Draw();
 	};
 }
