@@ -46,11 +46,6 @@ namespace VNEngine {
 
 	void App::HandleEvents() {
 		IH_INSTANCE.Update();
-
-		for (auto w : m_Widgets) {
-			TextBox* tb = (TextBox*)w;
-			tb->Check();
-		}
 	}
 
 	void App::Draw() {

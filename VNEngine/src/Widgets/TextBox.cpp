@@ -35,6 +35,9 @@ namespace VNEngine {
 		SetAlign((Alignment)(ALIGN_VCENTER | ALIGN_LEFT));
 		s_ActiveTextBox = this;
 
+		m_LineEnabled = true;
+		m_LineTimer = SDL_GetTicks64();
+
 		IH_INSTANCE.setTextInput(true);
 
 		s_InputString ? 0 : s_InputString = IH_INSTANCE.getTextInput();
