@@ -31,6 +31,7 @@
     <ClInclude Include="src\VNEngine.h" />
     <ClInclude Include="src\vnepch.h" />
     <ClInclude Include="src\Widgets\Text.h" />
+    <ClInclude Include="src\Widgets\TextBox.h" />
     <ClInclude Include="src\Widgets\Vectors.h" />
     <ClInclude Include="src\Widgets\Widget.h" />
   </ItemGroup>
@@ -44,6 +45,7 @@
     <ClCompile Include="src\Graphic\Artist.cpp" />
     <ClCompile Include="src\Graphic\TextureManager.cpp" />
     <ClCompile Include="src\Widgets\Text.cpp" />
+    <ClCompile Include="src\Widgets\TextBox.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

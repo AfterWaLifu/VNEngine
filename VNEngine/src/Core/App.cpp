@@ -3,6 +3,7 @@
 
 #include "Widgets/Text.h"
 #include "Widgets/Button.h"
+#include "Widgets/TextBox.h"
 
 namespace VNEngine {
 
@@ -46,6 +47,10 @@ namespace VNEngine {
 	void App::HandleEvents() {
 		IH_INSTANCE.Update();
 
+		for (auto w : m_Widgets) {
+			TextBox* tb = (TextBox*)w;
+			tb->Check();
+		}
 	}
 
 	void App::Draw() {

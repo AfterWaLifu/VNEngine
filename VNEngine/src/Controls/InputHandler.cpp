@@ -5,7 +5,8 @@ namespace VNEngine {
 
 	InputHandler::InputHandler(bool* isRunning)
 		: m_isRunningPointer(isRunning), m_keystates(nullptr),
-		mousePos({0,0}), windowResized(false), m_keyHolding(false)
+		m_mousePos({0,0}), m_windowResized(false), m_keyHolding(false),
+		m_textInputEnabled(false), m_textInputText("")
 	{
 		for (int i = 0; i < 3; i++) m_mouseButtonStates.push_back(false);
 	}
@@ -46,13 +47,17 @@ namespace VNEngine {
 			onMouseMove(event);
 			break;
 		case SDL_KEYDOWN:
-			onKeyDown();
+			onKeyDown(event);
 			break;
 		case SDL_KEYUP:
 			onKeyUp();
 			break;
 		case SDL_WINDOWEVENT:
 			onWindowEvent(event);
+			break;
+		case SDL_TEXTINPUT:
+			onTextInput(event);
+			break;
 		default:
 			break;
 		}
@@ -65,7 +70,7 @@ namespace VNEngine {
 
 	const vec2& InputHandler::getMousePos()
 	{
-		return mousePos;
+		return m_mousePos;
 	}
 
 	bool InputHandler::isKeyDown(std::string key)
@@ -90,16 +95,37 @@ namespace VNEngine {
 	}
 
 	bool InputHandler::getIfWindowResized() {
-		if (windowResized) {
-			windowResized = false;
+		if (m_windowResized) {
+			m_windowResized = false;
 			return true;
 		}
 		return false;
 	}
 
-	void InputHandler::onKeyDown() {
+	std::string* InputHandler::getTextInput()
+	{
+		return &m_textInputText;
+	}
+
+	void InputHandler::setTextInput(bool state) {
+		m_textInputEnabled = state;
+		m_textInputEnabled ? SDL_StartTextInput() : SDL_StopTextInput();
+	}
+
+	void InputHandler::onKeyDown(SDL_Event& event) {
 		m_keystates = (uint8_t*)SDL_GetKeyboardState(0);
 		m_keyHolding = true;
+
+		if (m_textInputEnabled) {
+			if (event.key.keysym.sym == SDLK_BACKSPACE && m_textInputText.length() > 0)
+			{
+				m_textInputText.pop_back();
+			}
+			else if (event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL)
+			{
+				m_textInputText += SDL_GetClipboardText();
+			}
+		}
 	}
 
 	void InputHandler::onKeyUp() {
@@ -107,8 +133,8 @@ namespace VNEngine {
 	}
 
 	void InputHandler::onMouseMove(SDL_Event& event) {
-		mousePos.x = event.motion.x;
-		mousePos.y = event.motion.y;
+		m_mousePos.x = event.motion.x;
+		m_mousePos.y = event.motion.y;
 	}
 
 	void InputHandler::onMouseButtonUp(SDL_Event& event) {
@@ -125,7 +151,15 @@ namespace VNEngine {
 
 	void InputHandler::onWindowEvent(SDL_Event& event) {
 		if (event.window.event == SDL_WINDOWEVENT_RESIZED) {
-			windowResized = true;
+			m_windowResized = true;
+		}
+	}
+
+	void InputHandler::onTextInput(SDL_Event& event) {
+		if (!(SDL_GetModState() & KMOD_CTRL && (event.text.text[0] == 'v' ||
+			event.text.text[0] == 'V')))
+		{
+			m_textInputText += event.text.text;
 		}
 	}
 
