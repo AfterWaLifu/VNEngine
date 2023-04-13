@@ -14,6 +14,7 @@ private:
 		m_WM.AddWidget("text", t);
 		m_WM.AddWidget("button", b);
 		m_WM.AddWidget("textbox", tb);
+		m_WM.RemoveWidget(WidgetsManager::WIDGET_TEXT, "text");
 	}
 };
 

@@ -18,16 +18,24 @@ namespace VNEngine {
 		std::unordered_map<std::string, std::shared_ptr<TextBox>>	m_AllTextBoxs;
 
 	public:
+		enum WidgetType : uint8_t {
+			WIDGET_TEXT = 0,
+			WIDGET_BUTTON,
+			WIDGET_TEXTBOX
+		};
+
 		WidgetsManager();
 		~WidgetsManager();
 
-		void AddWidget(std::string key, Text* text);
-		void AddWidget(std::string key, Button* button);
-		void AddWidget(std::string key, TextBox* textbox);
+		void AddWidget(const std::string& key, Text* text);
+		void AddWidget(const std::string& key, Button* button);
+		void AddWidget(const std::string& key, TextBox* textbox);
 
-		Text* GetText(std::string key);
-		Button* GetButton(std::string key);
-		TextBox* GetTextBox(std::string key);
+		void RemoveWidget(WidgetType type, const std::string& key);
+
+		Text* GetText(const std::string& key);
+		Button* GetButton(const std::string& key);
+		TextBox* GetTextBox(const std::string& key);
 
 		void Draw();
 		void Handle();

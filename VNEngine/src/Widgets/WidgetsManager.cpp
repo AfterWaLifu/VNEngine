@@ -12,7 +12,7 @@ namespace VNEngine {
 	WidgetsManager::~WidgetsManager() {
 	}
 
-	void WidgetsManager::AddWidget(std::string key, Text* text) {
+	void WidgetsManager::AddWidget(const std::string& key, Text* text) {
 		auto search = m_AllTexts.find(key);
 		if (!m_AllTexts.empty() && search == m_AllTexts.end()) {
 			VN_LOGS_WARNING("Attemp to add Text widget with existing key");
@@ -21,7 +21,7 @@ namespace VNEngine {
 		m_AllTexts[key] = std::shared_ptr<Text>(text);
 	}
 
-	void WidgetsManager::AddWidget(std::string key, Button* button) {
+	void WidgetsManager::AddWidget(const std::string& key, Button* button) {
 		auto search = m_AllButtons.find(key);
 		if (!m_AllButtons.empty() && search == m_AllButtons.end()) {
 			VN_LOGS_WARNING("Attemp to add Button widget with existing key");
@@ -30,7 +30,7 @@ namespace VNEngine {
 		m_AllButtons[key] = std::shared_ptr<Button>(button);
 	}
 
-	void WidgetsManager::AddWidget(std::string key, TextBox* textbox) {
+	void WidgetsManager::AddWidget(const std::string& key, TextBox* textbox) {
 		auto search = m_AllTextBoxs.find(key);
 		if (!m_AllTextBoxs.empty() && search == m_AllTextBoxs.end()) {
 			VN_LOGS_WARNING("Attemp to add TextBox widget with existing key");
@@ -39,7 +39,23 @@ namespace VNEngine {
 		m_AllTextBoxs[key] = std::shared_ptr<TextBox>(textbox);
 	}
 
-	Text* WidgetsManager::GetText(std::string key) {
+	void WidgetsManager::RemoveWidget(WidgetType type, const std::string& key) {
+		switch (type) {
+		case WIDGET_TEXT:
+			m_AllTexts.erase(key);
+			break;
+		case WIDGET_BUTTON:
+			m_AllButtons.erase(key);
+			break;
+		case WIDGET_TEXTBOX:
+			m_AllTextBoxs.erase(key);
+			break;
+		default:
+			break;
+		}
+	}
+
+	Text* WidgetsManager::GetText(const std::string& key) {
 		auto search = m_AllTexts.find(key);
 		if (search == m_AllTexts.end()) {
 			VN_LOGS_WARNING("Attemp to find Text widget with non-existing key");
@@ -48,7 +64,7 @@ namespace VNEngine {
 		return m_AllTexts[key].get();
 	}
 
-	Button* WidgetsManager::GetButton(std::string key) {
+	Button* WidgetsManager::GetButton(const std::string& key) {
 		auto search = m_AllButtons.find(key);
 		if (search == m_AllButtons.end()) {
 			VN_LOGS_WARNING("Attemp to find Button widget with non-existing key");
@@ -57,7 +73,7 @@ namespace VNEngine {
 		return m_AllButtons[key].get();
 	}
 
-	TextBox* WidgetsManager::GetTextBox(std::string key) {
+	TextBox* WidgetsManager::GetTextBox(const std::string& key) {
 		auto search = m_AllTextBoxs.find(key);
 		if (search == m_AllTextBoxs.end()) {
 			VN_LOGS_WARNING("Attemp to find TextBox widget with non-existing key");
