@@ -13,3 +13,4 @@
 #include "Widgets/Text.h"
 #include "Widgets/Button.h"
 #include "Widgets/TextBox.h"
+#include "Widgets/WidgetsManager.h"

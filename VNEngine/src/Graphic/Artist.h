@@ -35,8 +35,6 @@ namespace VNEngine{
 		std::unordered_map<uint32_t, DrawnData> m_Queue;
 		uint32_t m_DrawId;
 
-		std::vector<Widget*>* m_WidgetsPointer;
-
 		void FindFirstEmptyId();
 
 		struct {
@@ -51,10 +49,11 @@ namespace VNEngine{
 		} m_Background;
 
 	public:
-		Artist(const std::string& title, int width, int height, bool fullscreen, std::vector<Widget*>* widgetsPointer);
+		Artist(const std::string& title, int width, int height, bool fullscreen);
 		~Artist();
 
 		void Perform();
+		void DrawAkaFinale();
 
 		void SetBackground(vec4u8 color = { 0, 0, 0, 255 });
 		void SetBackground(const std::string& key);

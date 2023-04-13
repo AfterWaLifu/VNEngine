@@ -7,7 +7,7 @@
 #include "Graphic/Artist.h"
 #include "Audio/AudioPlayer.h"
 #include "Controls/InputHandler.h"
-#include "Widgets/Widget.h"
+#include "Widgets/WidgetsManager.h"
 
 namespace VNEngine {
 
@@ -23,7 +23,7 @@ namespace VNEngine {
 		std::unique_ptr<Artist> m_Drawer;
 		std::unique_ptr<AudioPlayer> m_AudioPlayer;
 
-		std::vector<Widget*> m_Widgets;
+		WidgetsManager m_WM;
 
 		virtual void Load();
 

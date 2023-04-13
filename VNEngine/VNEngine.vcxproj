@@ -34,8 +34,10 @@
     <ClInclude Include="src\Widgets\TextBox.h" />
     <ClInclude Include="src\Widgets\Vectors.h" />
     <ClInclude Include="src\Widgets\Widget.h" />
+    <ClInclude Include="src\Widgets\WidgetsManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Widgets\WidgetsManager.cpp" />
     <ClCompile Include="src\Widgets\Button.cpp" />
     <ClCompile Include="src\Audio\AudioList.cpp" />
     <ClCompile Include="src\Audio\AudioPlayer.cpp" />

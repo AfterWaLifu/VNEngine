@@ -36,9 +36,9 @@ namespace VNEngine {
 		return source;
 	}
 
-	Artist::Artist(const std::string& title, int width, int height, bool fullscreen, std::vector<Widget*>* widgetsPointer)
+	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
 		: m_pWindow(nullptr), m_pRenderer(nullptr), m_DrawId(0), m_Background({}),
-		WIDTH(width), HEIGHT(height), m_WidgetsPointer(widgetsPointer)
+		WIDTH(width), HEIGHT(height)
 	{
 
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
@@ -118,11 +118,9 @@ namespace VNEngine {
 			SDL_RenderCopy(m_pRenderer, d->texture->sdl_texture,
 				&d->source, &d->destination);
 		}
+	}
 
-		for ( Widget* widget: *m_WidgetsPointer) {
-			widget->Draw();
-		}
-
+	void Artist::DrawAkaFinale() {
 		SDL_RenderPresent(m_pRenderer);
 	}
 
