@@ -28,7 +28,8 @@ namespace VNEngine {
 	}
 #endif
 
-	TextBox::TextBox(vec4 geometry, std::wstring text, vec4u8 textColor, FontInfo fontInfo)
+	TextBox::TextBox(vec4 geometry, std::wstring text, uint32_t maxCharNumber,
+		vec4u8 textColor, FontInfo fontInfo)
 		:Text(geometry, text, textColor, fontInfo)
 	{
 		m_BackgroundColor = { 220,220,220,255 };
@@ -37,6 +38,7 @@ namespace VNEngine {
 
 		m_LineEnabled = true;
 		m_LineTimer = SDL_GetTicks64();
+		m_MaxCharNumber = maxCharNumber;
 
 		IH_INSTANCE.setTextInput(true);
 
@@ -62,9 +64,14 @@ namespace VNEngine {
 		}
 		
 		if (this == s_ActiveTextBox &&
-			m_CurrentString != *s_InputString) {
+			m_CurrentString != *s_InputString &&
+			m_Text.length() < m_MaxCharNumber) {
 			m_CurrentString = *s_InputString;
 			s_ActiveTextBox->SetText(cvt(m_CurrentString));
+		}
+
+		if (m_Text.length() >= m_MaxCharNumber) {
+			s_InputString->pop_back();
 		}
 	}
 
