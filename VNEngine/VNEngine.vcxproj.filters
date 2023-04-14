@@ -63,6 +63,12 @@
     <ClInclude Include="src\Widgets\WidgetsManager.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="src\StateMachine\State.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="src\StateMachine\StateMachine.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Logger.cpp">
@@ -96,6 +102,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\Widgets\WidgetsManager.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StateMachine\StateMachine.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
