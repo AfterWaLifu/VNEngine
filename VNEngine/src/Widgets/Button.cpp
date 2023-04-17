@@ -18,6 +18,13 @@ namespace VNEngine {
 			(uint8_t)(m_BackgroundColor.b < 40 ? 255 - m_BackgroundColor.b : m_BackgroundColor.b - 40),
 			255
 		};
+		m_DefaultBorder = m_BorderColor;
+		m_FocusBorder = {
+			(uint8_t)(m_BackgroundColor.r < 80 ? 255 - m_BackgroundColor.r : m_BackgroundColor.r - 80),
+			(uint8_t)(m_BackgroundColor.g < 80 ? 255 - m_BackgroundColor.g : m_BackgroundColor.g - 80),
+			(uint8_t)(m_BackgroundColor.b < 80 ? 255 - m_BackgroundColor.b : m_BackgroundColor.b - 80),
+			255
+		};
 		m_Focused = false;
 	}
 
@@ -35,9 +42,14 @@ namespace VNEngine {
 		if (mousePos.x >= m_Geometry.x &&
 			mousePos.x < m_Geometry.x + m_Geometry.w &&
 			mousePos.y > m_Geometry.y &&
-			mousePos.y < m_Geometry.y + m_Geometry.h)
+			mousePos.y < m_Geometry.y + m_Geometry.h) {
 			m_Focused = true;
-		else m_Focused = false;
+			m_BorderColor = m_FocusBorder;
+		}
+		else { 
+			m_Focused = false;
+			m_BorderColor = m_DefaultBorder;
+		}
 
 		if (m_OnClick == nullptr) return;
 		if (m_Focused && IH_INSTANCE.getMouseButtonState(InputHandler::LEFT))
@@ -46,6 +58,18 @@ namespace VNEngine {
 
 	void Button::Draw() {
 		Text::Draw();
+	}
+
+	void Button::SetBorderColor(vec4u8 color) {
+		m_DefaultBorder = color;
+	}
+	
+	void Button::SetFocusBorderColor(vec4u8 color) {
+		m_FocusBorder = color;
+	}
+	
+	vec4u8 Button::GetFocusBorderColor() {
+		return m_FocusBorder;
 	}
 }
 
