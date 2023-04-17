@@ -2,6 +2,7 @@
 #include "vnepch.h"
 
 #include "Core/Logger.h"
+#include "Controls/InputHandler.h"
 #include "Widgets/Widget.h"
 #include "Widgets/Text.h"
 
@@ -118,6 +119,8 @@ namespace VNEngine {
 			SDL_RenderCopy(m_pRenderer, d->texture->sdl_texture,
 				&d->source, &d->destination);
 		}
+
+		if (IH_INSTANCE.getIfWindowResized()) WindowResized();
 	}
 
 	void Artist::DrawAkaFinale() {
@@ -275,5 +278,10 @@ namespace VNEngine {
 	void Artist::WindowResized() {
 		SDL_GetWindowSize(m_pWindow, &WIDTH, &HEIGHT );
 		SetStretchingState(GetStretchingState());
+		SetStretchingState(m_Background.stretchState);
+	}
+	
+	void Artist::SetWindowResizable(bool resizable) {
+		SDL_SetWindowResizable(m_pWindow, (SDL_bool)resizable);
 	}
 }
