@@ -31,6 +31,9 @@ namespace VNEngine {
 		vec4u8 m_TextColor;
 		std::wstring m_Text;
 
+		vec4u8 m_BorderColor;
+		bool m_DrawBorder;
+
 		void freeTexture();
 
 	public:
@@ -49,6 +52,10 @@ namespace VNEngine {
 		bool IsItShown();
 		void SetTextColor(vec4u8 color);
 		vec4u8 GetTextColor();
+		void SetBorderColor(vec4u8 color);
+		vec4u8 GetBorderColor();
+		void SetDrawingBorder(bool draw = true);
+		bool GetDrawingBorder();
 		void TurnOnBack();
 		void TurnOffBack();
 		void SetWraped(bool isWraped);

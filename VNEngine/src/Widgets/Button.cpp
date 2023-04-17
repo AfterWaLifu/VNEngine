@@ -11,6 +11,13 @@ namespace VNEngine {
 	{
 		Bind(onClick);
 		m_BackgroundColor = BackgroundColor;
+		m_DrawBorder = true;
+		m_BorderColor = {
+			(uint8_t)(m_BackgroundColor.r < 40 ? 255 - m_BackgroundColor.r : m_BackgroundColor.r - 40),
+			(uint8_t)(m_BackgroundColor.g < 40 ? 255 - m_BackgroundColor.g : m_BackgroundColor.g - 40),
+			(uint8_t)(m_BackgroundColor.b < 40 ? 255 - m_BackgroundColor.b : m_BackgroundColor.b - 40),
+			255
+		};
 		m_Focused = false;
 	}
 

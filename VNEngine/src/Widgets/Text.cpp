@@ -23,6 +23,8 @@ namespace VNEngine {
 		m_IndentVertical = 3;
 		SetFont(fontInfo);
 		m_TextColor = textColor;
+		m_DrawBorder = false;
+		m_BorderColor = { 0,0,0,0 };
 
 		if (!text.empty()) {
 			SetText(text);
@@ -137,6 +139,23 @@ namespace VNEngine {
 		return m_TextColor;
 	}
 
+	void Text::SetBorderColor(vec4u8 color) {
+		m_BorderColor = color;
+	}
+
+	vec4u8 Text::GetBorderColor()
+	{
+		return m_BorderColor;
+	}
+
+	void Text::SetDrawingBorder(bool draw) {
+		m_DrawBorder = draw;
+	}
+
+	bool Text::GetDrawingBorder() {
+		return m_DrawBorder;
+	}
+
 	void Text::TurnOnBack() {
 		m_BackgroundTurned = true;
 	}
@@ -244,6 +263,12 @@ namespace VNEngine {
 
 		SDL_RenderCopy(Widget::sRenderer, m_TextTexture,
 			(SDL_Rect*)&m_TextNativeGeometry, (SDL_Rect*)&m_TextDestination);
+
+		if (m_DrawBorder) {
+			SDL_SetRenderDrawColor(Widget::sRenderer, m_BorderColor.r,
+				m_BorderColor.g, m_BorderColor.b, m_BorderColor.a);
+			SDL_RenderDrawRect(Widget::sRenderer, (SDL_Rect*)&m_Geometry); 
+		}
 	}
 
 }

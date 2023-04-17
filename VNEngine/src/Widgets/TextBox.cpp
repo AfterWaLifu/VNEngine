@@ -36,6 +36,14 @@ namespace VNEngine {
 		SetAlign((Alignment)(ALIGN_VCENTER | ALIGN_LEFT));
 		s_ActiveTextBox = this;
 
+		m_DrawBorder = true;
+		m_BorderColor = {
+			(uint8_t)(m_BackgroundColor.r < 40 ? 255 - m_BackgroundColor.r : m_BackgroundColor.r - 40),
+			(uint8_t)(m_BackgroundColor.g < 40 ? 255 - m_BackgroundColor.g : m_BackgroundColor.g - 40),
+			(uint8_t)(m_BackgroundColor.b < 40 ? 255 - m_BackgroundColor.b : m_BackgroundColor.b - 40),
+			255
+		};
+
 		m_LineEnabled = true;
 		m_LineTimer = SDL_GetTicks64();
 		m_MaxCharNumber = maxCharNumber;
