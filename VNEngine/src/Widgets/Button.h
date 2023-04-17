@@ -11,6 +11,7 @@ namespace VNEngine {
 	class Button : public Text {
 
 		std::function<void(void)> m_OnClick;
+		bool m_Focused;
 
 	public:
 		Button(vec4 geometry, std::function<void(void)> onClick = nullptr, std::wstring text = L"",

@@ -11,6 +11,7 @@ namespace VNEngine {
 	{
 		Bind(onClick);
 		m_BackgroundColor = BackgroundColor;
+		m_Focused = false;
 	}
 
 	Button::~Button() {
@@ -22,15 +23,18 @@ namespace VNEngine {
 	}
 
 	void Button::Check() {
-		if(m_OnClick == nullptr) return;
 		vec2 mousePos = IH_INSTANCE.getMousePos();
 
 		if (mousePos.x >= m_Geometry.x &&
 			mousePos.x < m_Geometry.x + m_Geometry.w &&
 			mousePos.y > m_Geometry.y &&
-			mousePos.y < m_Geometry.y + m_Geometry.h) {
+			mousePos.y < m_Geometry.y + m_Geometry.h)
+			m_Focused = true;
+		else m_Focused = false;
+
+		if (m_OnClick == nullptr) return;
+		if (m_Focused && IH_INSTANCE.getMouseButtonState(InputHandler::LEFT))
 			m_OnClick();
-		}
 	}
 
 	void Button::Draw() {
