@@ -7,12 +7,21 @@
 
 namespace VNEngine {
 
+	/**
+	* @brief Texture data needed to draw it
+	* Contains SDL texture, width+height and rows/collumns quantity
+	*/
 	struct Texture {
 		SDL_Texture* sdl_texture;
 		int w, h;
 		int r, c;
 	};
 
+	/**
+	* @brief Manages textures, what else do you want from texture manager?
+	* Contains textures with it's data and manages it (creation, containing, deleting)
+	* It exist as singletone, to have an access from anywhere
+	*/
 	class TextureManager
 	{
 		std::unordered_map<std::string, Texture*> m_Textures;

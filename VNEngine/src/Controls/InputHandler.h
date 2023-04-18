@@ -10,6 +10,10 @@
 
 namespace VNEngine {
 
+	/**
+	* @brief Class to handle all the input from keyboard or mouse in the app
+	* Implemented as singletone to have an a access from anywhere.
+	*/
 	class InputHandler {
 		
 		static inline InputHandler* s_pInstance;
@@ -45,11 +49,42 @@ namespace VNEngine {
 			RIGHT = 2
 		};
 
+		/**
+		* @brief Function to get a state of mouse button
+		* @param button A member of enum MouseButtons
+		* @return True if preesed and false if not
+		*/
 		bool getMouseButtonState(MouseButtons button);
+
+		/**
+		* @brief Function to get a mouse cursor position
+		* @return Vector of 2 coordinates x and y
+		*/
 		const vec2& getMousePos();
+
+		/**
+		* @brief Function to get a state of a keyboard button
+		* @param key Button sign or name (check Keys.h)
+		* @return True if pressed (and not holded*)
+		*/
 		bool isKeyDown(std::string key);
+		
+		/**
+		* @brief Cheching for state of window size
+		* @return True if window size changed
+		*/
 		bool getIfWindowResized();
+
+		/**
+		* @brief Gives an access to the string of text input
+		* @return Pointer to the string
+		*/
 		std::string* getTextInput();
+
+		/**
+		* @brief Turns on/off inputing text
+		* @param state True or false to ON/OFF accordingly
+		*/
 		void setTextInput(bool state);
 	};
 

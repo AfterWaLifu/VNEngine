@@ -11,6 +11,7 @@ namespace VNEngine {
 
 	namespace Keys {
 
+		///	Dictionary with all the buttons needed (may be added if not enough)
 		inline std::map<std::string, SDL_Scancode> K = {
 			{"a", SDL_SCANCODE_A},
 			{"b", SDL_SCANCODE_B},
@@ -100,6 +101,11 @@ namespace VNEngine {
 			{"rwindows",	SDL_SCANCODE_RGUI}
 		};
 
+		/**
+		* @brief Exchange an c-string value for a sdl scancode (used in it)
+		* @param key A letter or name of a needed button
+		* @return Scancode of needed button or SDL_SCANCODE_UNKNOWN if not found
+		*/
 		inline SDL_Scancode getScancodeFromKey(const char* key) {
 			auto search = K.find(key);
 			if (search != K.end()) return K[key];
