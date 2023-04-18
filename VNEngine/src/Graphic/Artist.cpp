@@ -102,6 +102,7 @@ namespace VNEngine {
 	}
 
 	void Artist::Perform() {
+		if (IH_INSTANCE.getIfWindowResized()) WindowResized();
 
 		SDL_SetRenderDrawColor(m_pRenderer, m_Background.backgroundColor.r,
 			m_Background.backgroundColor.g, m_Background.backgroundColor.b,
@@ -119,8 +120,6 @@ namespace VNEngine {
 			SDL_RenderCopy(m_pRenderer, d->texture->sdl_texture,
 				&d->source, &d->destination);
 		}
-
-		if (IH_INSTANCE.getIfWindowResized()) WindowResized();
 	}
 
 	void Artist::DrawAkaFinale() {
