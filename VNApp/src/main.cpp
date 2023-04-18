@@ -8,14 +8,6 @@ public:
 private:
 	void Load() override {
 		using namespace VNEngine;
-		
-		m_Drawer->AddTexture("b", "back.jpg");
-		m_Drawer->SetStretchingState(FULLSCREENED);
-		m_Drawer->SetBackground("b");
-
-		m_WM.AddWidget("",new Button({100,100,300,100}));
-		m_WM.GetButton("")->SetFocusBorderColor({255,0,0,128});
-		m_WM.AddWidget("", new TextBox({500,100,100,50}));
 	}
 };
 

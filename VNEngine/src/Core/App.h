@@ -23,8 +23,6 @@ namespace VNEngine {
 		std::unique_ptr<Artist> m_Drawer;
 		std::unique_ptr<AudioPlayer> m_AudioPlayer;
 
-		WidgetsManager m_WM;
-
 		virtual void Load();
 
 		void Update();
