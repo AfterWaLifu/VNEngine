@@ -14,3 +14,6 @@
 #include "Widgets/Button.h"
 #include "Widgets/TextBox.h"
 #include "Widgets/WidgetsManager.h"
+#include "StateMachine/State.h"
+#include "StateMachine/StateMachine.h"
+#include "StateMachine/ReadingState.h"

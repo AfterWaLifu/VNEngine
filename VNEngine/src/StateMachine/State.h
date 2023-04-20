@@ -5,7 +5,6 @@
 namespace VNEngine {
 
 	class State {
-
 	public:
 		virtual void Handle() = 0;
 		virtual void Update() = 0;

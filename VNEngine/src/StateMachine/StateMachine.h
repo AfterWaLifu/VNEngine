@@ -21,5 +21,5 @@ namespace VNEngine {
 		void PopState();
 	};
 
-#define SM_INSTANCE StateMachine::Instance();
+#define SM_INSTANCE StateMachine::Instance()
 }

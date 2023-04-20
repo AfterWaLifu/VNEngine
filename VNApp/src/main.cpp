@@ -8,7 +8,6 @@ public:
 private:
 	void Load() override {
 		using namespace VNEngine;
-		WM_INSTANCE.AddWidget("", new TextBox({100,100,100,100}));
 	}
 };
 

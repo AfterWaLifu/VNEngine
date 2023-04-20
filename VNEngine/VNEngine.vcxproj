@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\StateMachine\ReadingState.h" />
     <ClInclude Include="src\StateMachine\State.h" />
     <ClInclude Include="src\StateMachine\StateMachine.h" />
     <ClInclude Include="src\Widgets\Button.h" />
@@ -39,6 +40,7 @@
     <ClInclude Include="src\Widgets\WidgetsManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\StateMachine\ReadingState.cpp" />
     <ClCompile Include="src\StateMachine\StateMachine.cpp" />
     <ClCompile Include="src\Widgets\WidgetsManager.cpp" />
     <ClCompile Include="src\Widgets\Button.cpp" />
