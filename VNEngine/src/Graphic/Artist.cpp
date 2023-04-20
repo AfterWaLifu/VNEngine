@@ -6,6 +6,9 @@
 #include "Widgets/Widget.h"
 
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
+
+#include <chrono>
 
 namespace VNEngine {
 
@@ -123,6 +126,7 @@ namespace VNEngine {
 
 	void Artist::DrawAkaFinale() {
 		SDL_RenderPresent(m_pRenderer);
+		IH_INSTANCE.setIfWindowResized(false);
 	}
 
 	void Artist::SetBackground(vec4u8 color) {
@@ -281,5 +285,38 @@ namespace VNEngine {
 	
 	void Artist::SetWindowResizable(bool resizable) {
 		SDL_SetWindowResizable(m_pWindow, (SDL_bool)resizable);
+	}
+
+	void Artist::SetWindowSize(vec2 size) {
+		WIDTH = size.x;
+		HEIGHT = size.y;
+		SDL_SetWindowSize(m_pWindow, WIDTH, HEIGHT);
+		IH_INSTANCE.setIfWindowResized(true);
+	}
+	
+	vec2 Artist::GetWindowSize() {
+		return {WIDTH, HEIGHT};
+	}
+
+	void Artist::SetWindowTitle(std::string title) {
+		SDL_SetWindowTitle(m_pWindow, title.c_str());
+	}
+	
+	void Artist::SaveScreenshot() {
+
+		std::string datetime = "screenshot ";
+		std::time_t t = std::time(nullptr);
+		char mbstr[100];
+		tm localtime;
+		localtime_s(&localtime,&t);
+		std::strftime(mbstr, sizeof(mbstr), "%d.%m.%y %H'%M'%S", &localtime);
+		datetime += mbstr;
+		datetime += ".png";
+
+		SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, WIDTH, HEIGHT, 32, SDL_PIXELFORMAT_ARGB8888);
+		SDL_RenderReadPixels(m_pRenderer, NULL, SDL_PIXELFORMAT_ARGB8888, surface->pixels, surface->pitch);
+		IMG_SavePNG(surface, datetime.c_str());
+		VN_LOGS_WARNING(SDL_GetError());
+		SDL_FreeSurface(surface);
 	}
 }

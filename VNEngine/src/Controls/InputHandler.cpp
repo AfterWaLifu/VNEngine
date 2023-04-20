@@ -95,11 +95,11 @@ namespace VNEngine {
 	}
 
 	bool InputHandler::getIfWindowResized() {
-		if (m_windowResized) {
-			m_windowResized = false;
-			return true;
-		}
-		return false;
+		return m_windowResized;
+	}
+
+	void InputHandler::setIfWindowResized(bool resized) {
+		m_windowResized = resized;
 	}
 
 	std::string* InputHandler::getTextInput()

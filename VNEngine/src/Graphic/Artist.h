@@ -102,5 +102,10 @@ namespace VNEngine{
 		void DeleteTexture(const std::string& key);
 
 		void SetWindowResizable(bool resizable = true);
+		void SetWindowSize(vec2 size);
+		vec2 GetWindowSize();
+		void SetWindowTitle(std::string title);
+
+		void SaveScreenshot();
 	};
 }

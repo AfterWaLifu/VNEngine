@@ -74,6 +74,11 @@ namespace VNEngine {
 		* @return True if window size changed
 		*/
 		bool getIfWindowResized();
+		/**
+		* @brief Function to set resized flag (needed for scaling)
+		* @param key True if resized
+		*/
+		void setIfWindowResized(bool resized);
 
 		/**
 		* @brief Gives an access to the string of text input
