@@ -13,19 +13,23 @@ namespace VNEngine {
 
 	class WidgetsManager {
 
+		static inline WidgetsManager* s_pInstance;
+
 		std::unordered_map<std::string, std::shared_ptr<Text>>		m_AllTexts;
 		std::unordered_map<std::string, std::shared_ptr<Button>>	m_AllButtons;
 		std::unordered_map<std::string, std::shared_ptr<TextBox>>	m_AllTextBoxs;
 
+		WidgetsManager();
+		~WidgetsManager();
 	public:
+
+		static WidgetsManager& Instance();
+
 		enum WidgetType : uint8_t {
 			WIDGET_TEXT = 0,
 			WIDGET_BUTTON,
 			WIDGET_TEXTBOX
 		};
-
-		WidgetsManager();
-		~WidgetsManager();
 
 		void AddWidget(const std::string& key, Text* text);
 		void AddWidget(const std::string& key, Button* button);
@@ -40,5 +44,7 @@ namespace VNEngine {
 		void Draw();
 		void Handle();
 	};
+
+#define WM_INSTANCE WidgetsManager::Instance()
 
 }

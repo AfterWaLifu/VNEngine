@@ -12,6 +12,11 @@ namespace VNEngine {
 	WidgetsManager::~WidgetsManager() {
 	}
 
+	WidgetsManager& WidgetsManager::Instance()
+	{
+		return s_pInstance ? *s_pInstance : *(s_pInstance = new WidgetsManager());
+	}
+
 	void WidgetsManager::AddWidget(const std::string& key, Text* text) {
 		auto search = m_AllTexts.find(key);
 		if (!m_AllTexts.empty() && search == m_AllTexts.end()) {

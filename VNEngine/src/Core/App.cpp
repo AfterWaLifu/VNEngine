@@ -41,10 +41,12 @@ namespace VNEngine {
 
 	void App::HandleEvents() {
 		IH_INSTANCE.Update();
+		WM_INSTANCE.Handle();
 	}
 
 	void App::Draw() {
 		m_Drawer->Perform();
+		WM_INSTANCE.Draw();
 		m_Drawer->DrawAkaFinale();
 	}
 }
