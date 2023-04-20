@@ -13,7 +13,6 @@ namespace VNEngine {
 		static inline StateMachine* s_StateMachine;
 
 	public:
-		static void Init();
 		static StateMachine& Instance();
 
 		void PushState(State* state);

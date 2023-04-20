@@ -16,6 +16,8 @@ namespace VNEngine {
 
 		InputHandler::InputHandlerInit(&m_IsRunning);
 
+		State::InitDrawingForStates(m_Drawer.get());
+
 		m_IsRunning = true;
 
 		Load();

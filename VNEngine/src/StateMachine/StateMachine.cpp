@@ -5,10 +5,6 @@
 
 namespace VNEngine {
 
-	void StateMachine::Init() {
-		s_StateMachine ? 0 : s_StateMachine = new StateMachine();
-	}
-
 	StateMachine& StateMachine::Instance() {
 		return (s_StateMachine) ? *s_StateMachine : *(s_StateMachine = new StateMachine()) ;
 	}

@@ -8,6 +8,7 @@
 #include "Audio/AudioPlayer.h"
 #include "Controls/InputHandler.h"
 #include "Widgets/WidgetsManager.h"
+#include "StateMachine/StateMachine.h"
 
 namespace VNEngine {
 

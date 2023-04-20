@@ -4,7 +4,6 @@
 #include "Core/Logger.h"
 #include "Controls/InputHandler.h"
 #include "Widgets/Widget.h"
-#include "Widgets/Text.h"
 
 #include <SDL2/SDL_ttf.h>
 

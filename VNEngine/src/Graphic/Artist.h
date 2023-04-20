@@ -7,7 +7,6 @@
 
 #include "Graphic/TextureManager.h"
 #include "Widgets/Vectors.h"
-#include "Widgets/Widget.h"
 
 namespace VNEngine{
 
