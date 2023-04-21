@@ -74,6 +74,7 @@ namespace VNEngine {
 			VN_LOGS_ERROR("WHO HAVE BROKEN MY RENDERER!?");
 		}
 		Widget::TurnOnWidgets(m_pRenderer);
+		SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
 		
 		TextureManager::TextureManagerInit(m_pRenderer);
 		m_Queue.clear();

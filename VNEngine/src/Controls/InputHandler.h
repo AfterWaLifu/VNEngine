@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <stdint.h>
 
 #include "Keys.h"
 #include "Widgets/Vectors.h"
@@ -21,6 +22,7 @@ namespace VNEngine {
 		bool* m_isRunningPointer;
 		std::vector<bool> m_mouseButtonStates;
 		vec2 m_mousePos;
+		int32_t m_mouseScrollAmount;
 		uint8_t* m_keystates;
 		bool m_keyHolding;
 		bool m_windowResized;
@@ -32,6 +34,7 @@ namespace VNEngine {
 		void onMouseMove(SDL_Event& event);
 		void onMouseButtonUp(SDL_Event& event);
 		void onMouseButtonDown(SDL_Event& event);
+		void onMouseWheelEvent(SDL_Event& event);
 		void onWindowEvent(SDL_Event& event);
 		void onTextInput(SDL_Event& event);
 		
@@ -61,6 +64,12 @@ namespace VNEngine {
 		* @return Vector of 2 coordinates x and y
 		*/
 		const vec2& getMousePos();
+
+		/**
+		* @brief Mouse scroll event use
+		* @return Amount of pixels scrolled (positive=up, negative=down)
+		*/
+		int32_t getMouseScrollAmount();
 
 		/**
 		* @brief Function to get a state of a keyboard button

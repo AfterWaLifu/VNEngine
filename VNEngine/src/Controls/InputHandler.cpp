@@ -6,7 +6,7 @@ namespace VNEngine {
 	InputHandler::InputHandler(bool* isRunning)
 		: m_isRunningPointer(isRunning), m_keystates(nullptr),
 		m_mousePos({0,0}), m_windowResized(false), m_keyHolding(false),
-		m_textInputEnabled(false), m_textInputText("")
+		m_textInputEnabled(false), m_textInputText(""),m_mouseScrollAmount(0)
 	{
 		for (int i = 0; i < 3; i++) m_mouseButtonStates.push_back(false);
 	}
@@ -32,6 +32,7 @@ namespace VNEngine {
 	void InputHandler::Update() {
 		SDL_Event event;
 		SDL_PollEvent(&event);
+		m_mouseScrollAmount ? m_mouseScrollAmount = 0 : 0;
 
 		switch (event.type) {
 		case SDL_QUIT:
@@ -45,6 +46,9 @@ namespace VNEngine {
 			break;
 		case SDL_MOUSEMOTION:
 			onMouseMove(event);
+			break;
+		case SDL_MOUSEWHEEL:
+			onMouseWheelEvent(event);
 			break;
 		case SDL_KEYDOWN:
 			onKeyDown(event);
@@ -71,6 +75,10 @@ namespace VNEngine {
 	const vec2& InputHandler::getMousePos()
 	{
 		return m_mousePos;
+	}
+
+	int32_t InputHandler::getMouseScrollAmount() {
+		return m_mouseScrollAmount;
 	}
 
 	bool InputHandler::isKeyDown(std::string key)
@@ -147,6 +155,10 @@ namespace VNEngine {
 		if (event.button.button == SDL_BUTTON_LEFT) m_mouseButtonStates[LEFT] = true;
 		if (event.button.button == SDL_BUTTON_MIDDLE) m_mouseButtonStates[MIDDLE] = true;
 		if (event.button.button == SDL_BUTTON_RIGHT) m_mouseButtonStates[RIGHT] = true;
+	}
+
+	void InputHandler::onMouseWheelEvent(SDL_Event& event) {
+		m_mouseScrollAmount = event.wheel.y;
 	}
 
 	void InputHandler::onWindowEvent(SDL_Event& event) {
