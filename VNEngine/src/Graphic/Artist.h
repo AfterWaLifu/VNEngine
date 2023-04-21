@@ -10,14 +10,11 @@
 
 namespace VNEngine{
 
-	//it will be replaced w/ vec4 I guess
-	typedef SDL_Rect Rect;
-
 	/// Everything needed to draw a texture (*will be changed w/ adding animations)
 	struct DrawnData {
 		Texture* texture;
-		Rect source;
-		Rect destination;
+		vec4 source;
+		vec4 destination;
 	};
 
 	/// Stretching states enum
@@ -51,7 +48,7 @@ namespace VNEngine{
 			std::string textureKey;
 			bool drawBackPic;
 			bool colorChanged;
-			Rect dest;
+			vec4 dest;
 			
 			Stretching stretchState;
 		} m_Background;
@@ -89,8 +86,8 @@ namespace VNEngine{
 		* @brief Adding sprite to the queue on drawing
 		* @return ID of drawn texture, so if you use a lot of the same texture, you can control it easily
 		*/
-		uint32_t Draw(const std::string& key, int tileNum = 0, Rect destination = {0,0,100,100});
-		uint32_t Draw(const std::string& key, int row = 0, int collumn = 0, Rect destination = { 0,0,100,100 });
+		uint32_t Draw(const std::string& key, int tileNum = 0, vec4 destination = {0,0,100,100});
+		uint32_t Draw(const std::string& key, int row = 0, int collumn = 0, vec4 destination = { 0,0,100,100 });
 		void StopDrawing(const std::string& key);
 		/**
 		* @brief Removing sprite from the queue on drawing
