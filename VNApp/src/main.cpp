@@ -8,6 +8,21 @@ public:
 private:
 	void Load() override {
 		using namespace VNEngine;
+
+		m_Drawer->AddTexture("pic","back.jpg");
+		m_Drawer->Draw("pic", 0, {600,50,320,180});
+		m_Drawer->SetBackground("pic");
+
+		Button* b = new Button({100,100,200,80}, nullptr, L"BUTTON");
+		b->SetFontSize(40);
+		b->SetFocusBorderColor({ 0,0,0,255 });
+
+		TextBox* tb = new TextBox({ 100,200,200,80 });
+		tb->SetFontSize(40);
+		tb->SetBackgroundColor({200,200,200,255});
+
+		WM_INSTANCE.AddWidget("b", b);
+		WM_INSTANCE.AddWidget("tb", tb);
 	}
 };
 

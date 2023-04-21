@@ -3,6 +3,8 @@ build-int/
 logs.txt
 *.ini
 *.ttf
+*.jpg
+*.png
 
 # Prerequisites
 *.d

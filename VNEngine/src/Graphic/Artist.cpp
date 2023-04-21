@@ -88,7 +88,7 @@ namespace VNEngine {
 			false,
 			false,
 			{-1,-1,1,1},
-			Stretching::FULLSCREENED
+			Stretching::STRETCHED
 		};
 
 		VN_LOGS_INFO("Window creation succes");
@@ -151,24 +151,24 @@ namespace VNEngine {
 	void Artist::SetStretchingState(Stretching state) {
 		m_Background.stretchState = state;
 		if (m_Background.ptexture != nullptr) {
-			Rect source = { 0,0,m_Background.ptexture->w,m_Background.ptexture->h };
+			vec2 source = { m_Background.ptexture->w,m_Background.ptexture->h };
 			switch (m_Background.stretchState) {
 			case CENTERED:
-				m_Background.dest = source;
+				m_Background.dest = { 0,0, source.x,source.y};
 				m_Background.dest.x = (WIDTH - m_Background.dest.w) / 2;
 				m_Background.dest.y = (HEIGHT - m_Background.dest.h) / 2;
 				break;
 			case STRETCHED:
-				if (HEIGHT / source.h > WIDTH / source.w) {
-					int imageAspectRation = source.h / source.w;
-					m_Background.dest.h = source.h + ((WIDTH - source.w) * imageAspectRation);
+				if (HEIGHT / source.y > WIDTH / source.x) {
+					float imageAspectRation = (float)WIDTH / source.x;
+					m_Background.dest.h = (int)round((float)source.y * imageAspectRation);
 					m_Background.dest.w = WIDTH;
 					m_Background.dest.x = 0;
 					m_Background.dest.y = (HEIGHT - m_Background.dest.h) / 2;
 				}
 				else {
-					int imageAspectRation = source.h / source.w;
-					m_Background.dest.w = source.w + ((HEIGHT - source.h) * imageAspectRation);
+					float imageAspectRation = (float)HEIGHT / source.y;
+					m_Background.dest.w = (int)round((float)source.x * imageAspectRation);
 					m_Background.dest.h = HEIGHT;
 					m_Background.dest.x = (WIDTH - m_Background.dest.w) / 2;
 					m_Background.dest.y = 0;
