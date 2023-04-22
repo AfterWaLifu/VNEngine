@@ -18,11 +18,20 @@ namespace VNEngine {
 		ALIGN_DOWN		= 1 << 5
 	};
 
+	struct WindowData {
+		SDL_Renderer* renderer;
+		vec2* windowSizeCurr;
+		vec2* windowSizePrev;
+		vec4* backgrSizeCurr;
+		vec4* backgrSizePrev;
+		uint8_t* stretching;	// 1 full, 2 stretch
+	};
+
 	class Widget {
 		
 	protected:
 		
-		inline static SDL_Renderer* sRenderer;
+		inline static WindowData sWD;
 
 		vec4 m_Geometry;
 		Texture* m_Image;
@@ -37,8 +46,13 @@ namespace VNEngine {
 		virtual ~Widget() = default;
 
 	public:
-		static void TurnOnWidgets(SDL_Renderer* renderer) {
-			sRenderer = renderer;
+		static void TurnOnWidgets(WindowData wd) {
+			sWD.renderer = wd.renderer; 
+			sWD.windowSizeCurr = wd.windowSizeCurr;
+			sWD.windowSizePrev= wd.windowSizePrev;
+			sWD.backgrSizeCurr= wd.backgrSizeCurr;
+			sWD.backgrSizePrev= wd.backgrSizePrev;
+			sWD.stretching= wd.stretching;
 		}
 
 		virtual void Draw() = 0;

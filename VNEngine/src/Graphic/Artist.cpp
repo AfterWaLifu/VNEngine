@@ -41,7 +41,7 @@ namespace VNEngine {
 
 	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
 		: m_pWindow(nullptr), m_pRenderer(nullptr), m_DrawId(0), m_Background({}),
-		WIDTH(width), HEIGHT(height), m_PrevWindowSize({0,0}),
+		m_WindowSize({width,height}), m_PrevWindowSize({0,0}),
 		m_PrevBackgroundSize({0,0,0,0})
 	{
 
@@ -57,7 +57,7 @@ namespace VNEngine {
 		m_pWindow = SDL_CreateWindow(
 			title.c_str(),
 			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-			WIDTH, HEIGHT,
+			m_WindowSize.x, m_WindowSize.y,
 			flags
 		);
 		if (m_pWindow == nullptr) {
@@ -74,7 +74,9 @@ namespace VNEngine {
 		if (!m_pRenderer) {
 			VN_LOGS_ERROR("WHO HAVE BROKEN MY RENDERER!?");
 		}
-		Widget::TurnOnWidgets(m_pRenderer);
+		Widget::TurnOnWidgets({ m_pRenderer, &m_WindowSize,
+			&m_PrevWindowSize, &m_Background.dest, &m_PrevBackgroundSize,
+			(uint8_t*)&(m_Background.stretchState) });
 		SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
 		
 		TextureManager::TextureManagerInit(m_pRenderer);
@@ -157,47 +159,47 @@ namespace VNEngine {
 			switch (m_Background.stretchState) {
 			case CENTERED:
 				m_Background.dest = { 0,0, source.x,source.y};
-				m_Background.dest.x = (WIDTH - m_Background.dest.w) / 2;
-				m_Background.dest.y = (HEIGHT - m_Background.dest.h) / 2;
+				m_Background.dest.x = (m_WindowSize.x - m_Background.dest.w) / 2;
+				m_Background.dest.y = (m_WindowSize.y - m_Background.dest.h) / 2;
 				break;
 
 			case STRETCHED:
 				m_PrevBackgroundSize = m_Background.dest;
-				if (m_PrevWindowSize.x > WIDTH ||
-					m_PrevWindowSize.y < HEIGHT) {
-					float imageAspectRation = (float)WIDTH / source.x;
+				if (m_PrevWindowSize.x > m_WindowSize.x ||
+					m_PrevWindowSize.y < m_WindowSize.y) {
+					float imageAspectRation = (float)m_WindowSize.x / source.x;
 					m_Background.dest.h = (int)round((float)source.y * imageAspectRation);
-					m_Background.dest.w = WIDTH;
+					m_Background.dest.w = m_WindowSize.x;
 					m_Background.dest.x = 0;
-					m_Background.dest.y = (HEIGHT - m_Background.dest.h) / 2;
+					m_Background.dest.y = (m_WindowSize.y - m_Background.dest.h) / 2;
 				}
 				else {
-					float imageAspectRation = (float)HEIGHT / source.y;
+					float imageAspectRation = (float)m_WindowSize.y / source.y;
 					m_Background.dest.w = (int)round((float)source.x * imageAspectRation);
-					m_Background.dest.h = HEIGHT;
-					m_Background.dest.x = (WIDTH - m_Background.dest.w) / 2;
+					m_Background.dest.h = m_WindowSize.y;
+					m_Background.dest.x = (m_WindowSize.x - m_Background.dest.w) / 2;
 					m_Background.dest.y = 0;
 				}
 
-				if (m_Background.dest.w > WIDTH) {
-					float imageAspectRation = (float)WIDTH / source.x;
+				if (m_Background.dest.w > m_WindowSize.x) {
+					float imageAspectRation = (float)m_WindowSize.x / source.x;
 					m_Background.dest.h = (int)round((float)source.y * imageAspectRation);
-					m_Background.dest.w = WIDTH;
+					m_Background.dest.w = m_WindowSize.x;
 					m_Background.dest.x = 0;
-					m_Background.dest.y = (HEIGHT - m_Background.dest.h) / 2;
+					m_Background.dest.y = (m_WindowSize.y - m_Background.dest.h) / 2;
 				}
-				else if (m_Background.dest.h > HEIGHT) {
-					float imageAspectRation = (float)HEIGHT / source.y;
+				else if (m_Background.dest.h > m_WindowSize.y) {
+					float imageAspectRation = (float)m_WindowSize.y / source.y;
 					m_Background.dest.w = (int)round((float)source.x * imageAspectRation);
-					m_Background.dest.h = HEIGHT;
-					m_Background.dest.x = (WIDTH - m_Background.dest.w) / 2;
+					m_Background.dest.h = m_WindowSize.y;
+					m_Background.dest.x = (m_WindowSize.x - m_Background.dest.w) / 2;
 					m_Background.dest.y = 0;
 				}
 				break;
 
 			case FULLSCREENED:
 			default:
-				m_Background.dest = { 0,0,WIDTH, HEIGHT };
+				m_Background.dest = { 0,0,m_WindowSize.x, m_WindowSize.y };
 			}
 		}
 	}
@@ -300,9 +302,9 @@ namespace VNEngine {
 	}
 
 	void Artist::WindowResized() {
-		m_PrevWindowSize = { WIDTH,HEIGHT };
-		SDL_GetWindowSize(m_pWindow, &WIDTH, &HEIGHT );
-		if (m_PrevWindowSize.x == WIDTH && m_PrevWindowSize.y == HEIGHT) return;
+		m_PrevWindowSize = m_WindowSize;
+		SDL_GetWindowSize(m_pWindow, &m_WindowSize.x, &m_WindowSize.y );
+		if (m_PrevWindowSize.x == m_WindowSize.x && m_PrevWindowSize.y == m_WindowSize.y) return;
 		SetStretchingState(m_Background.stretchState);
 		ResizeTextures();
 	}
@@ -333,8 +335,8 @@ namespace VNEngine {
 			}
 		}
 		else {
-			float verticalRation = (float)HEIGHT / m_PrevWindowSize.y;
-			float horizontRation = (float)WIDTH / m_PrevWindowSize.x;
+			float verticalRation = (float)m_WindowSize.y / m_PrevWindowSize.y;
+			float horizontRation = (float)m_WindowSize.x / m_PrevWindowSize.x;
 			for (auto texturePair = m_Queue.begin();
 				texturePair != m_Queue.end();
 				++texturePair) {
@@ -353,14 +355,13 @@ namespace VNEngine {
 	}
 
 	void Artist::SetWindowSize(vec2 size) {
-		WIDTH = size.x;
-		HEIGHT = size.y;
-		SDL_SetWindowSize(m_pWindow, WIDTH, HEIGHT);
+		m_WindowSize = size;
+		SDL_SetWindowSize(m_pWindow, m_WindowSize.x, m_WindowSize.y);
 		IH_INSTANCE.setIfWindowResized(true);
 	}
 	
 	vec2 Artist::GetWindowSize() {
-		return {WIDTH, HEIGHT};
+		return m_WindowSize;
 	}
 
 	void Artist::SetWindowTitle(std::string title) {
@@ -378,7 +379,7 @@ namespace VNEngine {
 		datetime += mbstr;
 		datetime += ".png";
 
-		SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, WIDTH, HEIGHT, 32, SDL_PIXELFORMAT_ARGB8888);
+		SDL_Surface* surface = SDL_CreateRGBSurfaceWithFormat(0, m_WindowSize.x, m_WindowSize.y, 32, SDL_PIXELFORMAT_ARGB8888);
 		SDL_RenderReadPixels(m_pRenderer, NULL, SDL_PIXELFORMAT_ARGB8888, surface->pixels, surface->pitch);
 		IMG_SavePNG(surface, datetime.c_str());
 		VN_LOGS_WARNING(SDL_GetError());

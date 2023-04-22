@@ -35,6 +35,7 @@ namespace VNEngine {
 		bool m_DrawBorder;
 
 		void freeTexture();
+		void windowResized();
 
 	public:
 		Text(vec4 geometry, std::wstring text = L"", vec4u8 textColor = {0,0,0,255},

@@ -87,8 +87,8 @@ namespace VNEngine {
 		Text::Draw();
 
 		if (s_ActiveTextBox != this) {
-			SDL_SetRenderDrawColor(Widget::sRenderer, m_TextColor.r, m_TextColor.g, m_TextColor.b, m_TextColor.a);
-			SDL_RenderDrawLine(Widget::sRenderer,
+			SDL_SetRenderDrawColor(Widget::sWD.renderer, m_TextColor.r, m_TextColor.g, m_TextColor.b, m_TextColor.a);
+			SDL_RenderDrawLine(Widget::sWD.renderer,
 				m_TextDestination.x + m_TextDestination.w + 1,
 				m_TextDestination.y + 1,
 				m_TextDestination.x + m_TextDestination.w + 1,
@@ -102,8 +102,8 @@ namespace VNEngine {
 			m_LineEnabled = !m_LineEnabled;
 		}
 		if (m_LineEnabled) {
-			SDL_SetRenderDrawColor(Widget::sRenderer, m_TextColor.r, m_TextColor.g, m_TextColor.b, m_TextColor.a);
-			SDL_RenderDrawLine(Widget::sRenderer,
+			SDL_SetRenderDrawColor(Widget::sWD.renderer, m_TextColor.r, m_TextColor.g, m_TextColor.b, m_TextColor.a);
+			SDL_RenderDrawLine(Widget::sWD.renderer,
 				m_TextDestination.x + m_TextDestination.w + 1,
 				m_TextDestination.y + 1,
 				m_TextDestination.x + m_TextDestination.w + 1,

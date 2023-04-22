@@ -33,7 +33,7 @@ namespace VNEngine{
 		SDL_Window* m_pWindow;
 		SDL_Renderer* m_pRenderer;
 
-		int WIDTH, HEIGHT;
+		vec2 m_WindowSize;
 		vec2 m_PrevWindowSize;	// needed for correct scaling
 		vec4 m_PrevBackgroundSize;
 

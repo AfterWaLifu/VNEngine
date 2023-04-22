@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #include "Core/Logger.h"
+#include "Controls/InputHandler.h"
 
 namespace VNEngine {
 
@@ -42,6 +43,33 @@ namespace VNEngine {
 		}
 	}
 
+	void Text::windowResized() {
+		if (Widget::sWD.renderer != nullptr)
+		if (*Widget::sWD.stretching == 2) { /*stretching*/
+			float wratio = (float)Widget::sWD.backgrSizeCurr->w / (float)Widget::sWD.backgrSizePrev->w;
+			float hratio = (float)Widget::sWD.backgrSizeCurr->h / (float)Widget::sWD.backgrSizePrev->h;
+			vec2 coordsAtBack = {
+				m_Geometry.x - Widget::sWD.backgrSizePrev->x,
+				m_Geometry.y - Widget::sWD.backgrSizePrev->y
+			};
+			m_Geometry.x = Widget::sWD.backgrSizeCurr->x + (int)round((float)coordsAtBack.x * wratio);
+			m_Geometry.y = Widget::sWD.backgrSizeCurr->y + (int)round((float)coordsAtBack.y * hratio);
+			m_Geometry.w = (int)round((float)m_Geometry.w * wratio);
+			m_Geometry.h = (int)round((float)m_Geometry.h * hratio);
+		}
+		else {/*everything else*/
+			float vertRation = (float)Widget::sWD.windowSizeCurr->y / (float)Widget::sWD.windowSizePrev->y;
+			float horzRation = (float)Widget::sWD.windowSizeCurr->x / (float)Widget::sWD.windowSizePrev->x;
+			m_Geometry = {
+				(int)round((float)m_Geometry.x * horzRation),
+				(int)round((float)m_Geometry.y * vertRation),
+				(int)round((float)m_Geometry.w * horzRation),
+				(int)round((float)m_Geometry.h * vertRation)
+			};
+		}
+		SetAlign(m_Alignment);
+	}
+
 	void Text::SetText(std::wstring text) {
 		freeTexture();
 
@@ -73,7 +101,7 @@ namespace VNEngine {
 			return;
 		}
 
-		m_TextTexture = SDL_CreateTextureFromSurface(Widget::sRenderer, textSurface);
+		m_TextTexture = SDL_CreateTextureFromSurface(Widget::sWD.renderer, textSurface);
 		if (!m_TextTexture) {
 			size_t length = m_Text.length();
 			char* temp = (char*)malloc(m_Text.length());
@@ -248,26 +276,27 @@ namespace VNEngine {
 
 	void Text::Draw() {
 		if (!m_IsShown) return;
+		if (IH_INSTANCE.getIfWindowResized()) windowResized();
 
 		if (m_BackgroundTurned) {
 			if (m_Image) {
-				SDL_RenderCopy(Widget::sRenderer, m_Image->sdl_texture,
+				SDL_RenderCopy(Widget::sWD.renderer, m_Image->sdl_texture,
 					nullptr, (SDL_Rect*)&m_Geometry);
 			}
 			else if (m_BackgroundColor.a != 0) {
-				SDL_SetRenderDrawColor(Widget::sRenderer, m_BackgroundColor.r,
+				SDL_SetRenderDrawColor(Widget::sWD.renderer, m_BackgroundColor.r,
 					m_BackgroundColor.g, m_BackgroundColor.b, m_BackgroundColor.a);
-				SDL_RenderFillRect(Widget::sRenderer, (SDL_Rect*)&m_Geometry);
+				SDL_RenderFillRect(Widget::sWD.renderer, (SDL_Rect*)&m_Geometry);
 			}
 		}
 
-		SDL_RenderCopy(Widget::sRenderer, m_TextTexture,
+		SDL_RenderCopy(Widget::sWD.renderer, m_TextTexture,
 			(SDL_Rect*)&m_TextNativeGeometry, (SDL_Rect*)&m_TextDestination);
 
 		if (m_DrawBorder) {
-			SDL_SetRenderDrawColor(Widget::sRenderer, m_BorderColor.r,
+			SDL_SetRenderDrawColor(Widget::sWD.renderer, m_BorderColor.r,
 				m_BorderColor.g, m_BorderColor.b, m_BorderColor.a);
-			SDL_RenderDrawRect(Widget::sRenderer, (SDL_Rect*)&m_Geometry); 
+			SDL_RenderDrawRect(Widget::sWD.renderer, (SDL_Rect*)&m_Geometry); 
 		}
 	}
 
