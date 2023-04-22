@@ -41,7 +41,8 @@ namespace VNEngine {
 
 	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
 		: m_pWindow(nullptr), m_pRenderer(nullptr), m_DrawId(0), m_Background({}),
-		WIDTH(width), HEIGHT(height)
+		WIDTH(width), HEIGHT(height), m_PrevWindowSize({0,0}),
+		m_PrevBackgroundSize({0,0,0,0})
 	{
 
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
@@ -105,7 +106,8 @@ namespace VNEngine {
 	}
 
 	void Artist::Perform() {
-		if (IH_INSTANCE.getIfWindowResized()) WindowResized();
+		if (IH_INSTANCE.getIfWindowResized()) 
+			WindowResized();
 
 		SDL_SetRenderDrawColor(m_pRenderer, m_Background.backgroundColor.r,
 			m_Background.backgroundColor.g, m_Background.backgroundColor.b,
@@ -158,8 +160,11 @@ namespace VNEngine {
 				m_Background.dest.x = (WIDTH - m_Background.dest.w) / 2;
 				m_Background.dest.y = (HEIGHT - m_Background.dest.h) / 2;
 				break;
+
 			case STRETCHED:
-				if (HEIGHT / source.y > WIDTH / source.x) {
+				m_PrevBackgroundSize = m_Background.dest;
+				if (m_PrevWindowSize.x > WIDTH ||
+					m_PrevWindowSize.y < HEIGHT) {
 					float imageAspectRation = (float)WIDTH / source.x;
 					m_Background.dest.h = (int)round((float)source.y * imageAspectRation);
 					m_Background.dest.w = WIDTH;
@@ -173,7 +178,23 @@ namespace VNEngine {
 					m_Background.dest.x = (WIDTH - m_Background.dest.w) / 2;
 					m_Background.dest.y = 0;
 				}
+
+				if (m_Background.dest.w > WIDTH) {
+					float imageAspectRation = (float)WIDTH / source.x;
+					m_Background.dest.h = (int)round((float)source.y * imageAspectRation);
+					m_Background.dest.w = WIDTH;
+					m_Background.dest.x = 0;
+					m_Background.dest.y = (HEIGHT - m_Background.dest.h) / 2;
+				}
+				else if (m_Background.dest.h > HEIGHT) {
+					float imageAspectRation = (float)HEIGHT / source.y;
+					m_Background.dest.w = (int)round((float)source.x * imageAspectRation);
+					m_Background.dest.h = HEIGHT;
+					m_Background.dest.x = (WIDTH - m_Background.dest.w) / 2;
+					m_Background.dest.y = 0;
+				}
 				break;
+
 			case FULLSCREENED:
 			default:
 				m_Background.dest = { 0,0,WIDTH, HEIGHT };
@@ -279,9 +300,52 @@ namespace VNEngine {
 	}
 
 	void Artist::WindowResized() {
+		m_PrevWindowSize = { WIDTH,HEIGHT };
 		SDL_GetWindowSize(m_pWindow, &WIDTH, &HEIGHT );
-		SetStretchingState(GetStretchingState());
+		if (m_PrevWindowSize.x == WIDTH && m_PrevWindowSize.y == HEIGHT) return;
 		SetStretchingState(m_Background.stretchState);
+		ResizeTextures();
+	}
+
+	void Artist::ResizeTextures() {
+		if (m_Queue.empty()) return;
+
+		if (m_Background.stretchState == STRETCHED 
+			&& m_Background.drawBackPic && m_Background.ptexture != nullptr) {
+
+			float wratio = (float)m_Background.dest.w / (float)m_PrevBackgroundSize.w;
+			float hratio = (float)m_Background.dest.h / (float)m_PrevBackgroundSize.h;
+
+			for (auto texturePair = m_Queue.begin();
+				texturePair != m_Queue.end();
+				++texturePair) {
+				DrawnData& dd = (*texturePair).second;
+
+				vec2 coordsAtBack = {
+					dd.destination.x - m_PrevBackgroundSize.x,
+					dd.destination.y - m_PrevBackgroundSize.y
+				};
+
+				dd.destination.x = m_Background.dest.x + (int)round((float)coordsAtBack.x*wratio);
+				dd.destination.y = m_Background.dest.y + (int)round((float)coordsAtBack.y*hratio);
+				dd.destination.w = (int)round((float)dd.destination.w * wratio);
+				dd.destination.h = (int)round((float)dd.destination.h * hratio);
+			}
+		}
+		else {
+			float verticalRation = (float)HEIGHT / m_PrevWindowSize.y;
+			float horizontRation = (float)WIDTH / m_PrevWindowSize.x;
+			for (auto texturePair = m_Queue.begin();
+				texturePair != m_Queue.end();
+				++texturePair) {
+				DrawnData& dd = (*texturePair).second;
+
+				dd.destination.x = (int)round((float)dd.destination.x * horizontRation);
+				dd.destination.y = (int)round((float)dd.destination.y * verticalRation);
+				dd.destination.w = (int)round((float)dd.destination.w * horizontRation);
+				dd.destination.h = (int)round((float)dd.destination.h * verticalRation);
+			}
+		}
 	}
 	
 	void Artist::SetWindowResizable(bool resizable) {

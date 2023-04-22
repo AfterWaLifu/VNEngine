@@ -34,12 +34,15 @@ namespace VNEngine{
 		SDL_Renderer* m_pRenderer;
 
 		int WIDTH, HEIGHT;
+		vec2 m_PrevWindowSize;	// needed for correct scaling
+		vec4 m_PrevBackgroundSize;
 
 		std::unordered_map<uint32_t, DrawnData> m_Queue;	/// Queue on drawing (data and indexes)
 		uint32_t m_DrawId;									/// First empty ID to draw
 
 		void FindFirstEmptyId();	/// Finds value for m_DrawId
 		void WindowResized();		/// Manages window resizing
+		void ResizeTextures();		/// Resizing drawn textures for new window size
 
 		/// Knows everything about your window background
 		struct {
