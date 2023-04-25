@@ -1,0 +1,2 @@
+--	file just to be, may be used (for example) to set default resources dirs
+--	or may be some defaults for interface idk

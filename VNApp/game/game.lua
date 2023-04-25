@@ -1,0 +1,1 @@
+-- game entry point script for reader
