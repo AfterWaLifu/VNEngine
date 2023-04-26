@@ -6,7 +6,7 @@
 ]]
 
 scripts = "game/"
-entryScript = "game/game.lua"
+-- entryScript = "game.lua"
 images = "game/images/"
 fonts = "game/fonts/"
-audio = "THERE IS NO AUDIO"
+-- audio = "game/audio"

@@ -123,6 +123,7 @@ namespace VNEngine {
 
 	void Text::SetFont(FontInfo fontInfo) {
 		m_Font.info = fontInfo;
+		if (m_Font.font) TTF_CloseFont(m_Font.font);
 		m_Font.font = TTF_OpenFont(m_Font.info.fontName, m_Font.info.fontSize);
 		if (!m_Font.font) {
 			VN_LOGS_ERROR("Can't load font '" <<
