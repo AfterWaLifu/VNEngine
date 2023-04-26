@@ -7,11 +7,11 @@ Window = {
 	Title = "VNEngine Test Game",
 	Width = 1280,
 	Height= 720,
-	Fullscreen = true
+	Fullscreen = false
 }
 
 Background = {
-	Color = {0,0,0,255},
+	Color = {200,100,100,255},
 	Stretching = "stretched"
 }
 

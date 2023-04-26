@@ -5,8 +5,8 @@
 	FIRST TO LOAD	
 ]]
 
--- scripts = "game/"
--- entryScript = "game.lua"
+scripts = "game/"
 images = "game/images/"
 fonts = "game/fonts/"
-audio = "game/audio"
+fontDefault = "Roboto.ttf"
+audio = "THERE IS NO AUDIO"

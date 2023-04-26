@@ -32,6 +32,10 @@ namespace VNEngine {
 		if (t.isString()) {
 			Widget::SetFontsPath(t.tostring());
 		}
+		t = lb::getGlobal(L, "fontDefault");
+		if (t.isString()) {
+			Widget::SetFontDefault(t.tostring());
+		}
 		t = lb::getGlobal(L, "audio");
 		if (t.isString()) {
 			AP_INSTANCE.SetAudiofilePath(t.tostring());
