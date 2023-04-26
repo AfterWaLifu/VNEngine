@@ -90,7 +90,7 @@ namespace VNEngine {
 		return *s_pInstance;
 	}
 
-	void TextureManager::SetImagesPath(std::string path) {
+	void TextureManager::SetImagesPath(const std::string& path) {
 		m_ImagesPath = path;
 	}
 

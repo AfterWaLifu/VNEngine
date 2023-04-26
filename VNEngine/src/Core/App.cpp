@@ -8,10 +8,6 @@ namespace VNEngine {
 	{
 		Loader loader = Loader(this);
 
-		InputHandler::InputHandlerInit(&m_IsRunning);
-
-		State::InitDrawingForStates(m_Drawer.get());
-
 		m_IsRunning = true;
 	}
 

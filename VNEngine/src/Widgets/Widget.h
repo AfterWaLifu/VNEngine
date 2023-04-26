@@ -61,9 +61,9 @@ namespace VNEngine {
 
 		virtual void SetGeometry(vec4 geometry) = 0;
 
-		void SetFontsPath(std::string path) { sFontsPath = path; }
-		std::string GetFontsPath() { return sFontsPath; }
-		void SetFontDefault(std::string font) { sFontDefault = font; }
-		std::string GetFontDefault() { return sFontDefault; }
+		static void SetFontsPath(const std::string& path) { sFontsPath = path; }
+		static std::string GetFontsPath() { return sFontsPath; }
+		static void SetFontDefault(const std::string& font) { sFontDefault = font; }
+		static std::string GetFontDefault() { return sFontDefault; }
 	};
 }

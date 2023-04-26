@@ -32,7 +32,7 @@ namespace VNEngine {
 
 		static inline TextureManager* s_pInstance;
 
-		std::string m_ImagesPath;
+		static inline std::string m_ImagesPath;
 	public:
 
 		bool addTexture(const std::string& key, const std::string& path, int rows, int collumns);
@@ -43,8 +43,8 @@ namespace VNEngine {
 		static void TextureManagerTerminate();
 		static TextureManager& Instance();
 
-		void SetImagesPath(std::string path);
-		std::string GetImagesPath();
+		static void SetImagesPath(const std::string& path);
+		static std::string GetImagesPath();
 	};
 
 #define TM_INSTANCE TextureManager::Instance()
