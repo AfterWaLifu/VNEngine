@@ -17,3 +17,5 @@
 #include "StateMachine/State.h"
 #include "StateMachine/StateMachine.h"
 #include "StateMachine/ReadingState.h"
+#include "LuaReaders/LuaReader.h"
+#include "LuaReaders/Loader.h"

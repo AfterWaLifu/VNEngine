@@ -4,15 +4,13 @@
 
 class Game : public VNEngine::App {
 public:
-	Game(VNEngine::AppInfo info) : VNEngine::App(info) { Load(); }
+	Game() : VNEngine::App() {  }
 private:
-	void Load() override {}
 };
 
 int main(int argc, char* argv[]) {
 	
-	VNEngine::AppInfo info = { "VNApp", 1280, 720, false };
-	Game game(info);
+	Game game = Game();
 	game.Run();
 
 	return 0;

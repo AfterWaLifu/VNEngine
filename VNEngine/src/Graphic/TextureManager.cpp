@@ -27,9 +27,9 @@ namespace VNEngine {
 
 	bool TextureManager::addTexture(const std::string& key, const std::string& path, int rows, int collumns)
 	{
-		SDL_Surface* tempSurface = IMG_Load(path.c_str());
+		SDL_Surface* tempSurface = IMG_Load((m_ImagesPath + path).c_str());
 		if (tempSurface == nullptr) {
-			VN_LOGS_WARNING("Image file not found '" << path << "', check error below");
+			VN_LOGS_WARNING("Image file not found '" << m_ImagesPath + path << "', check error below");
 			VN_LOGS_WARNING(IMG_GetError());
 			return false;
 		}
@@ -88,5 +88,13 @@ namespace VNEngine {
 			TextureManagerInit(nullptr);
 		}
 		return *s_pInstance;
+	}
+
+	void TextureManager::SetImagesPath(std::string path) {
+		m_ImagesPath = path;
+	}
+
+	std::string TextureManager::GetImagesPath() {
+		return m_ImagesPath;
 	}
 }

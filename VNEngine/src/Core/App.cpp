@@ -3,23 +3,16 @@
 
 namespace VNEngine {
 
-	App::App(AppInfo& defaultAppInfo)
+	App::App()
 		:m_Drawer(nullptr), m_IsRunning(false)
 	{
-		m_Drawer = std::make_unique<Artist>(
-			defaultAppInfo.WindowTitle,
-			defaultAppInfo.Width, defaultAppInfo.Height,
-			defaultAppInfo.Fullscreen
-		);				//inits window
-		AP_INSTANCE;	//inits player
+		Loader loader = Loader(this);
 
 		InputHandler::InputHandlerInit(&m_IsRunning);
 
 		State::InitDrawingForStates(m_Drawer.get());
 
 		m_IsRunning = true;
-
-		Load();
 	}
 
 	App::~App() {

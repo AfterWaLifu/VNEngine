@@ -12,7 +12,8 @@ namespace VNEngine {
 		m_MusicSource(0), m_SoundSource(0),
 		m_MusicBuffer(0), m_SoundBuffer(0),
 		m_MusicVolume(1.0f), m_SoundVolume(1.0f),
-		m_AudioList(), m_Mute(false)
+		m_AudioList(), m_Mute(false),
+		m_AudiofilesPath("")
 	{
 		m_pDevice = alcOpenDevice(nullptr);
 		if (!m_pDevice) {
@@ -151,11 +152,10 @@ namespace VNEngine {
 	}
 
 	void AudioPlayer::AddAudio(std::string filename, std::string key) {
-		if (m_AudioList.AddAudio(filename, key)) {
-			VN_LOGS_INFO("Audio '" + key + "' has been added");
+		if (m_AudioList.AddAudio(m_AudiofilesPath + filename, key)) {
 		}
 		else {
-			VN_LOGS_WARNING("Audio adding '" + key + "' error");
+			VN_LOGS_WARNING("Audio adding '" + m_AudiofilesPath + filename + "' error");
 		}
 	}
 
@@ -202,6 +202,14 @@ namespace VNEngine {
 		m_Mute = false;
 		alSourcef(m_MusicSource, AL_GAIN, m_MusicVolume);
 		alSourcef(m_SoundSource, AL_GAIN, m_SoundVolume);
+	}
+
+	void AudioPlayer::SetAudiofilePath(std::string path) {
+		m_AudiofilesPath = path;
+	}
+
+	std::string AudioPlayer::GetAudiofilePath() {
+		return m_AudiofilesPath;
 	}
 
 }

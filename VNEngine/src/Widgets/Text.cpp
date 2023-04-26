@@ -22,6 +22,7 @@ namespace VNEngine {
 		m_TextDestination = { 0,0,0,0 };
 		m_IndentHorizontal = 3;
 		m_IndentVertical = 3;
+		if (fontInfo.fontName == "") fontInfo.fontName = Widget::m_FontDefault;
 		SetFont(fontInfo);
 		m_TextColor = textColor;
 		m_DrawBorder = false;
@@ -124,9 +125,9 @@ namespace VNEngine {
 	void Text::SetFont(FontInfo fontInfo) {
 		m_Font.info = fontInfo;
 		if (m_Font.font) TTF_CloseFont(m_Font.font);
-		m_Font.font = TTF_OpenFont(m_Font.info.fontName, m_Font.info.fontSize);
+		m_Font.font = TTF_OpenFont((Widget::m_FontsPath + m_Font.info.fontName).c_str(), m_Font.info.fontSize);
 		if (!m_Font.font) {
-			VN_LOGS_ERROR("Can't load font '" <<
+			VN_LOGS_ERROR("Can't load font '" << Widget::m_FontsPath +
 				fontInfo.fontName << "', check other errors or fonts files location");
 			return;
 		}

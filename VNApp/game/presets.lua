@@ -5,8 +5,8 @@
 	FIRST TO LOAD	
 ]]
 
-scripts = "game/"
+-- scripts = "game/"
 -- entryScript = "game.lua"
 images = "game/images/"
 fonts = "game/fonts/"
--- audio = "game/audio"
+audio = "game/audio"

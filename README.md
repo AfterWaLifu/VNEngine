@@ -12,4 +12,6 @@ Libs needed:
 *	SDL_ttf (fonts to draw text)
 *	OpenAL - audio api
 *	sndfile - small lib to read audio files
+*	lua - script language
+*	LuaBridge - C++ lua wrapper
 *	*to be added*

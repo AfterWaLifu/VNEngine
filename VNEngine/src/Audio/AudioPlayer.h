@@ -64,8 +64,13 @@ namespace VNEngine {
 		void Mute();	/// Mute all the sounds/musics
 		void Unmute();	/// Unmute all the sounds/musics
 
+		void SetAudiofilePath(std::string path);
+		std::string GetAudiofilePath();
+
 	private:
 		static inline AudioPlayer* s_pInstance;
+		
+		std::string m_AudiofilesPath;
 
 		/**
 		* @brief	Constructors, inits it, needed

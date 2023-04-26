@@ -9,25 +9,16 @@
 #include "Controls/InputHandler.h"
 #include "Widgets/WidgetsManager.h"
 #include "StateMachine/StateMachine.h"
+#include "LuaReaders/Loader.h"
 
 namespace VNEngine {
-
-	/**
-	* @brief Info needed to create a window you need
-	* Contains title string, width, height and window-fullscreen state
-	*/
-	struct AppInfo {
-		std::string WindowTitle;
-		int Width;
-		int Height;
-		bool Fullscreen;
-	};
 
 	/**
 	* @brief Main app class
 	* Being used to use/inherint and change smth if you need
 	*/
 	class App {
+		friend Loader;
 	protected:
 		std::unique_ptr<Artist> m_Drawer;	/// Artist class object, works with graphics
 
@@ -44,7 +35,7 @@ namespace VNEngine {
 		* @brief App constructor, creates App
 		* @param	defaultAppInfo	Window default params
 		*/
-		App(AppInfo& defaultAppInfo);
+		App();
 		virtual ~App();			/// App destructor
 
 		void Run();				/// Function that starts work of the app

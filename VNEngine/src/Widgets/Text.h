@@ -10,7 +10,7 @@
 namespace VNEngine {
 
 	struct FontInfo {
-		const char* fontName;
+		std::string fontName;
 		int fontSize;
 	};
 
@@ -39,7 +39,7 @@ namespace VNEngine {
 
 	public:
 		Text(vec4 geometry, std::wstring text = L"", vec4u8 textColor = {0,0,0,255},
-			FontInfo fontInfo = { "Roboto.ttf", 16 });
+			FontInfo fontInfo = { "", 16 });
 		virtual ~Text();
 
 		void SetText(std::wstring text);
