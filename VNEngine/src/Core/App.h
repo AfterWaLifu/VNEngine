@@ -30,7 +30,6 @@ namespace VNEngine {
 	class App {
 	protected:
 		std::unique_ptr<Artist> m_Drawer;	/// Artist class object, works with graphics
-		std::unique_ptr<AudioPlayer> m_AudioPlayer;	/// Literaly audio player
 
 		virtual void Load();	/// Function for preparing for work
 

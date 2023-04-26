@@ -10,9 +10,8 @@ namespace VNEngine {
 			defaultAppInfo.WindowTitle,
 			defaultAppInfo.Width, defaultAppInfo.Height,
 			defaultAppInfo.Fullscreen
-		);
-
-		m_AudioPlayer = std::make_unique<AudioPlayer>();
+		);				//inits window
+		AP_INSTANCE;	//inits player
 
 		InputHandler::InputHandlerInit(&m_IsRunning);
 
@@ -24,7 +23,6 @@ namespace VNEngine {
 	}
 
 	App::~App() {
-		
 	}
 	
 	void App::Run() {

@@ -68,6 +68,11 @@ namespace VNEngine {
 		VN_LOGS_INFO("Audio Player deinitialized successfully");
 	}
 
+	AudioPlayer& AudioPlayer::Instance()
+	{
+		return s_pInstance ? *s_pInstance : *(s_pInstance = new AudioPlayer());
+	}
+
 	void AudioPlayer::PlayMusic(const std::string& trackName) {
 		uint32_t buffer = m_AudioList.GetAudio(trackName);
 

@@ -11,14 +11,7 @@ namespace VNEngine {
 	*/
 	class AudioPlayer {
 	public:
-		/**
-		* @brief	Constructors, inits it, needed
-		*/
-		AudioPlayer();
-		/**
-		* @brief	Destructor, also needed, but less =)
-		*/
-		~AudioPlayer();
+		static AudioPlayer& Instance();
 
 		/**
 		* @brief Plays audio on repeat
@@ -72,6 +65,17 @@ namespace VNEngine {
 		void Unmute();	/// Unmute all the sounds/musics
 
 	private:
+		static inline AudioPlayer* s_pInstance;
+
+		/**
+		* @brief	Constructors, inits it, needed
+		*/
+		AudioPlayer();
+		/**
+		* @brief	Destructor, also needed, but less =)
+		*/
+		~AudioPlayer();
+
 		AudioList m_AudioList;	/// Manages audiofiles
 
 		// OPENAL THINGS BELOW, DONT TOUCH THAT
@@ -89,4 +93,6 @@ namespace VNEngine {
 		float m_SoundVolume;	/// Sound volume
 		bool m_Mute;			/// Mute state
 	};
+
+#define AP_INSTANCE AudioPlayer::Instance()
 }
