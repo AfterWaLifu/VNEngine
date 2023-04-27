@@ -42,7 +42,7 @@ namespace VNEngine {
 	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
 		: m_pWindow(nullptr), m_pRenderer(nullptr), m_DrawId(0), m_Background({}),
 		m_WindowSize({width,height}), m_PrevWindowSize({0,0}),
-		m_PrevBackgroundSize({0,0,0,0})
+		m_PrevBackgroundSize({0,0,0,0}), m_Fullscreen(fullscreen)
 	{
 
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
@@ -50,15 +50,11 @@ namespace VNEngine {
 			return;
 		}
 
-		int flags = 0;
-		if (fullscreen) flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_FULLSCREEN;
-		else flags = SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE;
-
 		m_pWindow = SDL_CreateWindow(
 			title.c_str(),
 			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 			m_WindowSize.x, m_WindowSize.y,
-			flags
+			SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
 		);
 		if (m_pWindow == nullptr) {
 			VN_LOGS_ERROR("Window creation error");
@@ -93,6 +89,8 @@ namespace VNEngine {
 			{-1,-1,1,1},
 			Stretching::STRETCHED
 		};
+
+		if (fullscreen) SetWindowFullscreen(fullscreen);
 
 		VN_LOGS_INFO("Window creation succes");
 	}
@@ -355,6 +353,7 @@ namespace VNEngine {
 	}
 
 	void Artist::SetWindowSize(vec2 size) {
+		m_PrevWindowSize = m_WindowSize;
 		m_WindowSize = size;
 		SDL_SetWindowSize(m_pWindow, m_WindowSize.x, m_WindowSize.y);
 		IH_INSTANCE.setIfWindowResized(true);
@@ -366,6 +365,25 @@ namespace VNEngine {
 
 	void Artist::SetWindowTitle(std::string title) {
 		SDL_SetWindowTitle(m_pWindow, title.c_str());
+	}
+
+	void Artist::SetWindowFullscreen(bool fullscreen) {
+		m_Fullscreen = fullscreen;
+		if (m_Fullscreen) {
+			SDL_SetWindowFullscreen(m_pWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
+			m_PrevWindowSize = m_WindowSize;
+			SDL_GetWindowSize(m_pWindow, &m_WindowSize.x, &m_WindowSize.y);
+			IH_INSTANCE.setIfWindowResized(true);
+		}
+		else {
+			if (m_PrevWindowSize.x == 0 && m_PrevWindowSize.y == 0) return;
+			SDL_SetWindowFullscreen(m_pWindow, 0);
+			SetWindowSize(m_PrevWindowSize);
+		}
+	}
+
+	bool Artist::GetWindowFullscreen() {
+		return m_Fullscreen;
 	}
 	
 	void Artist::SaveScreenshot() {
