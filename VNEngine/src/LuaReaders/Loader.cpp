@@ -26,7 +26,7 @@ namespace VNEngine {
 		}
 		t = lb::getGlobal(L, "images");
 		if (t.isString()) {
-			TM_INSTANCE.SetImagesPath(t.tostring());
+			TextureManager::SetImagesPath(t.tostring());
 		}
 		t = lb::getGlobal(L, "fonts");
 		if (t.isString()) {
@@ -43,16 +43,15 @@ namespace VNEngine {
 	}
 
 	void Loader::readSettings() {
-		std::string title = "";
-		int width = 0, height = 0;
+		std::string title = "Title";
+		int width = 1280, height = 720;
 		bool foolscreen = false;
 		
 		if (luaL_dofile(L, (/*todo insert way to scripts*/"game/settings.lua"))) {
-			VN_LOGS_WARNING("Cant load settings");
-			return;
+			VN_LOGS_ERROR("Cant load settings");
 		}
 		lb::LuaRef t = lb::getGlobal(L, "Window");
-		if (!(t.isNil())) {
+		if (t.isTable()) {
 			if (t["Title"].isString())	title = t["Title"].cast<std::string>();
 			if (t["Width"].isNumber())	width = t["Width"].cast<int>();
 			if (t["Height"].isNumber())	height= t["Height"].cast<int>();
@@ -60,6 +59,8 @@ namespace VNEngine {
 		}
 		m_pApp->m_Drawer = std::make_unique<Artist>(
 			title, width, height, foolscreen);
+		if (!(t.isNil()) && t["Resizable"].isBool()) 
+			m_pApp->m_Drawer->SetWindowResizable(t["Resizable"].cast<bool>());
 		
 		vec4 vecColor = { 0,0,0,255 };
 		uint8_t stretching = 2;
@@ -79,7 +80,7 @@ namespace VNEngine {
 				else stretching = 2;
 			}
 		}
-		if (vecColor.r != 0 && vecColor.g != 0 && vecColor.b != 0 && vecColor.a != 255) {
+		if (vecColor.r != 0 || vecColor.g != 0 || vecColor.b != 0 || vecColor.a != 255) {
 			vec4u8 shortenedColor = {
 				(uint8_t)(vecColor.r % 256), (uint8_t)(vecColor.g % 256),
 				(uint8_t)(vecColor.b % 256), (uint8_t)(vecColor.a % 256)

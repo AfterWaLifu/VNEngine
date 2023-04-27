@@ -7,7 +7,8 @@ Window = {
 	Title = "VNEngine Test Game",
 	Width = 1280,
 	Height= 720,
-	Fullscreen = false
+	Fullscreen = false,
+	Resizable = true
 }
 
 Background = {

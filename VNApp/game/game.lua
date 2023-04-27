@@ -5,4 +5,7 @@
 	so it's ok to use any lua-non-conflict names etc
 ]]
 
-print("HERE IS THE GAME STARTS")
+--[[
+	VNEngine syntax for Lua
+
+]]
