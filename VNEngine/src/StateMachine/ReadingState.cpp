@@ -8,22 +8,22 @@
 namespace VNEngine {
 
 	void ReadingState::Handle() {
-		if (IH_INSTANCE.getMouseButtonState(InputHandler::RIGHT) || IH_INSTANCE.isKeyDown("esc")) {
+		if (IH_INSTANCE.getMouseButtonState(InputHandler::RIGHT) || IH_INSTANCE.isKeyPressed("esc")) {
 			// todo		SM_INSTANCE.PushState( *MENU STATE* )
 		}
 		if (IH_INSTANCE.getMouseButtonState(InputHandler::LEFT)) {
 			// todo		read next
 		}
-		if (IH_INSTANCE.isKeyDown("lctrl") || IH_INSTANCE.isKeyDown("rctrl")) {
+		if (IH_INSTANCE.isKeyPressed("lctrl") || IH_INSTANCE.isKeyPressed("rctrl")) {
 			// todo		read skip
 		}
-		if (IH_INSTANCE.isKeyDown("tab")) {
+		if (IH_INSTANCE.isKeyPressed("tab")) {
 			//todo		togle skip
 		}
-		if (IH_INSTANCE.isKeyDown("h")) {
+		if (IH_INSTANCE.isKeyPressed("h")) {
 			//todo		hide interface
 		}
-		if (IH_INSTANCE.isKeyDown("s")) {
+		if (IH_INSTANCE.isKeyPressed("s")) {
 			//todo		screenshot
 		}
 		//todo			add mouse wheel up & down
