@@ -7,7 +7,7 @@
 #include "Controls/InputHandler.h"
 #include "Graphic/TextureManager.h"
 #include "Widgets/Widget.h"
-//#include "LuaReaders/Reader.h"
+#include "LuaReaders/StoryTeller.h"
 
 #include <LuaBridge/LuaBridge.h>
 
@@ -22,7 +22,7 @@ namespace VNEngine {
 		}
 		lb::LuaRef t = lb::getGlobal(L, "scripts");
 		if (t.isString()) {
-			// = t.tostring();		for reader
+			StoryTeller::SetScriptPath(t.tostring());
 		}
 		t = lb::getGlobal(L, "images");
 		if (t.isString()) {
@@ -47,7 +47,7 @@ namespace VNEngine {
 		int width = 1280, height = 720;
 		bool foolscreen = false;
 		
-		if (luaL_dofile(L, (/*todo insert way to scripts*/"game/settings.lua"))) {
+		if (luaL_dofile(L, ((StoryTeller::GetScriptsPath() + "settings.lua").c_str()))) {
 			VN_LOGS_ERROR("Cant load settings");
 		}
 		lb::LuaRef t = lb::getGlobal(L, "Window");
