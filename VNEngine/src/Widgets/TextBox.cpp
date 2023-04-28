@@ -48,13 +48,13 @@ namespace VNEngine {
 		m_LineTimer = SDL_GetTicks64();
 		m_MaxCharNumber = maxCharNumber;
 
-		IH_INSTANCE.setTextInput(true);
+		IH_INSTANCE.setTextInputState(true);
 
 		s_InputString ? 0 : s_InputString = IH_INSTANCE.getTextInput();
 	}
 
 	TextBox::~TextBox() {
-		IH_INSTANCE.setTextInput(false);
+		IH_INSTANCE.setTextInputState(false);
 	}
 
 	void TextBox::Check() {
@@ -66,7 +66,7 @@ namespace VNEngine {
 			mousePos.y > m_Geometry.y &&
 			mousePos.y < m_Geometry.y + m_Geometry.h) {
 			s_ActiveTextBox = this;
-			if (IH_INSTANCE.getTextInput() == false) IH_INSTANCE.setTextInput(true);
+			if (IH_INSTANCE.getTextInputState() == false) IH_INSTANCE.setTextInputState(true);
 			*s_InputString = m_CurrentString;
 			return;
 		}

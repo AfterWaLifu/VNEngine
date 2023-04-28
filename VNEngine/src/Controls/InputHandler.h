@@ -108,7 +108,9 @@ namespace VNEngine {
 		* @brief Turns on/off inputing text
 		* @param state True or false to ON/OFF accordingly
 		*/
-		void setTextInput(bool state);
+		void setTextInputState(bool state);
+
+		bool getTextInputState();
 	};
 
 #define IH_INSTANCE InputHandler::Instance()

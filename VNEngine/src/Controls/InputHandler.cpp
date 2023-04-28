@@ -5,7 +5,7 @@ namespace VNEngine {
 
 	InputHandler::InputHandler(bool* isRunning)
 		: m_isRunningPointer(isRunning), m_keystates(nullptr),
-		m_mousePos({0,0}), m_windowResized(false), m_keyHolding(false),
+		m_mousePos({0,0}), m_windowResized(false),
 		m_textInputEnabled(false), m_textInputText(""),m_mouseScrollAmount(0)
 	{
 		for (int i = 0; i < 3; i++) m_mouseButtonStates.push_back(false);
@@ -122,9 +122,14 @@ namespace VNEngine {
 		return &m_textInputText;
 	}
 
-	void InputHandler::setTextInput(bool state) {
+	void InputHandler::setTextInputState(bool state) {
 		m_textInputEnabled = state;
 		m_textInputEnabled ? SDL_StartTextInput() : SDL_StopTextInput();
+	}
+
+	bool InputHandler::getTextInputState()
+	{
+		return m_textInputEnabled;
 	}
 
 	void InputHandler::onKeyDown(SDL_Event& event) {
