@@ -29,7 +29,6 @@ namespace VNEngine {
 	}
 
 	Button::~Button() {
-		Text::~Text();
 	}
 
 	void Button::Bind(std::function<void(void)> onClick) {

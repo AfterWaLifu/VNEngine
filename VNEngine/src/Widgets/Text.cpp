@@ -42,6 +42,7 @@ namespace VNEngine {
 			SDL_DestroyTexture(m_TextTexture);
 			m_TextTexture = nullptr;
 		}
+		if (m_Font.font) TTF_CloseFont(m_Font.font);
 	}
 
 	void Text::windowResized() {

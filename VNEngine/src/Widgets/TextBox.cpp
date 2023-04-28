@@ -55,7 +55,6 @@ namespace VNEngine {
 
 	TextBox::~TextBox() {
 		IH_INSTANCE.setTextInput(false);
-		Text::~Text();
 	}
 
 	void TextBox::Check() {
@@ -67,6 +66,7 @@ namespace VNEngine {
 			mousePos.y > m_Geometry.y &&
 			mousePos.y < m_Geometry.y + m_Geometry.h) {
 			s_ActiveTextBox = this;
+			if (IH_INSTANCE.getTextInput() == false) IH_INSTANCE.setTextInput(true);
 			*s_InputString = m_CurrentString;
 			return;
 		}
