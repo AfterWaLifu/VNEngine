@@ -59,6 +59,14 @@ namespace VNEngine {
 		Text::Draw();
 	}
 
+	bool Button::Pressed()
+	{
+		if (m_Focused && IH_INSTANCE.getMouseButtonState(InputHandler::LEFT)) {
+			return true;
+		}
+		return false;
+	}
+
 	void Button::SetBorderColor(vec4u8 color) {
 		m_DefaultBorder = color;
 	}

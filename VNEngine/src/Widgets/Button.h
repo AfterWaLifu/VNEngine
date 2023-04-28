@@ -25,6 +25,7 @@ namespace VNEngine {
 		void Bind(std::function<void(void)> onClick);
 		void Check();
 		void Draw();
+		bool Pressed();
 
 		void SetBorderColor(vec4u8 color);
 		void SetFocusBorderColor(vec4u8 color);
