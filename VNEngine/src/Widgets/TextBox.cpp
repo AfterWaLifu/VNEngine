@@ -111,4 +111,8 @@ namespace VNEngine {
 			);
 		}
 	}
+
+	std::string TextBox::Value() {
+		return m_CurrentString;
+	}
 }

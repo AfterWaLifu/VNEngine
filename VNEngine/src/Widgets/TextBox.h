@@ -23,5 +23,6 @@ namespace VNEngine {
 		void Check();
 		void Draw();
 
+		std::string Value();
 	};
 }

@@ -7,11 +7,29 @@
 	Interface HOW-TO
 	creation func's syntax
 
-	Text {x,y,w,h} "STRING" {r,g,b,a} "FONTNAME" FONTSIZE		straight way
-	Text {x,y} "STRING"		short one
-	Text {%x,%y} "STRING"	same, but with floates in range [-1;2]
+	table = {}
+	table.name = "string"			//codename of widget in programm
+	table.type = "text"/"button"/"textbox"	// what kind of widget
+	table.shown = bool				// shown if true
+	table.geometry = {x,y,w,h}		// without names, just an array-like
+	table.textColor = {r,g,b,a}		// same here
+	table.text = "string"			// what's inside
+	table.wrapped = bool			// true if wrapped
+	table.align	= "string"			// look at allign definition at widgets
+	table.vindent = NUM				// vertical indent
+	table.hindent = NUM				// horizontal indent
+	table.font = "string"			// font name
+	table.fontSize = NUM			// font size
+	table.backPic = "string"		// pic code for texture manager
+	table.backColor = {r,g,b,a}		// same as text color
+	table.borderColor = {r,g,b,a}	// same
+	table.borderActive = bool		//
 
-	buttons and textboxes almost same, BUT
-	Textbox	3rd value is a max char length
-	Button	2nd value is what onclick
+	Widget.Add(table)
+	Widget.Update("widget type", "codename", {table like above but w/out name, type})
+	Widget.Remove("widget type", "codename")
+
+	Widget.GetButtonClicked("codename")
+	Widget.GetButtonFocused("codename")
+	Widget.GetTextboxValue("codename")
 ]]

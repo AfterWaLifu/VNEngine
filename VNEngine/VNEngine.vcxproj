@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\LuaReaders\LuaWidgetFunctions.h" />
     <ClInclude Include="src\StateMachine\MenuState.h" />
     <ClInclude Include="src\LuaReaders\Loader.h" />
     <ClInclude Include="src\LuaReaders\LuaReader.h" />
