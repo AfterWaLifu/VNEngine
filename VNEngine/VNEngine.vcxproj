@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\StateMachine\MenuState.h" />
     <ClInclude Include="src\LuaReaders\Loader.h" />
     <ClInclude Include="src\LuaReaders\LuaReader.h" />
     <ClInclude Include="src\LuaReaders\StoryTeller.h" />
@@ -43,6 +44,7 @@
     <ClInclude Include="src\Widgets\WidgetsManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\StateMachine\MenuState.cpp" />
     <ClCompile Include="src\LuaReaders\Loader.cpp" />
     <ClCompile Include="src\LuaReaders\LuaReader.cpp" />
     <ClCompile Include="src\LuaReaders\StoryTeller.cpp" />

@@ -67,6 +67,10 @@ namespace VNEngine {
 		return false;
 	}
 
+	bool Button::Focused() {
+		return m_Focused;
+	}
+
 	void Button::SetBorderColor(vec4u8 color) {
 		m_DefaultBorder = color;
 	}

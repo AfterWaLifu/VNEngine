@@ -26,6 +26,7 @@ namespace VNEngine {
 		void Check();
 		void Draw();
 		bool Pressed();
+		bool Focused();
 
 		void SetBorderColor(vec4u8 color);
 		void SetFocusBorderColor(vec4u8 color);
