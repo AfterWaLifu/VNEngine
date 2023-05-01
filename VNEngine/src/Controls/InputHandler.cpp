@@ -1,6 +1,8 @@
 #include "InputHandler.h"
 #include "vnepch.h"
 
+#include <algorithm>
+
 namespace VNEngine {
 
 	InputHandler::InputHandler(bool* isRunning)
@@ -10,6 +12,8 @@ namespace VNEngine {
 	{
 		for (int i = 0; i < 3; i++) m_mouseButtonStates.push_back(false);
 		for (int i = 0; i < 3; i++) m_mouseButtonHold.push_back(false);
+		m_keysPressed = std::vector<SDL_Scancode>();
+		m_keysHold = std::vector<SDL_Scancode>();
 	}
 	
 	InputHandler::~InputHandler() {
@@ -84,6 +88,7 @@ namespace VNEngine {
 
 	bool InputHandler::isKeyPressed(const std::string& key)
 	{
+		if (m_keysPressed.empty()) return false;
 		using namespace Keys;
 		auto scancode = getScancodeFromKey(key.c_str());
 		if (scancode == SDL_SCANCODE_UNKNOWN) {
@@ -99,6 +104,7 @@ namespace VNEngine {
 
 	bool InputHandler::isKeyHeld(const std::string& key)
 	{
+		if (m_keysHold.empty()) return false;
 		using namespace Keys;
 		auto scancode = getScancodeFromKey(key.c_str());
 		if (scancode == SDL_SCANCODE_UNKNOWN) {
@@ -136,14 +142,11 @@ namespace VNEngine {
 		m_keystates = (uint8_t*)SDL_GetKeyboardState(0);
 
 		//	if just for pressed (widthout holding)
-		auto pressedSearch = std::find(m_keysPressed.begin(), m_keysPressed.end(), event.key.keysym.scancode);
-		if (pressedSearch != m_keysPressed.end()) m_keysPressed.push_back(event.key.keysym.scancode);
-		else m_keysPressed.erase(pressedSearch);
-		
-		//	if holding needed
-		if ( !(m_keysHold.empty()) &&
-			(std::find(m_keysHold.begin(), m_keysHold.end(), event.key.keysym.scancode)
-			!= m_keysHold.end())) {
+		auto search = std::find(m_keysPressed.begin(), m_keysPressed.end(), event.key.keysym.scancode);
+		if ( search != m_keysPressed.end() )
+			m_keysPressed.push_back(event.key.keysym.scancode);
+		else if ( !(m_keysPressed.empty()) ){
+			m_keysPressed.erase(search);
 			m_keysHold.push_back(event.key.keysym.scancode);
 		}
 
@@ -162,9 +165,9 @@ namespace VNEngine {
 	void InputHandler::onKeyUp(SDL_Event& event) {
 		m_keystates = (uint8_t*)SDL_GetKeyboardState(0);
 		auto search = std::find(m_keysPressed.begin(), m_keysPressed.end(), event.key.keysym.scancode);
-		if (search != m_keysPressed.end()) m_keysPressed.erase(search);
+		if ( (!(m_keysPressed.empty())) && search != m_keysPressed.end()) m_keysPressed.erase(search);
 		search = std::find(m_keysHold.begin(), m_keysHold.end(), event.key.keysym.scancode);
-		if (search != m_keysHold.end()) m_keysHold.erase(search);
+		if ((!(m_keysHold.empty())) && search != m_keysHold.end()) m_keysHold.erase(search);
 	}
 
 	void InputHandler::onMouseMove(SDL_Event& event) {

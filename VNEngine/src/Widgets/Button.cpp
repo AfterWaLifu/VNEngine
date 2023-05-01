@@ -6,8 +6,8 @@
 namespace VNEngine {
 
 	Button::Button(vec4 geometry, std::function<void(void)> onClick, std::wstring text,
-		vec4u8 BackgroundColor, vec4u8 textColor, FontInfo fontInfo)
-		: Text(geometry, text, textColor, fontInfo)
+		vec4u8 BackgroundColor, vec4u8 textColor, const std::string& fontKey)
+		: Text(geometry, text, textColor, fontKey)
 	{
 		Bind(onClick);
 		m_BackgroundColor = BackgroundColor;

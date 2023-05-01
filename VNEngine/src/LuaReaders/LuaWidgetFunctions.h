@@ -1,35 +1,24 @@
 #pragma once
 
-#include "Widgets/WidgetsManager.h"
-
+#include <lua.hpp>
 #include <LuaBridge/LuaBridge.h>
 
 namespace VNEngine {
 	
 	namespace LW {
 
-		void WidgetAdding(luabridge::LuaRef t) {
-			using namespace luabridge;
-		}
+		void WidgetAdding(luabridge::LuaRef t);
 
-		void WidgetUpdate(std::string type, std::string name, luabridge::LuaRef t) {
-			using namespace luabridge;
-		}
+		void WidgetUpdate(std::string type, std::string name, luabridge::LuaRef t);
 
-		void WidgetRemove(std::string type, std::string name) {
-			using namespace luabridge;
-		}
+		void WidgetRemove(std::string type, std::string name);
 
-		bool WidgetButtonClicked(std::string name) {
-			return WM_INSTANCE.GetButton(name)->Pressed();
-		}
+		luabridge::LuaRef WidgetGetState(std::string type, std::string name, lua_State* L);
 
-		bool WidgetButtonFocused(std::string name) {
-			return WM_INSTANCE.GetButton(name)->Focused();
-		}
+		bool WidgetButtonClicked(std::string name);
 
-		std::string WidgetTextboxValue(std::string name) {
-			return WM_INSTANCE.GetTextBox(name)->Value();
-		}
+		bool WidgetButtonFocused(std::string name);
+
+		std::string WidgetTextboxValue(std::string name);
 	}
 }

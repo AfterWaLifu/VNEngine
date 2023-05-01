@@ -31,6 +31,7 @@ namespace VNEngine {
 			beginNamespace("Widget").
 			addFunction("Add",				LW::WidgetAdding).
 			addFunction("Update",			LW::WidgetUpdate).
+			addFunction("GetState",			LW::WidgetGetState).
 			addFunction("Remove",			LW::WidgetRemove).
 			addFunction("GetButtonClicked",	LW::WidgetButtonClicked).
 			addFunction("GetButtonFocused",	LW::WidgetButtonFocused).

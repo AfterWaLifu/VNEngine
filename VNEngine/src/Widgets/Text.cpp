@@ -7,10 +7,34 @@
 
 #include "Core/Logger.h"
 #include "Controls/InputHandler.h"
+#include "Widgets/FontManager.h"
 
 namespace VNEngine {
 
-	Text::Text(vec4 geometry, std::wstring text, vec4u8 textColor, FontInfo fontInfo)
+#ifdef _WIN32
+#include <Windows.h>
+	std::wstring cvt(const std::string& str) {
+		if (str.empty())
+			return std::wstring();
+
+		size_t charsNeeded = MultiByteToWideChar(CP_UTF8, 0,
+			str.data(), (int)str.size(), NULL, 0);
+
+		std::vector<wchar_t> buffer(charsNeeded);
+		int charsConverted = MultiByteToWideChar(CP_UTF8, 0,
+			str.data(), (int)str.size(), &buffer[0], (int)buffer.size());
+
+		return std::wstring(&buffer[0], charsConverted);
+	}
+#else
+	std::wstring cvt(const std::string& str) {
+		if (str.empty())
+			return std::wstring();
+		return std::wstring(str.begin(), str.end());
+	}
+#endif
+
+	Text::Text(vec4 geometry, std::wstring text, vec4u8 textColor, const std::string& fontKey)
 		: Widget()
 	{
 		m_Geometry = geometry;
@@ -22,11 +46,11 @@ namespace VNEngine {
 		m_TextDestination = { 0,0,0,0 };
 		m_IndentHorizontal = 3;
 		m_IndentVertical = 3;
-		if (fontInfo.fontName == "") fontInfo.fontName = Widget::sFontDefault;
-		SetFont(fontInfo);
+		SetFont(fontKey);
 		m_TextColor = textColor;
 		m_DrawBorder = false;
 		m_BorderColor = { 0,0,0,0 };
+		m_Wraped = true;
 
 		if (!text.empty()) {
 			SetText(text);
@@ -42,7 +66,6 @@ namespace VNEngine {
 			SDL_DestroyTexture(m_TextTexture);
 			m_TextTexture = nullptr;
 		}
-		if (m_Font.font) TTF_CloseFont(m_Font.font);
 	}
 
 	void Text::windowResized() {
@@ -84,13 +107,13 @@ namespace VNEngine {
 		SDL_Surface* textSurface = nullptr;
 		if (m_Wraped) {
 			textSurface = TTF_RenderUNICODE_Blended_Wrapped(
-				m_Font.font, reinterpret_cast<Uint16 const*>(m_Text.c_str()),
+				FM_INSTANCE.getFont(m_FontKey)->font, reinterpret_cast<Uint16 const*>(m_Text.c_str()),
 				{ m_TextColor.r,m_TextColor.g ,m_TextColor.b ,m_TextColor.a },
 				(m_Geometry.w - ( m_IndentVertical > m_IndentHorizontal ? m_IndentVertical : m_IndentHorizontal ) ) );
 		}
 		else {
 			textSurface = TTF_RenderUNICODE_Blended(
-				m_Font.font, reinterpret_cast<Uint16 const*>(m_Text.c_str()),
+				FM_INSTANCE.getFont(m_FontKey)->font, reinterpret_cast<Uint16 const*>(m_Text.c_str()),
 				{m_TextColor.r,m_TextColor.g ,m_TextColor.b ,m_TextColor.a });
 		}
 		
@@ -123,29 +146,23 @@ namespace VNEngine {
 		return m_Text;
 	}
 
-	void Text::SetFont(FontInfo fontInfo) {
-		m_Font.info = fontInfo;
-		if (m_Font.font) TTF_CloseFont(m_Font.font);
-		m_Font.font = TTF_OpenFont((Widget::sFontsPath + m_Font.info.fontName).c_str(), m_Font.info.fontSize);
-		if (!m_Font.font) {
-			VN_LOGS_ERROR("Can't load font '" << Widget::sFontsPath +
-				fontInfo.fontName << "', check other errors or fonts files location");
+	void Text::SetText(std::string text) {
+		SetText(cvt(text));
+	}
+
+	void Text::SetFont(std::string font) {
+		Font* f = FM_INSTANCE.getFont(font);
+		if (f && f->font) m_FontKey = font;
+		else {
+			VN_LOGS_ERROR("Can't set font '" << font
+				<< "', check other errors or fonts files location");
 			return;
 		}
 		if (!m_Text.empty()) SetText(m_Text);
 	}
 
-	FontInfo Text::GetFont() {
-		return m_Font.info;
-	}
-
-	void Text::SetFontSize(int size) {
-		m_Font.info.fontSize = size;
-		SetFont(m_Font.info);
-	}
-
-	int Text::GetFontSize() {
-		return m_Font.info.fontSize;
+	std::string Text::GetFont() {
+		return m_FontKey;
 	}
 
 	void Text::Show() {
@@ -219,6 +236,8 @@ namespace VNEngine {
 		m_TextDestination.w = m_Geometry.w >= m_TextNativeGeometry.w ? m_TextNativeGeometry.w : m_Geometry.w;
 		m_TextDestination.h = m_Geometry.h >= m_TextNativeGeometry.h ? m_TextNativeGeometry.h : m_Geometry.h;
 
+		int fontSize = FM_INSTANCE.getFont(m_FontKey)->fontSize;
+
 		if (m_Alignment & ALIGN_LEFT )
 			m_TextDestination.x = m_Geometry.x + m_IndentHorizontal;
 		else if (m_Alignment & ALIGN_RIGHT)
@@ -228,10 +247,10 @@ namespace VNEngine {
 			m_TextDestination.x = m_Geometry.x + (m_Geometry.w - m_TextNativeGeometry.w) / 2;
 		if (m_Alignment & ALIGN_UP)
 			m_TextDestination.y = m_Geometry.y -
-			(m_TextNativeGeometry.h - m_Font.info.fontSize) + m_IndentVertical;
+			(m_TextNativeGeometry.h - fontSize) + m_IndentVertical;
 		else if (m_Alignment & ALIGN_DOWN)	
 			m_TextDestination.y = m_Geometry.y + m_Geometry.h - m_TextNativeGeometry.h +
-			(m_TextNativeGeometry.h - m_Font.info.fontSize) - m_IndentVertical;
+			(m_TextNativeGeometry.h - fontSize) - m_IndentVertical;
 		else 
 			m_TextDestination.y = m_Geometry.y + (m_Geometry.h - m_TextNativeGeometry.h) / 2;
 	}
@@ -260,6 +279,11 @@ namespace VNEngine {
 
 	void Text::SetBackImage(std::string key) {
 		m_Image = TM_INSTANCE.getTexture(key);
+		if (m_Image) m_BackImage = key;
+	}
+
+	std::string Text::GetBackImage() {
+		return m_BackImage;
 	}
 
 	void Text::SetGeometry(vec4 geometry)

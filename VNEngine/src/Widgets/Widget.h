@@ -32,8 +32,6 @@ namespace VNEngine {
 	protected:
 		
 		inline static WindowData sWD;
-		inline static std::string sFontsPath;
-		inline static std::string sFontDefault;
 
 		vec4 m_Geometry;
 		Texture* m_Image;
@@ -60,10 +58,5 @@ namespace VNEngine {
 		virtual void Draw() = 0;
 
 		virtual void SetGeometry(vec4 geometry) = 0;
-
-		static void SetFontsPath(const std::string& path) { sFontsPath = path; }
-		static std::string GetFontsPath() { return sFontsPath; }
-		static void SetFontDefault(const std::string& font) { sFontDefault = font; }
-		static std::string GetFontDefault() { return sFontDefault; }
 	};
 }

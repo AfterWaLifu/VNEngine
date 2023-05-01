@@ -6,7 +6,7 @@
 #include "Audio/AudioPlayer.h"
 #include "Controls/InputHandler.h"
 #include "Graphic/TextureManager.h"
-#include "Widgets/Widget.h"
+#include "Widgets/FontManager.h"
 #include "LuaReaders/StoryTeller.h"
 
 #include <LuaBridge/LuaBridge.h>
@@ -30,11 +30,11 @@ namespace VNEngine {
 		}
 		t = lb::getGlobal(L, "fonts");
 		if (t.isString()) {
-			Widget::SetFontsPath(t.tostring());
+			FM_INSTANCE.SetFontPath(t.tostring());
 		}
 		t = lb::getGlobal(L, "fontDefault");
 		if (t.isString()) {
-			Widget::SetFontDefault(t.tostring());
+			FM_INSTANCE.SetDefaultFont(t.tostring());
 		}
 		t = lb::getGlobal(L, "audio");
 		if (t.isString()) {

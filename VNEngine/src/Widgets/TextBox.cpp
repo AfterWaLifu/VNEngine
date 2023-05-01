@@ -5,32 +5,9 @@
 
 namespace VNEngine {
 
-#ifdef _WIN32
-#include <Windows.h>
-	std::wstring cvt(const std::string& str) {
-		if (str.empty())
-			return std::wstring();
-
-		size_t charsNeeded = MultiByteToWideChar(CP_UTF8, 0,
-			str.data(), (int)str.size(), NULL, 0);
-
-		std::vector<wchar_t> buffer(charsNeeded);
-		int charsConverted = MultiByteToWideChar(CP_UTF8, 0,
-			str.data(), (int)str.size(), &buffer[0], (int)buffer.size());
-
-		return std::wstring(&buffer[0], charsConverted);
-	}
-#else
-	std::wstring cvt(const std::string& str) {
-		if (str.empty())
-			return std::wstring();
-		return std::wstring(str.begin(), str.end());
-	}
-#endif
-
 	TextBox::TextBox(vec4 geometry, std::wstring text, uint32_t maxCharNumber,
-		vec4u8 textColor, FontInfo fontInfo)
-		:Text(geometry, text, textColor, fontInfo)
+		vec4u8 textColor, const std::string& fontKey)
+		:Text(geometry, text, textColor, fontKey)
 	{
 		m_BackgroundColor = { 220,220,220,255 };
 		SetAlign((Alignment)(ALIGN_VCENTER | ALIGN_LEFT));
@@ -114,5 +91,17 @@ namespace VNEngine {
 
 	std::string TextBox::Value() {
 		return m_CurrentString;
+	}
+
+	void TextBox::SetMaxCharNumber(uint32_t quantity) {
+		m_MaxCharNumber = quantity;
+		if (m_CurrentString.length() > quantity) {
+			m_CurrentString = m_CurrentString.substr(0, quantity);
+			SetText(cvt(m_CurrentString));
+		}
+	}
+	
+	uint32_t TextBox::GetMaxCharNumber() {
+		return m_MaxCharNumber;
 	}
 }

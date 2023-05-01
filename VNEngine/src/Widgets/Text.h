@@ -9,19 +9,12 @@
 
 namespace VNEngine {
 
-	struct FontInfo {
-		std::string fontName;
-		int fontSize;
-	};
+	std::wstring cvt(const std::string& str);
 
 	class Text : public Widget {
 
 	protected:
 		SDL_Texture* m_TextTexture;
-		struct {
-			FontInfo info;
-			TTF_Font* font;
-		} m_Font;
 		
 		vec4 m_TextNativeGeometry;
 		vec4 m_TextDestination;
@@ -30,6 +23,8 @@ namespace VNEngine {
 
 		vec4u8 m_TextColor;
 		std::wstring m_Text;
+		std::string m_FontKey;
+		std::string m_BackImage;
 
 		vec4u8 m_BorderColor;
 		bool m_DrawBorder;
@@ -39,15 +34,14 @@ namespace VNEngine {
 
 	public:
 		Text(vec4 geometry, std::wstring text = L"", vec4u8 textColor = {0,0,0,255},
-			FontInfo fontInfo = { "", 16 });
+			const std::string& fontKey = "");
 		virtual ~Text();
 
 		void SetText(std::wstring text);
 		std::wstring GetText();
-		void SetFont(FontInfo fontInfo);
-		FontInfo GetFont();
-		void SetFontSize(int size);
-		int GetFontSize();
+		void SetText(std::string text);
+		void SetFont(std::string font);
+		std::string GetFont();
 		void Show();
 		void Hide();
 		bool IsItShown();
@@ -70,6 +64,7 @@ namespace VNEngine {
 		int GetVerticalIndent();
 		int GetHorizontalIndent();
 		void SetBackImage(std::string key);
+		std::string GetBackImage();
 		void SetGeometry(vec4 geometry) override;
 		vec4 GetGeometry();
 		void Move(vec2 coords);
