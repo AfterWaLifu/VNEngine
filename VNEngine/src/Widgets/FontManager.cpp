@@ -29,6 +29,9 @@ namespace VNEngine {
 	}
 
 	Font* FontManager::getFont(const std::string& key) {
+		if (m_Fonts.empty()) {
+			addFont("", sDefaultFont, 32);
+		}
 		if (m_Fonts.find(key) == m_Fonts.end()) {
 			VN_LOGS_WARNING("Attemp to get a non-existing font");
 			return nullptr;

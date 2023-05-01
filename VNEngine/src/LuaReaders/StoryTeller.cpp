@@ -8,6 +8,7 @@ namespace VNEngine {
 	StoryTeller::StoryTeller()
 		: m_CurrentFile(""), m_CurrentLine(0)
 	{
+		RegisterInterfaceFunctions();
 	}
 
 	StoryTeller::~StoryTeller() {
