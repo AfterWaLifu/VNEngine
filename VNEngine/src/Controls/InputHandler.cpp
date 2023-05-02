@@ -138,6 +138,10 @@ namespace VNEngine {
 		return m_textInputEnabled;
 	}
 
+	void InputHandler::exit() {
+		*m_isRunningPointer = false;
+	}
+
 	void InputHandler::onKeyDown(SDL_Event& event) {
 		m_keystates = (uint8_t*)SDL_GetKeyboardState(0);
 

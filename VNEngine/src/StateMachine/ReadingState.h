@@ -12,8 +12,6 @@ namespace VNEngine {
 
 		std::string m_ReadingState;
 
-		Text* m_CharName, *m_Phrase;
-
 	public:
 		void Handle() override;
 		void Update() override;

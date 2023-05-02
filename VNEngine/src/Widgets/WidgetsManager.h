@@ -36,10 +36,15 @@ namespace VNEngine {
 		void AddWidget(const std::string& key, TextBox* textbox);
 
 		void RemoveWidget(WidgetType type, const std::string& key);
+		void WipeWidgets();
 
 		Text* GetText(const std::string& key);
 		Button* GetButton(const std::string& key);
 		TextBox* GetTextBox(const std::string& key);
+
+		bool ExistsText(const std::string key);
+		bool ExistsButton(const std::string key);
+		bool ExistsTextBox(const std::string key);
 
 		void Draw();
 		void Handle();

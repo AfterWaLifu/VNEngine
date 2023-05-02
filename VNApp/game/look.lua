@@ -36,7 +36,7 @@
 	Widget.GetTextboxValue("codename")
 ]]
 
-menu = {
+mainmenu = {
 	{type="text", name="title", geometry={50,50,500,100},textColor={255,255,255,255},text="VNApp", align="LT"},
 	{type="button", name="start", geometry={50,105,200,100},textColor={0,0,0,255},text="Start", align="CC"},
 	{type="button", name="load", geometry={50,210,200,100},textColor={0,0,0,255},text="Load", align="CC"},

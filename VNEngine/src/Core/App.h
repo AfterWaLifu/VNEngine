@@ -9,6 +9,8 @@
 #include "Controls/InputHandler.h"
 #include "Widgets/WidgetsManager.h"
 #include "StateMachine/StateMachine.h"
+#include "StateMachine/MenuState.h"
+#include "StateMachine/ReadingState.h"
 #include "LuaReaders/Loader.h"
 
 namespace VNEngine {

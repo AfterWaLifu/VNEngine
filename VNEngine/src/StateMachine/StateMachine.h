@@ -21,6 +21,9 @@ namespace VNEngine {
 		void PushState(State* state);
 		void ChangeState(State* state);
 		void PopState();
+
+		void Update();
+		void Draw();
 	};
 
 #define SM_INSTANCE StateMachine::Instance()

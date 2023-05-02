@@ -7,8 +7,11 @@ namespace VNEngine {
 	class MenuState : public State
 	{
 		std::string m_MenuState;
+		std::string m_ScreenToStart;
 
 	public:
+		MenuState(const std::string& screen);
+
 		void Handle() override;
 		void Update() override;
 		void Render() override;

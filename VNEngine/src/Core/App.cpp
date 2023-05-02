@@ -9,6 +9,8 @@ namespace VNEngine {
 		Loader loader = Loader(this);
 
 		m_IsRunning = true;
+
+		Load();
 	}
 
 	App::~App() {
@@ -22,19 +24,22 @@ namespace VNEngine {
 		}
 	}
 
-	void App::Load() {}
+	void App::Load() {
+		SM_INSTANCE.ChangeState(new MenuState("mainmenu"));
+	}
 
 	void App::Update() {
-		SDL_Delay(20);
 	}
 
 	void App::HandleEvents() {
 		IH_INSTANCE.Update();
 		WM_INSTANCE.Handle();
+		SM_INSTANCE.Update();
 	}
 
 	void App::Draw() {
 		m_Drawer->Perform();
+		SM_INSTANCE.Draw();
 		WM_INSTANCE.Draw();
 		m_Drawer->DrawAkaFinale();
 	}

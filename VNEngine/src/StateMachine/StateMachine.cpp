@@ -49,4 +49,17 @@ namespace VNEngine {
 		}
 		else VN_LOGS_WARNING("Attemp to pop state of empty stack");
 	}
+	
+	void StateMachine::Update() {
+		if (!(m_States.empty())) {
+			m_States.back()->Handle();
+			m_States.back()->Update();
+		}
+	}
+
+	void StateMachine::Draw() {
+		if (!(m_States.empty())) {
+			m_States.back()->Render();
+		}
+	}
 }

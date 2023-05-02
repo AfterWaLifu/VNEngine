@@ -111,6 +111,8 @@ namespace VNEngine {
 		void setTextInputState(bool state);
 
 		bool getTextInputState();
+
+		void exit();
 	};
 
 #define IH_INSTANCE InputHandler::Instance()

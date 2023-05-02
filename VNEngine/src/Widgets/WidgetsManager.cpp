@@ -60,6 +60,12 @@ namespace VNEngine {
 		}
 	}
 
+	void WidgetsManager::WipeWidgets() {
+		m_AllTexts.clear();
+		m_AllButtons.clear();
+		m_AllTextBoxs.clear();
+	}
+
 	Text* WidgetsManager::GetText(const std::string& key) {
 		auto search = m_AllTexts.find(key);
 		if (search == m_AllTexts.end()) {
@@ -85,6 +91,21 @@ namespace VNEngine {
 			return nullptr;
 		}
 		return m_AllTextBoxs[key].get();
+	}
+
+	bool WidgetsManager::ExistsText(const std::string key) {
+		if (m_AllTexts.find(key) != m_AllTexts.end()) return true;
+		return false;
+	}
+
+	bool WidgetsManager::ExistsButton(const std::string key) {
+		if (m_AllButtons.find(key) != m_AllButtons.end()) return true;
+		return false;
+	}
+
+	bool WidgetsManager::ExistsTextBox(const std::string key) {
+		if (m_AllTextBoxs.find(key) != m_AllTextBoxs.end()) return true;
+		return false;
 	}
 
 	void WidgetsManager::Draw() {
