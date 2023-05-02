@@ -1,6 +1,6 @@
 #include "App.h"
 #include "vnepch.h"
-
+#include "LuaReaders/InterfaceCreator.h"
 namespace VNEngine {
 
 	App::App()
@@ -15,6 +15,7 @@ namespace VNEngine {
 	}
 	
 	void App::Run() {
+		Load();
 		while (m_IsRunning) {
 			Update();
 			HandleEvents();
@@ -22,7 +23,7 @@ namespace VNEngine {
 		}
 	}
 
-	void App::Load() { }
+	void App::Load() { InterfaceCreator it; it.Draw("menu"); }
 
 	void App::Update() {
 		SDL_Delay(20);

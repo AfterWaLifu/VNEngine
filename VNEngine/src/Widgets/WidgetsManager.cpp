@@ -28,7 +28,7 @@ namespace VNEngine {
 
 	void WidgetsManager::AddWidget(const std::string& key, Button* button) {
 		auto search = m_AllButtons.find(key);
-		if (!m_AllButtons.empty() && search == m_AllButtons.end()) {
+		if (!m_AllButtons.empty() && search != m_AllButtons.end()) {
 			VN_LOGS_WARNING("Attemp to add Button widget with existing key");
 			return;
 		}

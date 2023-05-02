@@ -35,3 +35,13 @@
 	Widget.GetButtonFocused("codename")
 	Widget.GetTextboxValue("codename")
 ]]
+
+menu = {
+	{type="text", name="title", geometry={50,50,500,100},textColor={255,255,255,255},text="VNApp", align="LT"},
+	{type="button", name="start", geometry={50,105,200,100},textColor={0,0,0,255},text="Start", align="CC"},
+	{type="button", name="load", geometry={50,210,200,100},textColor={0,0,0,255},text="Load", align="CC"},
+	{type="button", name="sets", geometry={50,315,200,100},textColor={0,0,0,255},text="Settings", align="CC"},
+	{type="button", name="exit", geometry={50,420,200,100},textColor={0,0,0,255},text="Exit", align="CC"}
+}
+
+game = {}
