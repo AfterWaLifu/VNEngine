@@ -15,7 +15,6 @@ namespace VNEngine {
 	}
 	
 	void App::Run() {
-		Load();
 		while (m_IsRunning) {
 			Update();
 			HandleEvents();

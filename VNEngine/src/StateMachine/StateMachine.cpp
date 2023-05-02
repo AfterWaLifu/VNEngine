@@ -5,6 +5,10 @@
 
 namespace VNEngine {
 
+	StateMachine::StateMachine() {
+		m_States = std::vector<State*>();
+	}
+
 	StateMachine& StateMachine::Instance() {
 		return (s_StateMachine) ? *s_StateMachine : *(s_StateMachine = new StateMachine()) ;
 	}

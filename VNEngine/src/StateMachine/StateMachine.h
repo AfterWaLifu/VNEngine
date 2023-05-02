@@ -8,6 +8,9 @@ namespace VNEngine {
 
 	class StateMachine {
 
+		StateMachine();
+		~StateMachine() = default;
+
 		std::vector<State*> m_States;
 
 		static inline StateMachine* s_StateMachine;
