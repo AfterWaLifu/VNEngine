@@ -151,7 +151,7 @@ namespace VNEngine {
 		}
 	}
 
-	void AudioPlayer::AddAudio(std::string filename, std::string key) {
+	void AudioPlayer::AddAudio(const std::string& filename, const std::string& key) {
 		if (m_AudioList.AddAudio(m_AudiofilesPath + filename, key)) {
 		}
 		else {
@@ -159,7 +159,7 @@ namespace VNEngine {
 		}
 	}
 
-	void AudioPlayer::RemoveAudio(std::string key) {
+	void AudioPlayer::RemoveAudio(const std::string& key) {
 		if (m_AudioList.RemoveAudio(key)) {
 			VN_LOGS_INFO("Audio '" + key + "' has been removed");
 		}

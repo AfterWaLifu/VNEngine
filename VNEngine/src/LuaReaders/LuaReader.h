@@ -2,6 +2,9 @@
 
 #include <lua.hpp>
 
+#include "LuaWidgetFunctions.h"
+#include "LuaSetsFunctions.h"
+
 namespace VNEngine {
 
 	class LuaReader {
@@ -9,6 +12,7 @@ namespace VNEngine {
 		lua_State* L;
 
 		void RegisterInterfaceFunctions();
+		void RegisterSettingsFunctons();
 	public:
 		LuaReader();
 		virtual ~LuaReader();

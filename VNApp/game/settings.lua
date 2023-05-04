@@ -8,11 +8,7 @@ Window = {
 	Width = 1280,
 	Height= 720,
 	Fullscreen = false,
-	Resizable = true
-}
-
-Background = {
-	Color = {200,100,100,255},
+	Resizable = true,
 	Stretching = "stretched"
 }
 

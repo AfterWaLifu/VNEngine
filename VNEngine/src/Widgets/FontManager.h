@@ -31,6 +31,8 @@ namespace VNEngine {
 		Font* getFont(const std::string& key);
 		void delFont(const std::string& key);
 
+		bool Exist(const std::string& key);
+
 		static FontManager& Instance();
 
 		static void SetFontPath(const std::string& path);

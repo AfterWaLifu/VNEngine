@@ -98,6 +98,10 @@ namespace VNEngine{
 		* @param id It's ID you get after Draw func
 		*/
 		void StopDrawing(const uint32_t id);
+		/**
+		* @brief Removes everything from drawing
+		*/
+		void WipeDrawing();
 
 		void AddTexture(const std::string& key, const std::string& path, int rows = 1, int collumns = 1);
 		void DeleteTexture(const std::string& key);

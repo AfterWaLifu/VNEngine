@@ -11,6 +11,7 @@ namespace VNEngine {
 
 		void readPresets();
 		void readSettings();
+		void preload();
 
 	public:
 		Loader(App* app);

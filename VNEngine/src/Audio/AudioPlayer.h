@@ -33,12 +33,12 @@ namespace VNEngine {
 		* @param filename	The path + name of the file
 		* @param key		Keyword to get an access to this audio
 		*/
-		void AddAudio(std::string filename, std::string key);
+		void AddAudio(const std::string& filename, const std::string& key);
 		/**
 		* @brief Removing audio from the dictionary
 		* @param key		Keyword of audio to remove
 		*/
-		void RemoveAudio(std::string key);
+		void RemoveAudio(const std::string& key);
 
 		/**
 		* @brief Set a new volume value for music

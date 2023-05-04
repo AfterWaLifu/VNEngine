@@ -277,6 +277,10 @@ namespace VNEngine {
 		}
 	}
 
+	void Artist::WipeDrawing() {
+		if (!(m_Queue.empty())) m_Queue.clear();
+	}
+
 	void Artist::AddTexture(const std::string& key, const std::string& path, int rows, int collumns) {
 		TM_INSTANCE.addTexture(key, path, rows, collumns);
 	}

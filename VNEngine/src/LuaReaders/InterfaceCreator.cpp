@@ -14,6 +14,7 @@ namespace VNEngine {
 
 	InterfaceCreator::InterfaceCreator() {
 		RegisterInterfaceFunctions();
+		RegisterSettingsFunctons();
 	}
 
 	InterfaceCreator::~InterfaceCreator() {
@@ -25,10 +26,8 @@ namespace VNEngine {
 		}
 
 		lb::LuaRef lr = lb::getGlobal(L, what.c_str());
-		if (lr.isTable()) {
-			for (int i = 1; !(lr[i].isNil()); ++i) {
-				LW::WidgetAdding(lr[i]);
-			}
+		if (lr.isFunction()) {
+			lr();
 		}
 		else {
 			VN_LOGS_WARNING("Error on looking for name below in the 'look.lua'" << what);

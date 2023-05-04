@@ -6,6 +6,7 @@
 namespace VNEngine {
 	
 	FontManager::FontManager() {
+		addFont("", sDefaultFont,20);
 	}
 
 	FontManager::~FontManager() {
@@ -29,12 +30,9 @@ namespace VNEngine {
 	}
 
 	Font* FontManager::getFont(const std::string& key) {
-		if (m_Fonts.empty()) {
-			addFont("", sDefaultFont, 32);
-		}
 		if (m_Fonts.find(key) == m_Fonts.end()) {
 			VN_LOGS_WARNING("Attemp to get a non-existing font");
-			return nullptr;
+			return &(m_Fonts[""]);
 		}
 		return &(m_Fonts[key]);
 	}
@@ -46,6 +44,10 @@ namespace VNEngine {
 		}
 		TTF_CloseFont(m_Fonts[key].font);
 		m_Fonts.erase(key);
+	}
+
+	bool FontManager::Exist(const std::string& key) {
+		return (!(m_Fonts.empty()) && (m_Fonts.find(key) != m_Fonts.end()));
 	}
 
 	FontManager& FontManager::Instance() {

@@ -3,6 +3,7 @@
 
 #include "Core/Logger.h"
 #include "LuaReaders/LuaWidgetFunctions.h"
+#include "LuaReaders/LuaSetsFunctions.h"
 
 #include <LuaBridge/LuaBridge.h>
 
@@ -36,6 +37,48 @@ namespace VNEngine {
 			addFunction("GetButtonClicked",	LW::WidgetButtonClicked).
 			addFunction("GetButtonFocused",	LW::WidgetButtonFocused).
 			addFunction("GetTextboxValue",	LW::WidgetTextboxValue).
+			endNamespace();
+	}
+
+	void LuaReader::RegisterSettingsFunctons() {
+		using namespace luabridge;
+
+		getGlobalNamespace(L).
+			beginNamespace("Game").
+			addFunction("AddAudio", LS::AddAudio).
+			addFunction("DeleteAudio", LS::DelAudio).
+			addFunction("PlayMusic", LS::PlayMusic).
+			addFunction("PauseMusic", LS::PauseMusic).
+			addFunction("StopMysic", LS::StopMusic).
+			addFunction("PlaySound", LS::PlaySound).
+			addFunction("StopSound", LS::StopSound).
+			addFunction("SetMusicVolume", LS::SetMusicVolume).
+			addFunction("SetSoundVolume", LS::SetSoundVolume).
+			addFunction("GetMusicVolume", LS::GetMusicVolume).
+			addFunction("GetSoundVolume", LS::GetSoundVolume).
+			addFunction("AudioMute", LS::Mute).
+			addFunction("AudioUnmute", LS::Unmute).
+			addFunction("AddPicture", LS::AddPicture).
+			addFunction("DelPicture", LS::DelPicture).
+			addFunction("SetBackgroundColor", LS::SetBackgroundColor).
+			addFunction("SetBackgroundPicture", LS::SetBackgroundPicture).
+			addFunction("SetUsingBackgroundPic", LS::SetUsingBackgroundPic).
+			addFunction("GetBackgroundColor", LS::GetBackgroundColor).
+			addFunction("GetBackgroundPicture", LS::GetBackgroundPicture).
+			addFunction("GetDrawingBackPicture", LS::GetDrawingBackPicture).
+			addFunction("Draw", LS::Draw).
+			addFunction("DrawByRowCollumn", LS::DrawRC).
+			addFunction("StopDrawing", LS::StopDrawing).
+			addFunction("StopDrawingById", LS::StopDrawingID).
+			addFunction("WipeScreen", LS::WipeScreen).
+			addFunction("SetWindowTitle", LS::SetWindowTitle).
+			addFunction("SetWindowSize", LS::SetWindowSize).
+			addFunction("GetWindowSize", LS::GetWindowSize).
+			addFunction("Screenshot", LS::SaveScreenshot).
+			addFunction("FontAdd", LS::FontAdd).
+			addFunction("FontDel", LS::FontDel).
+			addFunction("FontExist", LS::FontExist).
+			addFunction("Exit", LS::ExitWithIH).
 			endNamespace();
 	}
 }

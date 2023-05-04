@@ -9,6 +9,7 @@ namespace VNEngine {
 		: m_CurrentFile(""), m_CurrentLine(0)
 	{
 		RegisterInterfaceFunctions();
+		RegisterSettingsFunctons();
 	}
 
 	StoryTeller::~StoryTeller() {
@@ -16,9 +17,10 @@ namespace VNEngine {
 
 	void StoryTeller::DoFile(const std::string& filename) {
 		m_CurrentFile = filename;
-		if (luaL_dofile(L, (sScriptsPath + m_CurrentFile).c_str()))
+		if (luaL_dofile(L, (sScriptsPath + m_CurrentFile).c_str()) != 0) {
 			VN_LOGS_ERROR("Lua file reading abortion" << m_CurrentFile <<
 				std::string("At line ") + std::to_string(m_CurrentLine));
+		}
 	}
 
 	std::string StoryTeller::GetCurrentFileName() {

@@ -7,7 +7,6 @@
 namespace VNEngine {
 	
 	namespace LW {
-
 		luabridge::LuaRef vecIntoTable(vec4 vec, lua_State* L) {
 			using namespace luabridge;
 			LuaRef table(L, newTable(L));
@@ -344,7 +343,7 @@ namespace VNEngine {
 		luabridge::LuaRef WidgetGetState(std::string type, std::string name, lua_State* L) {
 			using namespace luabridge;
 			LuaRef table(L, newTable(L));
-			
+
 			Text* text = nullptr;
 			Button* button = nullptr;
 			TextBox* textbox = nullptr;
@@ -361,7 +360,7 @@ namespace VNEngine {
 			if (text != nullptr) {
 				table["shown"] = text->IsItShown();
 				table["geometry"] = vecIntoTable(text->GetGeometry(), L);
-				table["textColor"] = vecIntoTable(text->GetTextColor(),L);
+				table["textColor"] = vecIntoTable(text->GetTextColor(), L);
 				table["text"] = text->GetText();
 				table["wrapped"] = text->GetWraped();
 				table["align"] = text->GetAlign();
@@ -369,8 +368,8 @@ namespace VNEngine {
 				table["hindent"] = text->GetHorizontalIndent();
 				table["font"] = text->GetFont();
 				table["backPic"] = text->GetBackImage();
-				table["backColor"] = vecIntoTable(text->GetBackgroundColor(),L);
-				table["borderColor"] = vecIntoTable(text->GetBorderColor(),L);
+				table["backColor"] = vecIntoTable(text->GetBackgroundColor(), L);
+				table["borderColor"] = vecIntoTable(text->GetBorderColor(), L);
 				table["borderActive"] = text->GetDrawingBorder();
 			}
 			else if (button != nullptr) {
@@ -420,7 +419,6 @@ namespace VNEngine {
 		std::string WidgetTextboxValue(std::string name) {
 			return WM_INSTANCE.GetTextBox(name)->Value();
 		}
-
 	}
 }
 
