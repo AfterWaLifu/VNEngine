@@ -19,7 +19,7 @@ namespace VNEngine {
 
 	void WidgetsManager::AddWidget(const std::string& key, Text* text) {
 		auto search = m_AllTexts.find(key);
-		if (!m_AllTexts.empty() && search == m_AllTexts.end()) {
+		if (!m_AllTexts.empty() && search != m_AllTexts.end()) {
 			VN_LOGS_WARNING("Attemp to add Text widget with existing key");
 			return;
 		}
@@ -37,7 +37,7 @@ namespace VNEngine {
 
 	void WidgetsManager::AddWidget(const std::string& key, TextBox* textbox) {
 		auto search = m_AllTextBoxs.find(key);
-		if (!m_AllTextBoxs.empty() && search == m_AllTextBoxs.end()) {
+		if (!m_AllTextBoxs.empty() && search != m_AllTextBoxs.end()) {
 			VN_LOGS_WARNING("Attemp to add TextBox widget with existing key");
 			return;
 		}

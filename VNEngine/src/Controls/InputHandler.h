@@ -11,6 +11,12 @@
 
 namespace VNEngine {
 
+	enum MouseButtons : uint8_t {
+		LEFT = 0,
+		MIDDLE = 1,
+		RIGHT = 2
+	};
+
 	/**
 	* @brief Class to handle all the input from keyboard or mouse in the app
 	* Implemented as singletone to have an a access from anywhere.
@@ -47,12 +53,6 @@ namespace VNEngine {
 		static void InputHandlerInit(bool* isRunning);
 
 		void Update();
-
-		enum MouseButtons : uint8_t {
-			LEFT = 0,
-			MIDDLE = 1,
-			RIGHT = 2
-		};
 
 		/**
 		* @brief Function to get a state of mouse button

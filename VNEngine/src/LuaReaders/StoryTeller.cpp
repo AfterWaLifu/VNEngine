@@ -2,6 +2,7 @@
 #include "vnepch.h"
 
 #include "Core/Logger.h"
+#include "LuaReaders/LuaGameFunctions.h"
 
 namespace VNEngine {
 
@@ -10,6 +11,8 @@ namespace VNEngine {
 	{
 		RegisterInterfaceFunctions();
 		RegisterSettingsFunctons();
+		RegisterGameFunctions();
+		LG::setStoryTeller(this);
 	}
 
 	StoryTeller::~StoryTeller() {
@@ -41,6 +44,15 @@ namespace VNEngine {
 
 	std::string StoryTeller::GetScriptsPath() {
 		return sScriptsPath;
+	}
+
+	void StoryTeller::RegisterGameFunctions() {
+		using namespace luabridge;
+
+		getGlobalNamespace(L).
+			addFunction("say", LG::say).
+			addFunction("who", LG::who).
+			addFunction("wait", LG::wait);
 	}
 
 }

@@ -51,7 +51,7 @@ namespace VNEngine {
 		}
 
 		if (m_OnClick == nullptr) return;
-		if (m_Focused && IH_INSTANCE.getMouseButtonState(InputHandler::LEFT))
+		if (m_Focused && IH_INSTANCE.getMouseButtonState(LEFT))
 			m_OnClick();
 	}
 
@@ -61,7 +61,7 @@ namespace VNEngine {
 
 	bool Button::Pressed()
 	{
-		if (m_Focused && IH_INSTANCE.getMouseButtonState(InputHandler::LEFT)) {
+		if (m_Focused && IH_INSTANCE.getMouseButtonState(LEFT)) {
 			return true;
 		}
 		return false;

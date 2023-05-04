@@ -4,6 +4,7 @@
 #include "Controls/InputHandler.h"
 #include "StateMachine/StateMachine.h"
 #include "Widgets/WidgetsManager.h"
+#include "LuaReaders/InterfaceCreator.h"
 #include "LuaReaders/StoryTeller.h"
 
 namespace VNEngine {
@@ -19,6 +20,8 @@ namespace VNEngine {
 
 	bool ReadingState::onEnter() {
 		m_ReadingState = "reading";
+		InterfaceCreator ic;
+		ic.Draw("game");
 		StoryTeller st;
 		st.DoFile("game.lua");
 

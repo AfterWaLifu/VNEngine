@@ -18,7 +18,16 @@ namespace VNEngine {
 				SM_INSTANCE.ChangeState(new ReadingState());
 			}
 		}
-		//todo add load screen and settings screen
+		if (WM_INSTANCE.ExistsButton("load")) {
+			if (WM_INSTANCE.GetButton("load")->Pressed()) {
+				SM_INSTANCE.ChangeState(new MenuState("load"));
+			}
+		}
+		if (WM_INSTANCE.ExistsButton("settings")) {
+			if (WM_INSTANCE.GetButton("settings")->Pressed()) {
+				SM_INSTANCE.ChangeState(new MenuState("settings"));
+			}
+		}
 		if (WM_INSTANCE.ExistsButton("exit")) {
 			if (WM_INSTANCE.GetButton("exit")->Pressed()) {
 				IH_INSTANCE.exit();

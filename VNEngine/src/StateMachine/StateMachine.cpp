@@ -15,8 +15,9 @@ namespace VNEngine {
 
 	void StateMachine::PushState(State* state) {
 		m_States.push_back(state);
-		if ( !(m_States.back()->onEnter()) ) 
+		if (!(m_States.back()->onEnter())) {
 			VN_LOGS_WARNING("Something wrong on entering " << m_States.back()->GetStateId() << " state");
+		}
 	}
 
 	void StateMachine::ChangeState(State* state) {

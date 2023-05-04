@@ -24,5 +24,7 @@ namespace VNEngine {
 
 		static void SetScriptPath(const std::string& path);
 		static std::string GetScriptsPath();
+
+		void RegisterGameFunctions();
 	};
 }
