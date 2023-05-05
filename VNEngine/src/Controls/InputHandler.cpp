@@ -74,7 +74,11 @@ namespace VNEngine {
 
 	bool InputHandler::getMouseButtonState(MouseButtons button)
 	{
-		return m_mouseButtonStates[button];
+		if (m_mouseButtonStates[button]) {
+			m_mouseButtonStates[button] = false;
+			return true;
+		}
+		return false;
 	}
 
 	const vec2& InputHandler::getMousePos()
