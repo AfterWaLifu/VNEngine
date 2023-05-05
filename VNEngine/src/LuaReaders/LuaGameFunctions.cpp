@@ -5,7 +5,6 @@
 
 #include "Core/Logger.h"
 #include "Widgets/WidgetsManager.h"
-#include "Controls/InputHandler.h"
 #include "LuaReaders/StoryTeller.h"
 
 namespace VNEngine {
@@ -30,7 +29,8 @@ namespace VNEngine {
 			else {
 				VN_LOGS_WARNING("Create 'say' text widget to be able to use 'say'");
 			}
-			while (!(IH_INSTANCE.getMouseButtonState(LEFT))) {}
+
+			if (!(s_ST->GetSkip())) luaL_dostring(L, "coroutine.yield()");
 		}
 
 		void who(std::string what, lua_State* L) {

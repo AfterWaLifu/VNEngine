@@ -21,7 +21,7 @@ namespace VNEngine {
 	void StoryTeller::DoFile(const std::string& filename) {
 		m_CurrentFile = filename;
 		if (luaL_dofile(L, (sScriptsPath + m_CurrentFile).c_str()) != 0) {
-			VN_LOGS_ERROR("Lua file reading abortion" << m_CurrentFile <<
+			VN_LOGS_ERROR("Lua file reading abortion" << sScriptsPath + m_CurrentFile <<
 				std::string("At line ") + std::to_string(m_CurrentLine));
 		}
 	}
@@ -55,4 +55,15 @@ namespace VNEngine {
 			addFunction("wait", LG::wait);
 	}
 
+	void StoryTeller::Go() {
+		luaL_dostring(L, "coroutine.resume()");
+	}
+	
+	void StoryTeller::SetSkip(bool skip) {
+		m_Skip = skip;
+	}
+
+	bool StoryTeller::GetSkip() {
+		return m_Skip;
+	}
 }

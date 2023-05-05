@@ -36,7 +36,7 @@ namespace VNEngine {
 	
 	void InputHandler::Update() {
 		SDL_Event event;
-		SDL_PollEvent(&event);
+		SDL_WaitEvent(&event);
 		m_mouseScrollAmount ? m_mouseScrollAmount = 0 : 0;
 
 		switch (event.type) {

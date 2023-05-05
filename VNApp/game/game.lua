@@ -15,3 +15,6 @@ Game.SetBackgroundPicture("b")
 
 who("Масюня")
 say("you will die soon")
+say("goodbye")
+
+Game.Exit()

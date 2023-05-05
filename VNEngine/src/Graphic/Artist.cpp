@@ -74,6 +74,7 @@ namespace VNEngine {
 			&m_PrevWindowSize, &m_Background.dest, &m_PrevBackgroundSize,
 			(uint8_t*)&(m_Background.stretchState) });
 		SDL_SetHint(SDL_HINT_RENDER_VSYNC, "1");
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 		
 		TextureManager::TextureManagerInit(m_pRenderer);
 		m_Queue.clear();

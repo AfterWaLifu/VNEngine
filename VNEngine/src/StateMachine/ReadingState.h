@@ -6,11 +6,15 @@
 #include "Widgets/Button.h"
 #include "Widgets/Textbox.h"
 
+#include "LuaReaders/StoryTeller.h"
+
 namespace VNEngine {
 
 	class ReadingState : public State {
 
 		std::string m_ReadingState;
+
+		StoryTeller m_ST;
 
 	public:
 		void Handle() override;

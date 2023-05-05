@@ -2,8 +2,6 @@
 
 #include "LuaReaders/LuaReader.h"
 
-#include <string>
-
 namespace VNEngine {
 
 	class StoryTeller : public LuaReader {
@@ -12,6 +10,8 @@ namespace VNEngine {
 
 		std::string m_CurrentFile;
 		int m_CurrentLine;
+
+		bool m_Skip;
 
 	public:
 		StoryTeller();
@@ -26,5 +26,9 @@ namespace VNEngine {
 		static std::string GetScriptsPath();
 
 		void RegisterGameFunctions();
+
+		void Go();
+		void SetSkip(bool skip);
+		bool GetSkip();
 	};
 }

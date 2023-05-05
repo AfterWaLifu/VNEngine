@@ -10,6 +10,11 @@
 namespace VNEngine {
 
 	void ReadingState::Handle() {
+		if (IH_INSTANCE.getMouseButtonState(LEFT)) {
+			m_ST.Go();
+		}
+		if (IH_INSTANCE.isKeyHeld("lctrl")) m_ST.SetSkip(true);
+		else m_ST.SetSkip(false);
 	}
 
 	void ReadingState::Update() {
@@ -22,8 +27,7 @@ namespace VNEngine {
 		m_ReadingState = "reading";
 		InterfaceCreator ic;
 		ic.Draw("game");
-		StoryTeller st;
-		st.DoFile("game.lua");
+		m_ST.DoFile("game.lua");
 
 		return true;
 	}
