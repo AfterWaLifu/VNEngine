@@ -10,11 +10,14 @@
 namespace VNEngine {
 
 	void ReadingState::Handle() {
-		if (IH_INSTANCE.getMouseButtonState(LEFT)) {
+		if (IH_INSTANCE.getMouseButtonState(LEFT) ||
+			IH_INSTANCE.isKeyPressed("space") || IH_INSTANCE.isKeyPressed("enter")) {
 			m_ST.Go();
 		}
-		if (IH_INSTANCE.isKeyHeld("lctrl")) m_ST.SetSkip(true);
+		if (IH_INSTANCE.isKeyPressed("lctrl") || IH_INSTANCE.isKeyPressed("rctrl")) m_ST.SetSkip(true);
 		else m_ST.SetSkip(false);
+		
+		if (IH_INSTANCE.isKeyPressed("tab")) m_ST.SetSkip(!m_ST.GetSkip());
 	}
 
 	void ReadingState::Update() {

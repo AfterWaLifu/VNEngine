@@ -9,7 +9,11 @@ Game.Draw("m", {500,300,256,256},0)
 Game.SetBackgroundPicture("b")
 
 who("Масюня")
-say("you will die soon")
+say("1")
+say("2")
+say("3")
+say("4")
+say("we are working on petrol")
 say("goodbye")
 
-Game.Exit()
+-- Game.Exit()

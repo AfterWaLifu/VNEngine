@@ -27,12 +27,10 @@ namespace VNEngine {
 
 		bool* m_isRunningPointer;
 		std::vector<bool> m_mouseButtonStates;
-		std::vector<bool> m_mouseButtonHold;
 		vec2 m_mousePos;
 		int32_t m_mouseScrollAmount;
 		uint8_t* m_keystates;
 		std::vector<SDL_Scancode> m_keysPressed;
-		std::vector<SDL_Scancode> m_keysHold;
 		bool m_windowResized;
 		bool m_textInputEnabled;
 		std::string m_textInputText;
@@ -79,13 +77,6 @@ namespace VNEngine {
 		* @return True if pressed (and not holded)
 		*/
 		bool isKeyPressed(const std::string& key);
-
-		/*
-		* @brief Function to get a hold state of keyboard button
-		* @param key Button sign or name (check Keys.h)
-		* @return True if being held
-		*/
-		bool isKeyHeld(const std::string& key);
 
 		/**
 		* @brief Cheching for state of window size
