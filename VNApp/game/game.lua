@@ -1,9 +1,4 @@
---[[
-	game entry point script for reader
-	
-	it will be different lua_state from loading
-	so it's ok to use any lua-non-conflict names etc
-]]
+-- this file is bad with comments so do it shorly not --[[]]
 
 Game.SetBackgroundColor({0,0,0,255})
 

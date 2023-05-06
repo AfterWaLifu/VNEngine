@@ -7,7 +7,7 @@
 namespace VNEngine {
 
 	StoryTeller::StoryTeller()
-		: m_CurrentFile(""), m_CurrentLine(0)
+		: m_CurrentFile(""), m_CurrentLine(0), m_Go(true), m_Skip(false)
 	{
 		RegisterInterfaceFunctions();
 		RegisterSettingsFunctons();
@@ -18,12 +18,27 @@ namespace VNEngine {
 	StoryTeller::~StoryTeller() {
 	}
 
+	void StoryTeller::goReadGoReadGo() {
+		char buffer[256];
+		while (m_Go && m_LuaFile.getline(buffer, 256, '\n')) {
+			++m_CurrentLine;
+			auto error = luaL_dostring(L, buffer);
+			if (error) {
+				VN_LOGS_WARNING("Lua error in line below" <<
+					std::to_string(m_CurrentLine) + " | " + buffer);
+			}
+		}
+	}
+
 	void StoryTeller::DoFile(const std::string& filename) {
 		m_CurrentFile = filename;
-		if (luaL_dofile(L, (sScriptsPath + m_CurrentFile).c_str()) != 0) {
-			VN_LOGS_ERROR("Lua file reading abortion" << sScriptsPath + m_CurrentFile <<
-				std::string("At line ") + std::to_string(m_CurrentLine));
+		m_CurrentLine = 0;
+		m_LuaFile.open(sScriptsPath + m_CurrentFile);
+		
+		if (!m_LuaFile.is_open()) {
+			VN_LOGS_ERROR("Can't open game file" << sScriptsPath + m_CurrentFile);
 		}
+		goReadGoReadGo();
 	}
 
 	std::string StoryTeller::GetCurrentFileName() {
@@ -56,11 +71,17 @@ namespace VNEngine {
 	}
 
 	void StoryTeller::Go() {
-		luaL_dostring(L, "coroutine.resume()");
+		m_Go = true;
+		goReadGoReadGo();
+	}
+
+	void StoryTeller::Wait() {
+		m_Go = false;
 	}
 	
 	void StoryTeller::SetSkip(bool skip) {
 		m_Skip = skip;
+		if (m_Skip) Go();
 	}
 
 	bool StoryTeller::GetSkip() {

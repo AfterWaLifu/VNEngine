@@ -16,6 +16,7 @@ namespace VNEngine {
 	class FontManager {
 
 		std::unordered_map<std::string, Font> m_Fonts;
+		Font m_DefaultFont;
 
 		FontManager();
 		~FontManager();

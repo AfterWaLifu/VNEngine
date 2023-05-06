@@ -2,16 +2,22 @@
 
 #include "LuaReaders/LuaReader.h"
 
+#include <fstream>
+
 namespace VNEngine {
 
 	class StoryTeller : public LuaReader {
 
 		static inline std::string sScriptsPath;
 
+		std::ifstream m_LuaFile;
 		std::string m_CurrentFile;
 		int m_CurrentLine;
 
+		bool m_Go;
 		bool m_Skip;
+
+		void goReadGoReadGo();
 
 	public:
 		StoryTeller();
@@ -28,6 +34,7 @@ namespace VNEngine {
 		void RegisterGameFunctions();
 
 		void Go();
+		void Wait();
 		void SetSkip(bool skip);
 		bool GetSkip();
 	};

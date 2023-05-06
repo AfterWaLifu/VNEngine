@@ -18,7 +18,6 @@ namespace VNEngine {
 		}
 		
 		luaL_openlibs(L);
-		lua_pcall(L, 0, 0, 0);
 	}
 
 	LuaReader::~LuaReader() {

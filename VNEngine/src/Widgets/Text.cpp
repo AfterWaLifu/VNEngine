@@ -153,11 +153,6 @@ namespace VNEngine {
 	void Text::SetFont(std::string font) {
 		Font* f = FM_INSTANCE.getFont(font);
 		if (f && f->font) m_FontKey = font;
-		else {
-			VN_LOGS_ERROR("Can't set font '" << font
-				<< "', check other errors or fonts files location");
-			return;
-		}
 		if (!m_Text.empty()) SetText(m_Text);
 	}
 

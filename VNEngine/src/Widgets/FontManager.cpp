@@ -6,7 +6,6 @@
 namespace VNEngine {
 	
 	FontManager::FontManager() {
-		addFont("", sDefaultFont,20);
 	}
 
 	FontManager::~FontManager() {
@@ -14,6 +13,13 @@ namespace VNEngine {
 	}
 
 	void FontManager::addFont(const std::string& key, const std::string& filename, int size) {
+
+		if (m_DefaultFont.font == nullptr) {
+			m_DefaultFont.font = TTF_OpenFont((sFontPath + sDefaultFont).c_str(), 16);
+			m_DefaultFont.fontName = sDefaultFont;
+			m_DefaultFont.fontSize = 16;
+		}
+
 		TTF_Font* f = TTF_OpenFont((sFontPath + filename).c_str(), size);
 		if (f == nullptr) {
 			VN_LOGS_WARNING("Cant open font " << sFontPath + filename);
@@ -29,11 +35,17 @@ namespace VNEngine {
 		}
 	}
 
-	Font* FontManager::getFont(const std::string& key) {
-		if (m_Fonts.find(key) == m_Fonts.end()) {
+	Font* FontManager::getFont(const std::string& key) {		
+		if ( !(m_Fonts.empty()) && m_Fonts.find(key) == m_Fonts.end() && key != "") {
 			VN_LOGS_WARNING("Attemp to get a non-existing font");
-			return &(m_Fonts[""]);
+			if (m_DefaultFont.font == nullptr) {
+				m_DefaultFont.font = TTF_OpenFont((sFontPath+sDefaultFont).c_str(), 16);
+				m_DefaultFont.fontName = sDefaultFont;
+				m_DefaultFont.fontSize = 16;
+			}
+			return &m_DefaultFont;
 		}
+		if (m_Fonts.empty() || key == "") return &m_DefaultFont;
 		return &(m_Fonts[key]);
 	}
 
