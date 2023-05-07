@@ -5,8 +5,11 @@
 #include "Graphic/Artist.h"
 
 namespace VNEngine {
+	class StateMachine;
 
 	class State {
+		friend StateMachine;
+	protected:
 		static inline Artist* s_pDrawer;
 	public:
 		virtual void Handle() = 0;

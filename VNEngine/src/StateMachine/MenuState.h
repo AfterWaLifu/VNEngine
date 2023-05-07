@@ -6,7 +6,7 @@ namespace VNEngine {
 
 	class MenuState : public State
 	{
-		std::string m_MenuState;
+		std::string m_MenuState = "menu";
 		std::string m_ScreenToStart;
 
 	public:

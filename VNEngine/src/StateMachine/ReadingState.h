@@ -12,7 +12,7 @@ namespace VNEngine {
 
 	class ReadingState : public State {
 
-		std::string m_ReadingState;
+		std::string m_ReadingState = "reading";
 
 		StoryTeller m_ST;
 

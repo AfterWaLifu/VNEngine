@@ -24,6 +24,8 @@ namespace VNEngine {
 
 		void Update();
 		void Draw();
+
+		bool isThereAReading();
 	};
 
 #define SM_INSTANCE StateMachine::Instance()

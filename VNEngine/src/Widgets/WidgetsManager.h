@@ -13,11 +13,18 @@ namespace VNEngine {
 
 	class WidgetsManager {
 
-		static inline WidgetsManager* s_pInstance;
+		struct widgets {
+			std::unordered_map<std::string, std::shared_ptr<Text>>		m_AllTexts;
+			std::unordered_map<std::string, std::shared_ptr<Button>>	m_AllButtons;
+			std::unordered_map<std::string, std::shared_ptr<TextBox>>	m_AllTextBoxs;
+		};
 
-		std::unordered_map<std::string, std::shared_ptr<Text>>		m_AllTexts;
-		std::unordered_map<std::string, std::shared_ptr<Button>>	m_AllButtons;
-		std::unordered_map<std::string, std::shared_ptr<TextBox>>	m_AllTextBoxs;
+		static inline WidgetsManager* s_pInstance;
+		static inline std::vector<widgets> m_Screens;
+
+		widgets m_Widgets;
+
+		bool m_AllHiden;
 
 		WidgetsManager();
 		~WidgetsManager();
@@ -48,6 +55,12 @@ namespace VNEngine {
 
 		void Draw();
 		void Handle();
+
+		void SetHiden(bool hide);
+		bool GetHiden();
+
+		void SaveScreen();
+		void PopScreen();
 	};
 
 #define WM_INSTANCE WidgetsManager::Instance()

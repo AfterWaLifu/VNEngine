@@ -29,7 +29,8 @@ namespace VNEngine {
 			else {
 				VN_LOGS_WARNING("Create 'say' text widget to be able to use 'say'");
 			}
-			if (!(s_ST->GetSkip())) s_ST->Wait();
+
+			s_ST->Wait();
 		}
 
 		void who(std::string what, lua_State* L) {

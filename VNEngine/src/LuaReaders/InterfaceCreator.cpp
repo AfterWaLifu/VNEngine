@@ -16,6 +16,7 @@ namespace VNEngine {
 	InterfaceCreator::InterfaceCreator() {
 		RegisterInterfaceFunctions();
 		RegisterSettingsFunctons();
+		RegisterStateMachineFunc();
 	}
 
 	InterfaceCreator::~InterfaceCreator() {
@@ -36,4 +37,14 @@ namespace VNEngine {
 			VN_LOGS_WARNING("Error on looking for name below in the 'look.lua'" << what);
 		}
 	}
+
+	void InterfaceCreator::RegisterStateMachineFunc() {
+		using namespace luabridge;
+
+		getGlobalNamespace(L).
+			beginNamespace("Game").
+			addFunction("IsThereReading", LS::GetIfReadingExist).
+			endNamespace();
+	}
+
 }

@@ -33,6 +33,10 @@ namespace VNEngine {
 				IH_INSTANCE.exit();
 			}
 		}
+
+		if (IH_INSTANCE.getMouseButtonState(RIGHT) && SM_INSTANCE.isThereAReading()) {
+			SM_INSTANCE.PopState();
+		}
 	}
 	
 	void MenuState::Update() {
@@ -42,7 +46,6 @@ namespace VNEngine {
 	}
 	
 	bool MenuState::onEnter() {
-		m_MenuState = "menu";
 		InterfaceCreator ic;
 		ic.Draw(m_ScreenToStart);
 

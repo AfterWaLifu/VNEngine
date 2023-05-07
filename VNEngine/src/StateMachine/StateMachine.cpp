@@ -2,6 +2,7 @@
 #include "vnepch.h"
 
 #include "Core/Logger.h"
+#include "Widgets/WidgetsManager.h"
 
 namespace VNEngine {
 
@@ -14,6 +15,11 @@ namespace VNEngine {
 	}
 
 	void StateMachine::PushState(State* state) {
+		if (!m_States.empty()) {
+			WM_INSTANCE.SaveScreen();
+			State::s_pDrawer->SaveScreen();
+		}
+
 		m_States.push_back(state);
 		if (!(m_States.back()->onEnter())) {
 			VN_LOGS_WARNING("Something wrong on entering " << m_States.back()->GetStateId() << " state");
@@ -48,7 +54,11 @@ namespace VNEngine {
 				m_States.pop_back();
 			}
 		}
-		else VN_LOGS_WARNING("Attemp to pop state of empty stack");
+
+		if (!m_States.empty()) {
+			WM_INSTANCE.PopScreen();
+			State::s_pDrawer->PopScreen();
+		}
 	}
 	
 	void StateMachine::Update() {
@@ -62,5 +72,13 @@ namespace VNEngine {
 		if (!(m_States.empty())) {
 			m_States.back()->Render();
 		}
+	}
+
+	bool StateMachine::isThereAReading() {
+		if (m_States.empty()) return false;
+		for (auto s : m_States) {
+			if (s->GetStateId() == "reading") return true;
+		}
+		return false;
 	}
 }

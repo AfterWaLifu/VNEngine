@@ -5,16 +5,39 @@
 ]]
 
 function mainmenu()
-	Game.SetBackgroundColor({200,100,100,255})
+	Game.SetBackgroundColor({250,125,125,255})
+	reading = Game.IsThereReading()
+
+	-- VNApp text above
 	table = {type="text", name="title", geometry={65,65,500,100},textColor={255,255,255,255},text="VNApp", align="LT", font="r60"}
 	Widget.Add(table)
-	table = {type="button", name="start", geometry={50,165,200,100},textColor={0,0,0,255},text="Start", align="CC", font="r32"}
-	Widget.Add(table)
-	table.name = "load"; table.geometry = {50,270,200,100}; table.text = "Load"
-	Widget.Add(table)
-	table.name = "settings"; table.geometry = {50,375,200,100}; table.text = "Settings"
-	Widget.Add(table)
-	table.name = "exit"; table.geometry = {50,480,200,100}; table.text = "Exit"
+
+	if (reading) then
+		table = {type="button", name="save", geometry={50,165,200,80},textColor={0,0,0,255},text="Save", align="CC", font="r32"}
+		Widget.Add(table)
+		table.name = "load"; table.geometry = {50,250,200,80}; table.text = "Load"
+		Widget.Add(table)
+		table.name = "settings"; table.geometry = {50,335,200,80}; table.text = "Settings"
+		Widget.Add(table)
+		table.name = "mainmenu"; table.geometry = {50,460,200,80}; table.text = "Main menu"
+		Widget.Add(table)
+		table.name = "exit"; table.geometry = {50,545,200,80}; table.text = "Exit"
+		Widget.Add(table)
+	else
+		table = {type="button", name="start", geometry={50,165,200,80},textColor={0,0,0,255},text="Start", align="CC", font="r32"}
+		Widget.Add(table)
+		table.name = "load"; table.geometry = {50,270,200,80}; table.text = "Load"
+		Widget.Add(table)
+		table.name = "settings"; table.geometry = {50,375,200,80}; table.text = "Settings"
+		Widget.Add(table)
+		table.name = "exit"; table.geometry = {50,480,200,80}; table.text = "Exit"
+		Widget.Add(table)
+	end
+end
+
+function save()
+	mainmenu()
+	table = {type="text", name="placeholder", geometry={565,365,300,100},text="save screen", font="r60"}
 	Widget.Add(table)
 end
 

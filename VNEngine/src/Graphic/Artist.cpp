@@ -280,6 +280,10 @@ namespace VNEngine {
 
 	void Artist::WipeDrawing() {
 		if (!(m_Queue.empty())) m_Queue.clear();
+		m_Background.textureKey = "";
+		m_Background.ptexture = nullptr;
+		m_Background.drawBackPic = false;
+		m_DrawId = 0;
 	}
 
 	void Artist::AddTexture(const std::string& key, const std::string& path, int rows, int collumns) {
@@ -407,5 +411,19 @@ namespace VNEngine {
 		IMG_SavePNG(surface, datetime.c_str());
 		VN_LOGS_WARNING(SDL_GetError());
 		SDL_FreeSurface(surface);
+	}
+	
+	void Artist::SaveScreen() {
+		m_Screens.push_back({ m_Background, m_Queue, m_DrawId });
+		WipeDrawing();
+	}
+
+	void Artist::PopScreen() {
+		WipeDrawing();
+		screenToSave screen = m_Screens.back();
+		m_Background = screen.b;
+		m_Queue = screen.q;
+		m_DrawId = screen.id;
+		m_Screens.pop_back();
 	}
 }

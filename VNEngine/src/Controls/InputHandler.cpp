@@ -97,8 +97,13 @@ namespace VNEngine {
 			return false;
 		}
 		//if (m_keystates == nullptr) return false;
-		
-		return (std::find(m_keysPressed.begin(), m_keysPressed.end(), scancode) != m_keysPressed.end());
+		auto search = std::find(m_keysPressed.begin(), m_keysPressed.end(), scancode);
+		if (search != m_keysPressed.end()) {
+			if (scancode != SDL_SCANCODE_LCTRL && scancode != SDL_SCANCODE_RCTRL)
+				m_keysPressed.erase(search);
+			return true;
+		}
+		else return false;
 
 		//return !!(m_keystates[K[key]]);
 	}

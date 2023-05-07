@@ -6,6 +6,7 @@
 #include "Graphic/Artist.h"
 #include "Controls/InputHandler.h"
 #include "Widgets/FontManager.h"
+#include "StateMachine/StateMachine.h"
 
 namespace VNEngine {
 
@@ -209,6 +210,10 @@ namespace VNEngine {
 
 		bool FontExist(std::string key) {
 			return FM_INSTANCE.Exist(key);
+		}
+
+		bool GetIfReadingExist() {
+			return SM_INSTANCE.isThereAReading();
 		}
 
 		void ExitWithIH() {

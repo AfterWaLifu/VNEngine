@@ -46,7 +46,7 @@ namespace VNEngine{
 		void ResizeTextures();		/// Resizing drawn textures for new window size
 
 		/// Knows everything about your window background
-		struct {
+		struct background {
 			vec4u8 backgroundColor;
 			Texture* ptexture;
 			std::string textureKey;
@@ -56,6 +56,13 @@ namespace VNEngine{
 			
 			Stretching stretchState;
 		} m_Background;
+
+		struct screenToSave {
+			background b;
+			std::unordered_map<uint32_t, DrawnData> q;
+			uint32_t id;
+		};
+		std::vector<screenToSave> m_Screens;
 
 	public:
 		/**
@@ -114,5 +121,8 @@ namespace VNEngine{
 		bool GetWindowFullscreen();
 
 		void SaveScreenshot();
+
+		void SaveScreen();
+		void PopScreen();
 	};
 }

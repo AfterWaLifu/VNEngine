@@ -43,9 +43,13 @@ namespace VNEngine {
 		luabridge::LuaRef GetWindowSize(lua_State* L);
 		void SaveScreenshot();
 
+		//	font functions
 		void FontAdd(std::string key, std::string filename, int size);
 		void FontDel(std::string key);
 		bool FontExist(std::string key);
+
+		//	state machine functions
+		bool GetIfReadingExist();
 
 		void ExitWithIH();
 	}

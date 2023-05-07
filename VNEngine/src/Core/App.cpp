@@ -17,10 +17,14 @@ namespace VNEngine {
 	}
 	
 	void App::Run() {
+		uint64_t TICKS, diff;
 		while (m_IsRunning) {
+			TICKS = SDL_GetTicks64();
 			Update();
 			HandleEvents();
 			Draw();
+			diff = TICKS = SDL_GetTicks64();
+			if (diff < 16) SDL_Delay((uint32_t)(16 - diff));
 		}
 	}
 
