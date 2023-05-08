@@ -28,6 +28,7 @@ namespace VNEngine {
 					std::to_string(m_CurrentLine) + " | " + buffer);
 			}
 		}
+		if (m_LuaFile.eof()) m_Completed = true;
 	}
 
 	void StoryTeller::DoFile(const std::string& filename) {
@@ -86,5 +87,9 @@ namespace VNEngine {
 
 	bool StoryTeller::GetSkip() {
 		return m_Skip;
+	}
+	
+	bool StoryTeller::GetCompleted() {
+		return m_Completed;
 	}
 }

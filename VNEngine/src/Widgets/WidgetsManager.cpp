@@ -182,6 +182,7 @@ namespace VNEngine {
 	}
 
 	void WidgetsManager::WipeScreens() {
+		WipeWidgets();
 		if (m_Screens.empty()) return;
 		m_Screens.clear();
 	}

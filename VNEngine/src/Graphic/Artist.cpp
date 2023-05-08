@@ -429,6 +429,7 @@ namespace VNEngine {
 	}
 	
 	void Artist::WipeScreens() {
+		WipeDrawing();
 		if (m_Screens.empty()) return;
 		m_Screens.clear();
 	}

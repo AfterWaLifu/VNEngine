@@ -18,6 +18,12 @@ namespace VNEngine {
 		if (IH_INSTANCE.getMouseButtonState(LEFT) ||
 			IH_INSTANCE.isKeyPressed("space") || IH_INSTANCE.isKeyPressed("enter")) {
 			
+			if (m_ST.GetCompleted()) {
+				SM_INSTANCE.WipeStates();
+				SM_INSTANCE.ChangeState(new MenuState("mainmenu"));
+				return;
+			}
+
 			if (WM_INSTANCE.GetHiden()) {
 				WM_INSTANCE.SetHiden(false);
 			}

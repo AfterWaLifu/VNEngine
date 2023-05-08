@@ -62,9 +62,9 @@ namespace VNEngine {
 	}
 
 	void StateMachine::WipeStates() {
+		while (!m_States.empty()) PopState();
 		WM_INSTANCE.WipeScreens();
 		State::s_pDrawer->WipeScreens();
-		while (!m_States.empty()) PopState();
 	}
 	
 	void StateMachine::Update() {
