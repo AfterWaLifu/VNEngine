@@ -9,13 +9,18 @@
 
 namespace VNEngine {
 
-	MenuState::MenuState(const std::string& screen) : m_ScreenToStart(screen) {
+	MenuState::MenuState(const std::string& screen) : m_ScreenToStart(screen), m_MenuState(screen) {
 	}
 	
 	void MenuState::Handle() {
 		if (WM_INSTANCE.ExistsButton("start")) {
 			if (WM_INSTANCE.GetButton("start")->Pressed()) {
 				SM_INSTANCE.ChangeState(new ReadingState());
+			}
+		}
+		if (WM_INSTANCE.ExistsButton("save")) {
+			if (WM_INSTANCE.GetButton("save")->Pressed()) {
+				SM_INSTANCE.ChangeState(new MenuState("save"));
 			}
 		}
 		if (WM_INSTANCE.ExistsButton("load")) {
@@ -26,6 +31,12 @@ namespace VNEngine {
 		if (WM_INSTANCE.ExistsButton("settings")) {
 			if (WM_INSTANCE.GetButton("settings")->Pressed()) {
 				SM_INSTANCE.ChangeState(new MenuState("settings"));
+			}
+		}
+		if (WM_INSTANCE.ExistsButton("mainmenu")) {
+			if (WM_INSTANCE.GetButton("mainmenu")->Pressed()) {
+				SM_INSTANCE.WipeStates();
+				SM_INSTANCE.ChangeState(new MenuState("mainmenu"));
 			}
 		}
 		if (WM_INSTANCE.ExistsButton("exit")) {

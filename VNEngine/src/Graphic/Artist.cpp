@@ -419,11 +419,17 @@ namespace VNEngine {
 	}
 
 	void Artist::PopScreen() {
+		if (m_Screens.empty()) return;
 		WipeDrawing();
 		screenToSave screen = m_Screens.back();
 		m_Background = screen.b;
 		m_Queue = screen.q;
 		m_DrawId = screen.id;
 		m_Screens.pop_back();
+	}
+	
+	void Artist::WipeScreens() {
+		if (m_Screens.empty()) return;
+		m_Screens.clear();
 	}
 }

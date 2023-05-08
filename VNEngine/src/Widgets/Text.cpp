@@ -318,7 +318,9 @@ namespace VNEngine {
 		if (m_DrawBorder) {
 			SDL_SetRenderDrawColor(Widget::sWD.renderer, m_BorderColor.r,
 				m_BorderColor.g, m_BorderColor.b, m_BorderColor.a);
-			SDL_RenderDrawRect(Widget::sWD.renderer, (SDL_Rect*)&m_Geometry); 
+			SDL_RenderDrawRect(Widget::sWD.renderer, (SDL_Rect*)&m_Geometry);
+			vec4 inner = { m_Geometry.x + 1,m_Geometry.y + 1, m_Geometry.w - 2,m_Geometry.h - 2 };
+			SDL_RenderDrawRect(Widget::sWD.renderer, (SDL_Rect*)&inner);
 		}
 	}
 

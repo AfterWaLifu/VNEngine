@@ -21,6 +21,7 @@ namespace VNEngine {
 		void PushState(State* state);
 		void ChangeState(State* state);
 		void PopState();
+		void WipeStates();
 
 		void Update();
 		void Draw();

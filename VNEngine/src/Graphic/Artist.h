@@ -124,5 +124,6 @@ namespace VNEngine{
 
 		void SaveScreen();
 		void PopScreen();
+		void WipeScreens();
 	};
 }

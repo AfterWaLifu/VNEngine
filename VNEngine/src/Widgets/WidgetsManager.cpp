@@ -175,9 +175,14 @@ namespace VNEngine {
 	}
 
 	void WidgetsManager::PopScreen() {
+		if (m_Screens.empty()) return;
 		WipeWidgets();
 		m_Widgets = m_Screens.back();
 		m_Screens.pop_back();
 	}
 
+	void WidgetsManager::WipeScreens() {
+		if (m_Screens.empty()) return;
+		m_Screens.clear();
+	}
 }

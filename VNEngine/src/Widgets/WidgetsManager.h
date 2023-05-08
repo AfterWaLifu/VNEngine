@@ -61,6 +61,7 @@ namespace VNEngine {
 
 		void SaveScreen();
 		void PopScreen();
+		void WipeScreens();
 	};
 
 #define WM_INSTANCE WidgetsManager::Instance()

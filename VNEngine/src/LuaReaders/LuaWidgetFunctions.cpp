@@ -51,7 +51,7 @@ namespace VNEngine {
 				std::string codename = "";
 				std::wstring text = L"";
 				if (t["name"].isString()) codename = t["name"].tostring();
-				if (t["text"].isString()) text = cvt(t["text"].tostring());
+				text = cvt(t["text"].tostring());
 
 				if (t["type"].tostring() == "text") {
 					Text* textWidget = new Text(geometry, text);
@@ -72,6 +72,15 @@ namespace VNEngine {
 					if (t["vindent"].isNumber()) textWidget->SetVerticalIndent(t["vindent"].cast<int>());
 					if (t["hindent"].isNumber()) textWidget->SetHorizontalIndent(t["hindent"].cast<int>());
 					if (t["backPic"].isString()) textWidget->SetBackImage(t["backPic"].tostring());
+					if (t["textColor"].isTable() &&
+						t["textColor"][1].isNumber() && t["textColor"][2].isNumber() &&
+						t["textColor"][3].isNumber() && t["textColor"][4].isNumber()) {
+						vec4u8 backcolor = {
+							t["textColor"][1].cast<uint8_t>() , t["textColor"][2].cast<uint8_t>(),
+							t["textColor"][3].cast<uint8_t>() , t["textColor"][4].cast<uint8_t>()
+						};
+						textWidget->SetTextColor(backcolor);
+					}
 					if (t["backColor"].isTable() &&
 						t["backColor"][1].isNumber() && t["backColor"][2].isNumber() &&
 						t["backColor"][3].isNumber() && t["backColor"][4].isNumber()) {
@@ -113,6 +122,15 @@ namespace VNEngine {
 					if (t["vindent"].isNumber()) buttonWidget->SetVerticalIndent(t["vindent"].cast<int>());
 					if (t["hindent"].isNumber()) buttonWidget->SetHorizontalIndent(t["hindent"].cast<int>());
 					if (t["backPic"].isString()) buttonWidget->SetBackImage(t["backPic"].tostring());
+					if (t["textColor"].isTable() &&
+						t["textColor"][1].isNumber() && t["textColor"][2].isNumber() &&
+						t["textColor"][3].isNumber() && t["textColor"][4].isNumber()) {
+						vec4u8 backcolor = {
+							t["textColor"][1].cast<uint8_t>() , t["textColor"][2].cast<uint8_t>(),
+							t["textColor"][3].cast<uint8_t>() , t["textColor"][4].cast<uint8_t>()
+						};
+						buttonWidget->SetTextColor(backcolor);
+					}
 					if (t["backColor"].isTable() &&
 						t["backColor"][1].isNumber() && t["backColor"][2].isNumber() &&
 						t["backColor"][3].isNumber() && t["backColor"][4].isNumber()) {
@@ -163,6 +181,15 @@ namespace VNEngine {
 					if (t["vindent"].isNumber()) textBoxWidget->SetVerticalIndent(t["vindent"].cast<int>());
 					if (t["hindent"].isNumber()) textBoxWidget->SetHorizontalIndent(t["hindent"].cast<int>());
 					if (t["backPic"].isString()) textBoxWidget->SetBackImage(t["backPic"].tostring());
+					if (t["textColor"].isTable() &&
+						t["textColor"][1].isNumber() && t["textColor"][2].isNumber() &&
+						t["textColor"][3].isNumber() && t["textColor"][4].isNumber()) {
+						vec4u8 backcolor = {
+							t["textColor"][1].cast<uint8_t>() , t["textColor"][2].cast<uint8_t>(),
+							t["textColor"][3].cast<uint8_t>() , t["textColor"][4].cast<uint8_t>()
+						};
+						textBoxWidget->SetTextColor(backcolor);
+					}
 					if (t["backColor"].isTable() &&
 						t["backColor"][1].isNumber() && t["backColor"][2].isNumber() &&
 						t["backColor"][3].isNumber() && t["backColor"][4].isNumber()) {
@@ -225,6 +252,15 @@ namespace VNEngine {
 				if (t["vindent"].isNumber()) text->SetVerticalIndent(t["vindent"].cast<int>());
 				if (t["hindent"].isNumber()) text->SetHorizontalIndent(t["hindent"].cast<int>());
 				if (t["backPic"].isString()) text->SetBackImage(t["backPic"].tostring());
+				if (t["textColor"].isTable() &&
+					t["textColor"][1].isNumber() && t["textColor"][2].isNumber() &&
+					t["textColor"][3].isNumber() && t["textColor"][4].isNumber()) {
+					vec4u8 backcolor = {
+						t["textColor"][1].cast<uint8_t>() , t["textColor"][2].cast<uint8_t>(),
+						t["textColor"][3].cast<uint8_t>() , t["textColor"][4].cast<uint8_t>()
+					};
+					text->SetTextColor(backcolor);
+				}
 				if (t["backColor"].isTable() &&
 					t["backColor"][1].isNumber() && t["backColor"][2].isNumber() &&
 					t["backColor"][3].isNumber() && t["backColor"][4].isNumber()) {
@@ -263,6 +299,15 @@ namespace VNEngine {
 				if (t["vindent"].isNumber()) button->SetVerticalIndent(t["vindent"].cast<int>());
 				if (t["hindent"].isNumber()) button->SetHorizontalIndent(t["hindent"].cast<int>());
 				if (t["backPic"].isString()) button->SetBackImage(t["backPic"].tostring());
+				if (t["textColor"].isTable() &&
+					t["textColor"][1].isNumber() && t["textColor"][2].isNumber() &&
+					t["textColor"][3].isNumber() && t["textColor"][4].isNumber()) {
+					vec4u8 backcolor = {
+						t["textColor"][1].cast<uint8_t>() , t["textColor"][2].cast<uint8_t>(),
+						t["textColor"][3].cast<uint8_t>() , t["textColor"][4].cast<uint8_t>()
+					};
+					button->SetTextColor(backcolor);
+				}
 				if (t["backColor"].isTable() &&
 					t["backColor"][1].isNumber() && t["backColor"][2].isNumber() &&
 					t["backColor"][3].isNumber() && t["backColor"][4].isNumber()) {
@@ -310,6 +355,15 @@ namespace VNEngine {
 				if (t["vindent"].isNumber()) textbox->SetVerticalIndent(t["vindent"].cast<int>());
 				if (t["hindent"].isNumber()) textbox->SetHorizontalIndent(t["hindent"].cast<int>());
 				if (t["backPic"].isString()) textbox->SetBackImage(t["backPic"].tostring());
+				if (t["textColor"].isTable() &&
+					t["textColor"][1].isNumber() && t["textColor"][2].isNumber() &&
+					t["textColor"][3].isNumber() && t["textColor"][4].isNumber()) {
+					vec4u8 backcolor = {
+						t["textColor"][1].cast<uint8_t>() , t["textColor"][2].cast<uint8_t>(),
+						t["textColor"][3].cast<uint8_t>() , t["textColor"][4].cast<uint8_t>()
+					};
+					textbox->SetTextColor(backcolor);
+				}
 				if (t["backColor"].isTable() &&
 					t["backColor"][1].isNumber() && t["backColor"][2].isNumber() &&
 					t["backColor"][3].isNumber() && t["backColor"][4].isNumber()) {

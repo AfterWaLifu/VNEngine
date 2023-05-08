@@ -60,6 +60,12 @@ namespace VNEngine {
 			State::s_pDrawer->PopScreen();
 		}
 	}
+
+	void StateMachine::WipeStates() {
+		WM_INSTANCE.WipeScreens();
+		State::s_pDrawer->WipeScreens();
+		while (!m_States.empty()) PopState();
+	}
 	
 	void StateMachine::Update() {
 		if (!(m_States.empty())) {
