@@ -34,6 +34,8 @@ function mainmenu()
 		table.name = "exit"; table.geometry = {50,480,200,80}; table.text = "Exit"
 		Widget.Add(table)
 	end
+
+	Game.PlayMusic("mainmenu")
 end
 
 function save()
@@ -149,10 +151,12 @@ function settings()
 	Widget.Add(label)
 
 	volume = Game.GetMusicVolume()
+	volume = tonumber(string.format("%.2f", volume))
 	number = {type="text",name="musicVolume", geometry={450,170,150,100},text=volume, textColor={255,255,255,255}, align="CC", font="r40"}
 	Widget.Add(number)
 	volume = Game.GetSoundVolume()
-	number.name = "soundVolume"; number.geometry[1] = 920
+	volume = tonumber(string.format("%.2f", volume))
+	number.name = "soundVolume"; number.geometry[1] = 920; number.text = volume
 	Widget.Add(number)
 	
 	change = {type="button",name="music-",geometry={325,170,100,100},text="-",align="CC",font="r72"}
@@ -165,11 +169,22 @@ function settings()
 	change.name = "sound+"; change.geometry[1] = 1095
 	Widget.Add(change)
 
-	applyButton = {type="button", name="musicVolumeApply",geometry={300,300,450,50},text="Apply", align="CC",font="r32"}
-	Widget.Add(applyButton)
-	applyButton.name = "soundVolumeApply"; applyButton.geometry[1] = 770
-	Widget.Add(applyButton)
+	label.name = "musicLabel"
+	label.font = "r32"
+	label.text = "Music"
+	label.geometry = {300,300,450,100}
+	Widget.Add(label)
+	label.name = "soundLabel"
+	label.text = "Sound"
+	label.geometry[1] = 900
+	Widget.Add(label)
 
+	muteButton = {type="button",name="muteButton",geometry={625,370,270,50},font="r32",text="Mute", align="CC"}
+	muted = Game.AudioIsMuted()
+	if (muted) then
+		muteButton.text="Unmute"
+	end
+	Widget.Add(muteButton)
 end
 
 function game()

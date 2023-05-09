@@ -1,6 +1,7 @@
 #include "ReadingState.h"
 #include "vnepch.h"
 
+#include "Audio/AudioPlayer.h"
 #include "Controls/InputHandler.h"
 #include "StateMachine/StateMachine.h"
 #include "StateMachine/MenuState.h"
@@ -54,6 +55,9 @@ namespace VNEngine {
 	}
 
 	bool ReadingState::onExit() {
+		WM_INSTANCE.WipeWidgets();
+		AP_INSTANCE.StopMusic();
+		s_pDrawer->WipeScreens();
 		return true;
 	}
 

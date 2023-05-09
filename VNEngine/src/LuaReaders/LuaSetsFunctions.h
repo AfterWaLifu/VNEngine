@@ -23,6 +23,7 @@ namespace VNEngine {
 		float GetSoundVolume();
 		void Mute();
 		void Unmute();
+		bool IsMuted();
 
 		//	drawer control functions
 		void AddPicture(std::string filename, std::string key, int rows = 1, int collumns = 1);

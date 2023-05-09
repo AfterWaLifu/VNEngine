@@ -10,3 +10,5 @@ Game.FontAdd("r20","Roboto.ttf",20)
 
 Game.AddPicture("urban.png","menuBack", 1,1)
 Game.AddPicture("savePlaceholder.png", "savePlaceholder",1,1)
+
+Game.AddAudio("moom.mp3","mainmenu")

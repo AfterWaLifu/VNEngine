@@ -37,6 +37,9 @@ namespace VNEngine {
 		}
 
 		void PlayMusic(std::string key) {
+			if (AP_INSTANCE.GetIfPlays() && AP_INSTANCE.GetCurrentMusic() == key) {
+				return;
+			}
 			AP_INSTANCE.PlayMusic(key);
 		}
 
@@ -78,6 +81,10 @@ namespace VNEngine {
 
 		void Unmute() {
 			AP_INSTANCE.Unmute();
+		}
+
+		bool IsMuted() {
+			return AP_INSTANCE.GetIfMute();
 		}
 
 		void AddPicture(std::string filename, std::string key, int rows, int collumns) {

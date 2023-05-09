@@ -3,6 +3,7 @@
 
 #include "Core/Logger.h"
 #include "Widgets/WidgetsManager.h"
+#include "Audio/AudioPlayer.h"
 
 namespace VNEngine {
 
@@ -18,6 +19,7 @@ namespace VNEngine {
 		if (!m_States.empty()) {
 			WM_INSTANCE.SaveScreen();
 			State::s_pDrawer->SaveScreen();
+			AP_INSTANCE.PushState();
 		}
 
 		m_States.push_back(state);
@@ -58,6 +60,7 @@ namespace VNEngine {
 		if (!m_States.empty()) {
 			WM_INSTANCE.PopScreen();
 			State::s_pDrawer->PopScreen();
+			AP_INSTANCE.PopState();
 		}
 	}
 
@@ -65,6 +68,7 @@ namespace VNEngine {
 		while (!m_States.empty()) PopState();
 		WM_INSTANCE.WipeScreens();
 		State::s_pDrawer->WipeScreens();
+		AP_INSTANCE.WipeStates();
 	}
 	
 	void StateMachine::Update() {

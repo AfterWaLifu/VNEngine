@@ -4,6 +4,8 @@
 
 #include "AudioList.h"
 
+#include <vector>
+
 namespace VNEngine {
 
 	/**
@@ -63,6 +65,15 @@ namespace VNEngine {
 
 		void Mute();	/// Mute all the sounds/musics
 		void Unmute();	/// Unmute all the sounds/musics
+		bool GetIfMute();	///	Returns true if muted
+
+		std::string GetCurrentMusic();	/// Returns a key of current music
+		std::string GetCurrentSound();	/// Returns a key of current sound
+		bool GetIfPlays();	// Returns true if music plays
+
+		void PushState();
+		void PopState();
+		void WipeStates();
 
 		void SetAudiofilePath(std::string path);
 		std::string GetAudiofilePath();
@@ -97,6 +108,17 @@ namespace VNEngine {
 		float m_MusicVolume;	/// Music volume
 		float m_SoundVolume;	/// Sound volume
 		bool m_Mute;			/// Mute state
+
+		std::string m_CurrentMusic;		/// current music key
+		std::string m_CurrentSound;		/// current sound key
+		bool m_plays;	// music is currently playing
+
+		struct state {
+			std::string mkey;
+			std::string skey;
+			bool plays;
+		};
+		std::vector<state> m_States;
 	};
 
 #define AP_INSTANCE AudioPlayer::Instance()

@@ -84,9 +84,11 @@ namespace VNEngine {
 
 		if (buffer != m_MusicBuffer) {
 			m_MusicBuffer = buffer;
+			m_CurrentMusic = trackName;
 			alSourcei(m_MusicSource, AL_BUFFER, (int)m_MusicBuffer);
 		}
 		alSourcePlay(m_MusicSource);
+		m_plays = true;
 	}
 
 	void AudioPlayer::PauseMusic() {
@@ -105,6 +107,7 @@ namespace VNEngine {
 		alGetSourcei(m_MusicSource, AL_SOURCE_STATE, &state);
 		if (state == AL_PAUSED) {
 			alSourcePlay(m_MusicSource);
+			m_plays = true;
 		}
 		else if (state == AL_STOPPED){
 			VN_LOGS_WARNING("Attempted to resume music, but it is stopped");
@@ -119,6 +122,7 @@ namespace VNEngine {
 		alGetSourcei(m_MusicSource, AL_SOURCE_STATE, &state);
 		if (state == AL_PLAYING) {
 			alSourceStop(m_MusicSource);
+			m_plays = false;
 		}
 		else {
 			VN_LOGS_WARNING("Attempted to stop music, but it is not playing");
@@ -135,6 +139,7 @@ namespace VNEngine {
 
 		if (buffer != m_SoundBuffer) {
 			m_SoundBuffer = buffer;
+			m_CurrentSound = trackName;
 			alSourcei(m_SoundSource, AL_BUFFER, (int)m_SoundBuffer);
 		}
 		alSourcePlay(m_SoundSource);
@@ -202,6 +207,54 @@ namespace VNEngine {
 		m_Mute = false;
 		alSourcef(m_MusicSource, AL_GAIN, m_MusicVolume);
 		alSourcef(m_SoundSource, AL_GAIN, m_SoundVolume);
+	}
+
+	bool AudioPlayer::GetIfMute() {
+		return m_Mute;
+	}
+
+	std::string AudioPlayer::GetCurrentMusic() {
+		return m_CurrentMusic;
+	}
+
+	std::string AudioPlayer::GetCurrentSound() {
+		return m_CurrentSound;
+	}
+
+	bool AudioPlayer::GetIfPlays() {
+		return m_plays;
+	}
+
+	void AudioPlayer::PushState() {
+		m_States.push_back({m_CurrentMusic,m_CurrentSound,m_plays});
+		m_CurrentMusic = "";
+		m_CurrentSound = "";
+		StopMusic();
+		StopSound();
+	}
+
+	void AudioPlayer::PopState() {
+		if (m_States.empty()) return;
+		state s = m_States.back();
+		m_States.pop_back();
+		m_CurrentMusic = s.mkey;
+		m_CurrentSound = s.mkey;
+		if (s.plays) {
+			PlayMusic(m_CurrentMusic);
+		}
+		else {
+			m_MusicBuffer = m_AudioList.GetAudio(m_CurrentMusic);
+			alSourcei(m_MusicSource, AL_BUFFER, (int)m_MusicBuffer);
+		}
+		m_SoundBuffer = m_AudioList.GetAudio(m_CurrentSound);
+		alSourcei(m_SoundSource, AL_BUFFER, (int)m_SoundBuffer);
+	}
+
+	void AudioPlayer::WipeStates() {
+		StopMusic();
+		StopSound();
+		if (m_States.empty()) return;
+		m_States.clear();
 	}
 
 	void AudioPlayer::SetAudiofilePath(std::string path) {
