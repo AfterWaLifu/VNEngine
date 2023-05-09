@@ -128,7 +128,7 @@ namespace VNEngine {
 	bool MenuState::onExit() {
 		WM_INSTANCE.WipeWidgets();
 		AP_INSTANCE.StopMusic();
-		s_pDrawer->WipeScreens();
+		s_pDrawer->WipeDrawing();
 		return true;
 	}
 
