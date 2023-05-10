@@ -3,6 +3,7 @@
 #include "StateMachine/State.h"
 
 #include <vector>
+#include <fstream>
 
 namespace VNEngine {
 
@@ -27,6 +28,8 @@ namespace VNEngine {
 		void Draw();
 
 		bool isThereAReading();
+
+		std::streampos GetTopReaderPos();
 	};
 
 #define SM_INSTANCE StateMachine::Instance()

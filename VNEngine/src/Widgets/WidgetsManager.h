@@ -62,6 +62,13 @@ namespace VNEngine {
 		void SaveScreen();
 		void PopScreen();
 		void WipeScreens();
+
+		struct dump {
+			std::vector<textState> ts;
+			std::vector<buttonState> bs;
+			std::vector<textboxState> tbs;
+		};
+		dump Dump();
 	};
 
 #define WM_INSTANCE WidgetsManager::Instance()

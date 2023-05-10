@@ -2,6 +2,8 @@
 #include "vnepch.h"
 
 #include "Core/Logger.h"
+#include "StateMachine/MenuState.h"
+#include "StateMachine/ReadingState.h"
 #include "Widgets/WidgetsManager.h"
 #include "Audio/AudioPlayer.h"
 
@@ -90,5 +92,18 @@ namespace VNEngine {
 			if (s->GetStateId() == "reading") return true;
 		}
 		return false;
+	}
+	
+	std::streampos StateMachine::GetTopReaderPos() {
+		auto back = m_States.end();
+		std::streampos sp(0);
+		while (back != m_States.begin() || (*back)->GetStateId() != "reading") {
+			--back;
+		}
+		if ((*back)->GetStateId() == "reading") {
+			ReadingState* r = dynamic_cast<ReadingState*>(*back);
+			sp = r->GetReaderPos();
+		}
+		return sp;
 	}
 }

@@ -99,6 +99,9 @@
     <ClInclude Include="src\LuaReaders\LuaGameFunctions.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="src\StateMachine\SaveLoad.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Core\Logger.cpp">
@@ -165,6 +168,9 @@
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="src\LuaReaders\LuaGameFunctions.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StateMachine\SaveLoad.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

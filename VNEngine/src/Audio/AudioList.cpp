@@ -101,6 +101,7 @@ namespace VNEngine {
         }
 
         m_SoundBufferList[key] = buffer;
+        m_ListOfPathes.push_back({filename,key});
         return true;
 	}
 	
@@ -114,16 +115,33 @@ namespace VNEngine {
 		}
 	}
 
+    std::vector<std::pair<std::string, std::string>> AudioList::Dump() {
+        return m_ListOfPathes;
+    }
+
+    void AudioList::RemoveFromDumpList(const std::string& key) {
+        auto it = m_ListOfPathes.begin();
+        while (it != m_ListOfPathes.end()) {
+            if ((*it).second == key) {
+                m_ListOfPathes.erase(it);
+                return;
+            }
+            ++it;
+        }
+    }
+
 	bool AudioList::RemoveAudio(std::string key) {
-		auto it = m_SoundBufferList.begin();
-		while (it != m_SoundBufferList.end()) {
-			if ((*it).first == key) {
-				alDeleteBuffers(1, &((*it).second));
-				it = m_SoundBufferList.erase(it);
+        if (m_ListOfPathes.empty()) return false;
+        auto search = m_SoundBufferList.find(key);
+        if (search == m_SoundBufferList.end()) return false;
+        else {
+                RemoveFromDumpList(key);
+                alDeleteBuffers(1, &((*search).second));
+				m_SoundBufferList.erase(search);
+
 				return true;
-			}
-			++it;
-		}
+        }
+
 		return false;
 	}
 }

@@ -8,6 +8,7 @@
 #include "Graphic/TextureManager.h"
 #include "Widgets/FontManager.h"
 #include "LuaReaders/StoryTeller.h"
+#include "StateMachine/SaveLoad.h"
 
 #include <LuaBridge/LuaBridge.h>
 
@@ -39,6 +40,10 @@ namespace VNEngine {
 		t = lb::getGlobal(L, "audio");
 		if (t.isString()) {
 			AP_INSTANCE.SetAudiofilePath(t.tostring());
+		}
+		t = lb::getGlobal(L, "saves");
+		if (t.isString()) {
+			SaveLoad::SetSaveDir(t.tostring());
 		}
 	}
 

@@ -6,7 +6,7 @@
 #include "Core/Logger.h"
 
 namespace VNEngine {
-
+	
 	TextureManager::TextureManager(SDL_Renderer* renderer)
 		: m_Renderer(renderer)
 	{
@@ -46,7 +46,8 @@ namespace VNEngine {
 				return false;
 			}
 
-			m_Textures[key] = new Texture({tempTexture, w, h, rows, collumns});
+			m_Textures[key] = new Texture({tempTexture, w, h, rows, collumns, key});
+			m_ListOfPathes.push_back({ path,key });
 			return true;
 		}
 		VN_LOGS_WARNING("Something went wrong on creating texture '" << key << "'");
@@ -62,10 +63,26 @@ namespace VNEngine {
 		}
 	}
 
+	void TextureManager::RemoveFromDumpList(const std::string& key) {
+		auto it = m_ListOfPathes.begin();
+		while (it != m_ListOfPathes.end()) {
+			if ((*it).key == key) {
+				m_ListOfPathes.erase(it);
+				return;
+			}
+			++it;
+		}
+	}
+
 	bool TextureManager::delTexture(const std::string& key)
 	{
-		SDL_DestroyTexture(m_Textures[key]->sdl_texture);
-		m_Textures.erase(key);
+		if (m_Textures.empty()) return false;
+		if (m_Textures.find(key) != m_Textures.end()) {
+			RemoveFromDumpList(key);
+			SDL_DestroyTexture(m_Textures[key]->sdl_texture);
+			m_Textures.erase(key);
+		}
+		
 		if (SDL_GetError()) {
 			VN_LOGS_WARNING("Something went wrong on deleting texture '" << key << "'");
 		}
@@ -96,5 +113,9 @@ namespace VNEngine {
 
 	std::string TextureManager::GetImagesPath() {
 		return m_ImagesPath;
+	}
+	
+	std::vector<TextureManager::dumpT> TextureManager::Dump() {
+		return m_ListOfPathes;
 	}
 }

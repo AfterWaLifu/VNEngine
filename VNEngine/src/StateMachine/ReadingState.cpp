@@ -64,4 +64,12 @@ namespace VNEngine {
 	std::string ReadingState::GetStateId() const {
 		return m_ReadingState;
 	}
+	
+	std::streampos ReadingState::GetReaderPos() {
+		return m_ST.GetCurrentPos();
+	}
+
+	void ReadingState::SetReaderPos(std::streampos pos) {
+		m_ST.SetCurrentPos(pos);
+	}
 }

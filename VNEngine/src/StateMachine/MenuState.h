@@ -10,6 +10,8 @@ namespace VNEngine {
 		std::string m_ScreenToStart;
 
 		void handleSettings();
+		void handleSave();
+		void handleLoad();
 
 	public:
 		MenuState(const std::string& screen);

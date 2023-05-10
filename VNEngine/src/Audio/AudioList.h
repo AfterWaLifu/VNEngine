@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <string>
 
 namespace VNEngine {
@@ -31,9 +31,14 @@ namespace VNEngine {
 		*/
 		uint32_t GetAudio(std::string key);
 
+		std::vector<std::pair<std::string, std::string>> Dump();
+
 	private:
 		/// Dictionary of all the added audio (pairs keyword - internal openal code)
-		std::map<std::string, uint32_t> m_SoundBufferList;
+		std::unordered_map<std::string, uint32_t> m_SoundBufferList;
+		
+		void RemoveFromDumpList(const std::string& key);
+		std::vector<std::pair<std::string, std::string>> m_ListOfPathes;	///	To save current state of list
 	};
 }
 

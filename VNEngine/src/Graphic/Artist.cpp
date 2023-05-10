@@ -249,23 +249,18 @@ namespace VNEngine {
 
 	void Artist::StopDrawing(const std::string& key) {
 		int counter = 0;
-		Texture* goalTexture = TM_INSTANCE.getTexture(key);
-		if (goalTexture == nullptr) return;
 
-		for (const std::pair<uint32_t, DrawnData>& pair : m_Queue) {
-			if (pair.second.texture == goalTexture) {
+		for (std::pair<const uint32_t, DrawnData>& pair : m_Queue) {
+			if (pair.second.texture->key == key) {
 				++counter;
 				m_Queue.erase(pair.first);
+				break;
 			}
 		}
 
 		if (counter == 0) {
 			VN_LOGS_WARNING("While stopping drawing by key '" << key <<
 				"', not a single texture stopped drawing");
-		}
-		else if (counter > 1) {
-			VN_LOGS_WARNING("While stopping drawing by key '" << key <<
-						"', has been stoped " << counter << " textures");
 		}
 	}
 	void Artist::StopDrawing(const uint32_t id) {
@@ -432,5 +427,19 @@ namespace VNEngine {
 		WipeDrawing();
 		if (m_Screens.empty()) return;
 		m_Screens.clear();
+	}
+	
+	Artist::dump Artist::Dumb() {
+		dump d = {
+			TM_INSTANCE.Dump(),
+			{ m_Screens.back().b.backgroundColor ,
+			m_Screens.back().b.textureKey ,
+			m_Screens.back().b.drawBackPic ,
+			m_Screens.back().b.colorChanged ,
+			m_Screens.back().b.dest ,
+			m_Screens.back().b.stretchState ,
+			m_Screens.back().q, m_Screens.back().id}
+		};
+		return d;
 	}
 }

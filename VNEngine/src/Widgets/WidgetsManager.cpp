@@ -186,4 +186,18 @@ namespace VNEngine {
 		if (m_Screens.empty()) return;
 		m_Screens.clear();
 	}
+	
+	WidgetsManager::dump WidgetsManager::Dump() {
+		dump d = {};
+		for (auto t : m_Screens.back().m_AllTexts) {
+			d.ts.push_back(t.second->Dump());
+		}
+		for (auto b : m_Screens.back().m_AllButtons) {
+			d.bs.push_back(b.second->Dump());
+		}
+		for (auto tb : m_Screens.back().m_AllTextBoxs) {
+			d.tbs.push_back(tb.second->Dump());
+		}
+		return d;
+	}
 }

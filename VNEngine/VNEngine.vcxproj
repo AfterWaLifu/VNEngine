@@ -28,6 +28,7 @@
     <ClInclude Include="src\LuaReaders\LuaReader.h" />
     <ClInclude Include="src\LuaReaders\StoryTeller.h" />
     <ClInclude Include="src\StateMachine\ReadingState.h" />
+    <ClInclude Include="src\StateMachine\SaveLoad.h" />
     <ClInclude Include="src\StateMachine\State.h" />
     <ClInclude Include="src\StateMachine\StateMachine.h" />
     <ClInclude Include="src\Widgets\Button.h" />
@@ -58,6 +59,7 @@
     <ClCompile Include="src\LuaReaders\LuaReader.cpp" />
     <ClCompile Include="src\LuaReaders\StoryTeller.cpp" />
     <ClCompile Include="src\StateMachine\ReadingState.cpp" />
+    <ClCompile Include="src\StateMachine\SaveLoad.cpp" />
     <ClCompile Include="src\StateMachine\StateMachine.cpp" />
     <ClCompile Include="src\Widgets\FontManager.cpp" />
     <ClCompile Include="src\Widgets\WidgetsManager.cpp" />

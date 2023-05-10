@@ -13,7 +13,7 @@ namespace VNEngine {
 		m_MusicBuffer(0), m_SoundBuffer(0),
 		m_MusicVolume(1.0f), m_SoundVolume(1.0f),
 		m_AudioList(), m_Mute(false),
-		m_AudiofilesPath("")
+		m_AudiofilesPath(""), m_plays(false)
 	{
 		m_pDevice = alcOpenDevice(nullptr);
 		if (!m_pDevice) {
@@ -124,9 +124,6 @@ namespace VNEngine {
 			alSourceStop(m_MusicSource);
 			m_plays = false;
 		}
-		else {
-			VN_LOGS_WARNING("Attempted to stop music, but it is not playing");
-		}
 	}
 
 	void AudioPlayer::PlaySound(const std::string& trackName) {
@@ -150,9 +147,6 @@ namespace VNEngine {
 		alGetSourcei(m_SoundSource, AL_SOURCE_STATE, &state);
 		if (state == AL_PLAYING) {
 			alSourceStop(m_SoundSource);
-		}
-		else {
-			VN_LOGS_WARNING("Attempted to stop music, but it is not playing");
 		}
 	}
 
@@ -263,6 +257,14 @@ namespace VNEngine {
 
 	std::string AudioPlayer::GetAudiofilePath() {
 		return m_AudiofilesPath;
+	}
+
+	AudioPlayer::dump AudioPlayer::Dump() {
+		dump d = {
+			m_AudioList.Dump(),
+			{m_States.back().mkey,m_States.back().skey,m_States.back().plays}
+		};
+		return d;
 	}
 
 }

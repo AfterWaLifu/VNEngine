@@ -26,11 +26,28 @@ namespace VNEngine {
 
 		return std::wstring(&buffer[0], charsConverted);
 	}
+	std::string cvtb(const std::wstring& str) {
+		if (str.empty())
+			return std::string();
+		
+		size_t charsNeeded = WideCharToMultiByte(CP_UTF8, 0, str.data(),
+			(int)str.size(), NULL, 0, NULL, NULL);
+		std::string buffer;
+		int charsConverted = WideCharToMultiByte(CP_UTF8, 0, str.data(),
+			(int)str.size(), &(buffer[0]), (int)charsNeeded, NULL, NULL);
+
+		return buffer;
+	}
 #else
 	std::wstring cvt(const std::string& str) {
 		if (str.empty())
 			return std::wstring();
 		return std::wstring(str.begin(), str.end());
+	}
+	std::string cvtb(const std::wstring& str) {
+		if (str.empty())
+			return std::string();
+		return std::string(str.begin(), str.end());
 	}
 #endif
 
@@ -207,6 +224,10 @@ namespace VNEngine {
 		m_BackgroundTurned = false;
 	}
 
+	bool Text::GetDrawingBack() {
+		return m_BackgroundTurned;
+	}
+
 	void Text::SetWraped(bool isWraped) {
 		m_Wraped = isWraped;
 		SetText(m_Text);
@@ -322,6 +343,19 @@ namespace VNEngine {
 			vec4 inner = { m_Geometry.x + 1,m_Geometry.y + 1, m_Geometry.w - 2,m_Geometry.h - 2 };
 			SDL_RenderDrawRect(Widget::sWD.renderer, (SDL_Rect*)&inner);
 		}
+	}
+
+	textState Text::Dump()
+	{
+		textState t = {
+			m_Geometry,
+			cvtb(m_Text), m_FontKey, m_BackImage,
+			m_TextColor, m_BackgroundColor, m_BorderColor,
+			(uint8_t)m_Alignment,
+			m_IsShown, m_DrawBorder, m_BackgroundTurned, m_Wraped,
+			m_IndentHorizontal, m_IndentVertical
+		};
+		return t;
 	}
 
 }

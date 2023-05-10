@@ -5,6 +5,8 @@ logs.txt
 *.ttf
 *.jpg
 *.png
+*.vns
+*.mp3
 
 # Prerequisites
 *.d

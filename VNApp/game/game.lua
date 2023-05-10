@@ -9,6 +9,7 @@ Game.Draw("m", {500,300,256,256},0)
 Game.SetBackgroundPicture("b")
 
 who("Масюня")
+say("abcdef")
 say("1")
 say("2")
 say("3")

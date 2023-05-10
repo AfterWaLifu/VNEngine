@@ -15,6 +15,7 @@ namespace VNEngine {
 		SDL_Texture* sdl_texture;
 		int w, h;
 		int r, c;
+		std::string key;
 	};
 
 	/**
@@ -26,6 +27,15 @@ namespace VNEngine {
 	{
 		std::unordered_map<std::string, Texture*> m_Textures;
 		SDL_Renderer* m_Renderer;
+
+	public:
+		struct dumpT {
+			std::string filename, key;
+			int r, c;
+		};
+	private:
+		std::vector<dumpT> m_ListOfPathes;
+		void RemoveFromDumpList(const std::string& key);
 
 		TextureManager(SDL_Renderer* renderer);
 		~TextureManager();
@@ -45,6 +55,8 @@ namespace VNEngine {
 
 		static void SetImagesPath(const std::string& path);
 		static std::string GetImagesPath();
+
+		std::vector<dumpT> Dump();
 	};
 
 #define TM_INSTANCE TextureManager::Instance()

@@ -22,6 +22,7 @@ namespace VNEngine {
 		char buffer[256];
 		while (m_Go && m_LuaFile.getline(buffer, 256, '\n')) {
 			++m_CurrentLine;
+			m_PosInLua = m_LuaFile.tellg();
 			auto error = luaL_dostring(L, buffer);
 			if (error) {
 				VN_LOGS_WARNING("Lua error in line below" <<
@@ -91,5 +92,14 @@ namespace VNEngine {
 	
 	bool StoryTeller::GetCompleted() {
 		return m_Completed;
+	}
+	
+	std::streampos StoryTeller::GetCurrentPos() {
+		return m_PosInLua;
+	}
+	
+	void StoryTeller::SetCurrentPos(std::streampos pos) {
+		m_LuaFile.seekg(pos);
+		m_PosInLua = pos;
 	}
 }

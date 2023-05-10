@@ -8,6 +8,8 @@
 
 #include "LuaReaders/StoryTeller.h"
 
+#include <fstream>
+
 namespace VNEngine {
 
 	class ReadingState : public State {
@@ -25,5 +27,8 @@ namespace VNEngine {
 		bool onExit()  override;
 
 		std::string GetStateId() const override;
+
+		std::streampos GetReaderPos();
+		void SetReaderPos(std::streampos pos);
 	};
 }

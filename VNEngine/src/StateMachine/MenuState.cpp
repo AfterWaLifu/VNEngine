@@ -7,12 +7,13 @@
 #include "Widgets/WidgetsManager.h"
 #include "LuaReaders/InterfaceCreator.h"
 #include "Audio/AudioPlayer.h"
+#include "StateMachine/SaveLoad.h"
 
 namespace VNEngine {
 	
 	MenuState::MenuState(const std::string& screen) : m_ScreenToStart(screen), m_MenuState(screen) {
 	}
-	
+
 	void MenuState::Handle() {
 		if (WM_INSTANCE.ExistsButton("start")) {
 			if (WM_INSTANCE.GetButton("start")->Pressed()) {
@@ -54,6 +55,8 @@ namespace VNEngine {
 		}
 
 		handleSettings();
+		handleSave();
+		handleLoad();
 
 		if (IH_INSTANCE.getMouseButtonState(RIGHT) && SM_INSTANCE.isThereAReading()) {
 			SM_INSTANCE.PopState();
@@ -112,6 +115,21 @@ namespace VNEngine {
 		}
 	}
 	
+	void MenuState::handleSave() {
+		std::string saveWord = "save";
+		for (int i = 1; i < 7; ++i) {
+			std::string savename = saveWord + std::to_string(i);
+			if (WM_INSTANCE.ExistsButton(savename)) {
+				if (WM_INSTANCE.GetButton(savename)->Pressed()) {
+					SaveLoad::Save(i, s_pDrawer);
+				}
+			}
+		}
+	}
+
+	void MenuState::handleLoad() {
+	}
+
 	void MenuState::Update() {
 	}
 	

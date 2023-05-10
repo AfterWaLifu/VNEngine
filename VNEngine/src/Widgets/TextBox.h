@@ -4,6 +4,12 @@
 
 namespace VNEngine {
 
+	struct textboxState {
+		textState ts;
+		std::string currentString;
+		uint32_t maxchar;
+	};
+
 	class TextBox : public Text {
 
 		static inline TextBox* s_ActiveTextBox;
@@ -24,7 +30,10 @@ namespace VNEngine {
 		void Draw();
 
 		std::string Value();
+		void SetValue(const std::string& str);
 		void SetMaxCharNumber(uint32_t quantity);
 		uint32_t GetMaxCharNumber();
+
+		textboxState Dump();
 	};
 }

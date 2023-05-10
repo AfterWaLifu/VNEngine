@@ -10,6 +10,17 @@
 namespace VNEngine {
 
 	std::wstring cvt(const std::string& str);
+	std::string cvtb(const std::wstring& str);
+
+	struct textState {
+		vec4 geometry;
+		std::string text;
+		std::string font, backimage;
+		vec4u8 textcolor, backcolor,bordercolor;
+		uint8_t align;
+		bool shown, showborder, backisshown, wrapped;
+		int hindent, vindent;
+	};
 
 	class Text : public Widget {
 
@@ -53,6 +64,7 @@ namespace VNEngine {
 		bool GetDrawingBorder();
 		void TurnOnBack();
 		void TurnOffBack();
+		bool GetDrawingBack();
 		void SetWraped(bool isWraped);
 		bool GetWraped();
 		void SetBackgroundColor(vec4u8 color);
@@ -70,5 +82,7 @@ namespace VNEngine {
 		void Move(vec2 coords);
 
 		void Draw() override;
+
+		textState Dump();
 	};
 }

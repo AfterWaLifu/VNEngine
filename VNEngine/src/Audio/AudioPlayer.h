@@ -78,6 +78,17 @@ namespace VNEngine {
 		void SetAudiofilePath(std::string path);
 		std::string GetAudiofilePath();
 
+		struct state {
+			std::string mkey;
+			std::string skey;
+			bool plays;
+		};
+		struct dump {
+			std::vector<std::pair<std::string, std::string>> list;
+			state s;
+		};
+		dump Dump();
+
 	private:
 		static inline AudioPlayer* s_pInstance;
 		
@@ -113,11 +124,6 @@ namespace VNEngine {
 		std::string m_CurrentSound;		/// current sound key
 		bool m_plays;	// music is currently playing
 
-		struct state {
-			std::string mkey;
-			std::string skey;
-			bool plays;
-		};
 		std::vector<state> m_States;
 	};
 

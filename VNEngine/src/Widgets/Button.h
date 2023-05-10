@@ -8,6 +8,11 @@
 
 namespace VNEngine {
 
+	struct buttonState {
+		textState ts;
+		vec4u8 defaultborder, focusborder;
+	};
+
 	class Button : public Text {
 
 		std::function<void(void)> m_OnClick;
@@ -30,7 +35,10 @@ namespace VNEngine {
 
 		void SetBorderColor(vec4u8 color);
 		void SetFocusBorderColor(vec4u8 color);
+		vec4u8 GetDefaultBorderColor();
 		vec4u8 GetFocusBorderColor();
+
+		buttonState Dump();
 	};
 }
 

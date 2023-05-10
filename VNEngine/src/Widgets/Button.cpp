@@ -78,9 +78,22 @@ namespace VNEngine {
 	void Button::SetFocusBorderColor(vec4u8 color) {
 		m_FocusBorder = color;
 	}
+
+	vec4u8 Button::GetDefaultBorderColor() {
+		return m_DefaultBorder;
+	}
 	
 	vec4u8 Button::GetFocusBorderColor() {
 		return m_FocusBorder;
+	}
+	
+	buttonState Button::Dump() {
+		textState t = Text::Dump();
+		buttonState b = {
+			t,
+			m_DefaultBorder, m_FocusBorder
+		};
+		return b;
 	}
 }
 

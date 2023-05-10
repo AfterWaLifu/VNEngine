@@ -125,5 +125,22 @@ namespace VNEngine{
 		void SaveScreen();
 		void PopScreen();
 		void WipeScreens();
+
+		struct screen {
+			vec4u8 backgroundColor;
+			std::string textureKey;
+			bool drawBackPic;
+			bool colorChanged;
+			vec4 dest;
+			Stretching stretchState;
+
+			std::unordered_map<uint32_t, DrawnData> q;
+			uint32_t id;
+		};
+		struct dump {
+			std::vector<TextureManager::dumpT> list;
+			screen s;
+		};
+		dump Dumb();
 	};
 }

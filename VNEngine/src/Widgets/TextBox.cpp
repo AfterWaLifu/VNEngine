@@ -93,6 +93,12 @@ namespace VNEngine {
 		return m_CurrentString;
 	}
 
+	void TextBox::SetValue(const std::string& str) {
+		m_CurrentString = str;
+		if (s_ActiveTextBox == this) *s_InputString = str;
+		SetText(str);
+	}
+
 	void TextBox::SetMaxCharNumber(uint32_t quantity) {
 		m_MaxCharNumber = quantity;
 		if (m_CurrentString.length() > quantity) {
@@ -103,5 +109,13 @@ namespace VNEngine {
 	
 	uint32_t TextBox::GetMaxCharNumber() {
 		return m_MaxCharNumber;
+	}
+	
+	textboxState TextBox::Dump() {
+		textboxState tbs = {
+			Text::Dump(),
+			m_CurrentString, m_MaxCharNumber
+		};
+		return tbs;
 	}
 }

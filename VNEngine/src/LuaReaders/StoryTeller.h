@@ -13,6 +13,7 @@ namespace VNEngine {
 		std::ifstream m_LuaFile;
 		std::string m_CurrentFile;
 		int m_CurrentLine;
+		std::streampos m_PosInLua;
 
 		bool m_Go;
 		bool m_Skip;
@@ -40,5 +41,8 @@ namespace VNEngine {
 		bool GetSkip();
 
 		bool GetCompleted();
+
+		std::streampos GetCurrentPos();
+		void SetCurrentPos(std::streampos pos);
 	};
 }
