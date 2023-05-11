@@ -20,9 +20,11 @@ namespace VNEngine {
 
 	TextureManager::~TextureManager()
 	{
-		IMG_Quit();
-		for (auto texture : m_Textures) SDL_DestroyTexture(texture.second->sdl_texture);
+		for (auto texture : m_Textures) {
+			if (texture.second && texture.second->sdl_texture) SDL_DestroyTexture(texture.second->sdl_texture);
+		}
 		m_Textures.clear();
+		IMG_Quit();
 	}
 
 	bool TextureManager::addTexture(const std::string& key, const std::string& path, int rows, int collumns)
@@ -47,7 +49,7 @@ namespace VNEngine {
 			}
 
 			m_Textures[key] = new Texture({tempTexture, w, h, rows, collumns, key});
-			m_ListOfPathes.push_back({ path,key });
+			m_ListOfPathes.push_back({ path,key, rows,collumns });
 			return true;
 		}
 		VN_LOGS_WARNING("Something went wrong on creating texture '" << key << "'");

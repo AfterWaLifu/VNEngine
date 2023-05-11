@@ -128,6 +128,16 @@ namespace VNEngine {
 	}
 
 	void MenuState::handleLoad() {
+		const std::string loadWord = "load";
+		for (int i = 1; i < 7; ++i) {
+			std::string savename = loadWord + std::to_string(i);
+			if (WM_INSTANCE.ExistsButton(savename)) {
+				if (WM_INSTANCE.GetButton(savename)->Pressed()) {
+					SM_INSTANCE.WipeStates();
+					SM_INSTANCE.PushState(new ReadingState(SaveLoad::Load(i, s_pDrawer)));
+				}
+			}
+		}
 	}
 
 	void MenuState::Update() {

@@ -190,14 +190,26 @@ namespace VNEngine {
 	WidgetsManager::dump WidgetsManager::Dump() {
 		dump d = {};
 		for (auto t : m_Screens.back().m_AllTexts) {
-			d.ts.push_back(t.second->Dump());
+			d.ts.push_back({t.first, t.second->Dump() });
 		}
 		for (auto b : m_Screens.back().m_AllButtons) {
-			d.bs.push_back(b.second->Dump());
+			d.bs.push_back({ b.first, b.second->Dump() });
 		}
 		for (auto tb : m_Screens.back().m_AllTextBoxs) {
-			d.tbs.push_back(tb.second->Dump());
+			d.tbs.push_back({ tb.first, tb.second->Dump() });
 		}
 		return d;
+	}
+	
+	void WidgetsManager::Load(const dump& d) {
+		for (auto ts : d.ts) {
+			AddWidget(ts.first, new Text(ts.second));
+		}
+		for (auto bs : d.bs) {
+			AddWidget(bs.first, new Button(bs.second));
+		}
+		for (auto tbs : d.tbs) {
+			AddWidget(tbs.first, new TextBox(tbs.second));
+		}
 	}
 }

@@ -7,7 +7,7 @@
 namespace VNEngine {
 
 	StoryTeller::StoryTeller()
-		: m_CurrentFile(""), m_CurrentLine(0), m_Go(true), m_Skip(false)
+		: m_CurrentFile(""), m_CurrentLine(0), m_Go(true), m_Skip(false), m_PosLoaded(false)
 	{
 		RegisterInterfaceFunctions();
 		RegisterSettingsFunctons();
@@ -36,6 +36,12 @@ namespace VNEngine {
 		m_CurrentFile = filename;
 		m_CurrentLine = 0;
 		m_LuaFile.open(sScriptsPath + m_CurrentFile);
+
+		if (m_PosLoaded) {
+			m_LuaFile.seekg(m_PosInLua);
+			m_PosLoaded = false;
+			Wait();
+		}
 		
 		if (!m_LuaFile.is_open()) {
 			VN_LOGS_ERROR("Can't open game file" << sScriptsPath + m_CurrentFile);
@@ -99,7 +105,7 @@ namespace VNEngine {
 	}
 	
 	void StoryTeller::SetCurrentPos(std::streampos pos) {
-		m_LuaFile.seekg(pos);
+		m_PosLoaded = true;
 		m_PosInLua = pos;
 	}
 }

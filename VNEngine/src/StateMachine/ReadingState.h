@@ -15,10 +15,14 @@ namespace VNEngine {
 	class ReadingState : public State {
 
 		std::string m_ReadingState = "reading";
+		bool m_Loaded;
 
 		StoryTeller m_ST;
 
 	public:
+		ReadingState(std::streampos startPos = std::streampos(0));
+		~ReadingState() = default;
+
 		void Handle() override;
 		void Update() override;
 		void Render() override;

@@ -49,6 +49,7 @@ function save()
 	savePicture = {type="text", name="save1",geometry={330,175,240,160}, textColor={0,0,0,0}, text="",backPic="savePlaceholder"}
 	
 	saveButton.name = "save1"
+	saveButton.text = "1"
 	savePicture.name = saveButton.name
 	saveButton.geometry = {300,170,300,190}
 	savePicture.geometry = { 330, 175, 240,160 }
@@ -56,6 +57,7 @@ function save()
 	Widget.Add(savePicture)
 	
 	saveButton.name = "save2"
+	saveButton.text = "2"
 	savePicture.name = saveButton.name
 	saveButton.geometry = {610,170,300,190}
 	savePicture.geometry = { 640, 175, 240,160 }
@@ -63,6 +65,7 @@ function save()
 	Widget.Add(savePicture)
 	
 	saveButton.name = "save3"
+	saveButton.text = "3"
 	savePicture.name = saveButton.name
 	saveButton.geometry = {920,170,300,190}
 	savePicture.geometry = { 950, 175, 240,160 }
@@ -70,6 +73,7 @@ function save()
 	Widget.Add(savePicture)
 	
 	saveButton.name = "save4"
+	saveButton.text = "4"
 	savePicture.name = saveButton.name
 	saveButton.geometry = {300,385,300,190}
 	savePicture.geometry = { 330, 390, 240,160 }
@@ -77,6 +81,7 @@ function save()
 	Widget.Add(savePicture)
 	
 	saveButton.name = "save5"
+	saveButton.text = "5"
 	savePicture.name = saveButton.name
 	saveButton.geometry = {610,385,300,190}
 	savePicture.geometry = { 640, 390, 240,160 }
@@ -84,6 +89,7 @@ function save()
 	Widget.Add(savePicture)
 	
 	saveButton.name = "save6"
+	saveButton.text = "6"
 	savePicture.name = saveButton.name
 	saveButton.geometry = {920,385,300,190}
 	savePicture.geometry = { 950, 390, 240,160 }
@@ -102,6 +108,7 @@ function load()
 	savePicture = {type="text", name="save1",geometry={330,175,240,160}, textColor={0,0,0,0}, text="",backPic="savePlaceholder"}
 	
 	saveButton.name = "load1"
+	saveButton.text = "1"
 	savePicture.name = saveButton.name
 	saveButton.geometry = {300,170,300,190}
 	savePicture.geometry = { 330, 175, 240,160 }
@@ -109,6 +116,7 @@ function load()
 	Widget.Add(savePicture)
 	
 	saveButton.name = "load2"
+	saveButton.text = "2"
 	savePicture.name = saveButton.name
 	saveButton.geometry = {610,170,300,190}
 	savePicture.geometry = { 640, 175, 240,160 }
@@ -116,6 +124,7 @@ function load()
 	Widget.Add(savePicture)
 	
 	saveButton.name = "load3"
+	saveButton.text = "3"
 	savePicture.name = saveButton.name
 	saveButton.geometry = {920,170,300,190}
 	savePicture.geometry = { 950, 175, 240,160 }
@@ -123,6 +132,7 @@ function load()
 	Widget.Add(savePicture)
 	
 	saveButton.name = "load4"
+	saveButton.text = "4"
 	savePicture.name = saveButton.name
 	saveButton.geometry = {300,385,300,190}
 	savePicture.geometry = { 330, 390, 240,160 }
@@ -130,6 +140,7 @@ function load()
 	Widget.Add(savePicture)
 	
 	saveButton.name = "load5"
+	saveButton.text = "5"
 	savePicture.name = saveButton.name
 	saveButton.geometry = {610,385,300,190}
 	savePicture.geometry = { 640, 390, 240,160 }
@@ -137,6 +148,7 @@ function load()
 	Widget.Add(savePicture)
 	
 	saveButton.name = "load6"
+	saveButton.text = "6"
 	savePicture.name = saveButton.name
 	saveButton.geometry = {920,385,300,190}
 	savePicture.geometry = { 950, 390, 240,160 }

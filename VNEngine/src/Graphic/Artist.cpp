@@ -442,4 +442,15 @@ namespace VNEngine {
 		};
 		return d;
 	}
+	
+	void Artist::Load(const screen& s) {
+		m_Background.backgroundColor = s.backgroundColor;
+		m_Background.colorChanged = s.colorChanged;
+		m_Background.dest = s.dest;
+		m_Background.drawBackPic = s.drawBackPic;
+		m_Background.ptexture = TM_INSTANCE.getTexture(s.textureKey);
+		m_Background.stretchState = s.stretchState;
+		m_Background.textureKey = s.textureKey;
+		m_Queue = s.q;
+	}
 }

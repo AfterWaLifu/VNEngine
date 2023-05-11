@@ -75,6 +75,10 @@ namespace VNEngine {
 	}
 
 	void AudioPlayer::PlayMusic(const std::string& trackName) {
+		int state = AL_STOPPED;
+		alGetSourcei(m_MusicSource, AL_SOURCE_STATE, &state);
+		if (state == AL_PLAYING && trackName == m_CurrentMusic) return;
+
 		uint32_t buffer = m_AudioList.GetAudio(trackName);
 
 		if (buffer == UINT32_MAX) {
@@ -84,10 +88,10 @@ namespace VNEngine {
 
 		if (buffer != m_MusicBuffer) {
 			m_MusicBuffer = buffer;
-			m_CurrentMusic = trackName;
 			alSourcei(m_MusicSource, AL_BUFFER, (int)m_MusicBuffer);
 		}
 		alSourcePlay(m_MusicSource);
+		m_CurrentMusic = trackName;
 		m_plays = true;
 	}
 
@@ -136,10 +140,10 @@ namespace VNEngine {
 
 		if (buffer != m_SoundBuffer) {
 			m_SoundBuffer = buffer;
-			m_CurrentSound = trackName;
 			alSourcei(m_SoundSource, AL_BUFFER, (int)m_SoundBuffer);
 		}
 		alSourcePlay(m_SoundSource);
+		m_CurrentSound = trackName;
 	}
 
 	void AudioPlayer::StopSound() {

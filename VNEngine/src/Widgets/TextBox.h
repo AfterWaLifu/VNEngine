@@ -24,6 +24,7 @@ namespace VNEngine {
 	public:
 		TextBox(vec4 geometry, std::wstring text = L"", uint32_t maxCharNumber = 32,
 			vec4u8 textColor = { 0,0,0,255 }, const std::string& fontKey = "");
+		TextBox(const textboxState& tbs);
 		~TextBox();
 
 		void Check();

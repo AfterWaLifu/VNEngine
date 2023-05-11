@@ -9,7 +9,7 @@ namespace VNEngine {
 		static inline std::string sSaveDir;
 	public:
 		static void Save(int number, Artist* partist);
-		static void Load(int number);
+		static int Load(int number, Artist* partist);
 
 		static void SetSaveDir(const std::string& path);
 		static std::string GetSaveDir();

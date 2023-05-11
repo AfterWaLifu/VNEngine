@@ -32,11 +32,10 @@ namespace VNEngine {
 		
 		size_t charsNeeded = WideCharToMultiByte(CP_UTF8, 0, str.data(),
 			(int)str.size(), NULL, 0, NULL, NULL);
-		std::string buffer;
+		std::vector<char> buffer(charsNeeded);
 		int charsConverted = WideCharToMultiByte(CP_UTF8, 0, str.data(),
-			(int)str.size(), &(buffer[0]), (int)charsNeeded, NULL, NULL);
-
-		return buffer;
+			(int)str.size(), &buffer[0], (int)charsNeeded, NULL, NULL);
+		return std::string(&buffer[0], charsConverted);
 	}
 #else
 	std::wstring cvt(const std::string& str) {
@@ -72,6 +71,25 @@ namespace VNEngine {
 		if (!text.empty()) {
 			SetText(text);
 		}
+	}
+
+	Text::Text(const textState& ts) {
+		m_Geometry = ts.geometry;
+		SetFont(ts.font);
+		SetBackgroundColor(ts.backcolor);
+		SetBackImage(ts.backimage);
+		if (ts.backisshown) TurnOnBack();
+		else TurnOffBack();
+		SetTextColor(ts.textcolor);
+		SetBorderColor(ts.bordercolor);
+		if (ts.shown) Show();
+		else Hide();
+		SetDrawingBorder(ts.showborder);
+		SetWraped(ts.wrapped);
+		SetHorizontalIndent(ts.hindent);
+		SetVerticalIndent(ts.vindent);
+		SetAlign((Alignment)ts.align);
+		SetText(ts.text);
 	}
 
 	Text::~Text() {

@@ -28,6 +28,13 @@ namespace VNEngine {
 		m_Focused = false;
 	}
 
+	Button::Button(const buttonState& bs) : Text(bs.ts)
+	{
+		m_DefaultBorder = bs.defaultborder;
+		m_FocusBorder = bs.focusborder;
+		m_Focused = false;
+	}
+
 	Button::~Button() {
 	}
 

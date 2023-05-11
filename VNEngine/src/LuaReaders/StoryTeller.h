@@ -13,6 +13,8 @@ namespace VNEngine {
 		std::ifstream m_LuaFile;
 		std::string m_CurrentFile;
 		int m_CurrentLine;
+
+		bool m_PosLoaded;
 		std::streampos m_PosInLua;
 
 		bool m_Go;

@@ -7,264 +7,577 @@
 #include "Widgets/WidgetsManager.h"
 #include "StateMachine/StateMachine.h"
 
-#include <json/json.h>
+#include <tinyxml2.h>
 
 #include <filesystem>
 
 namespace VNEngine {
 
-	void writeInVec(Json::Value* list, const vec4* geom) {
-		Json::Value temp = geom->x;
-		list->append(temp);
-		temp = geom->y;
-		list->append(temp);
-		temp = geom->w;
-		list->append(temp);
-		temp = geom->h;
-		list->append(temp);
+	void vectoxml(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* elem, const vec4& vec) {
+		using namespace tinyxml2;
+		XMLElement* x = doc.NewElement("x");
+		XMLElement* y = doc.NewElement("y");
+		XMLElement* w = doc.NewElement("w");
+		XMLElement* h = doc.NewElement("h");
+		x->SetText(vec.x);
+		y->SetText(vec.y);
+		w->SetText(vec.w);
+		h->SetText(vec.h);
+		elem->InsertEndChild(x);
+		elem->InsertEndChild(y);
+		elem->InsertEndChild(w);
+		elem->InsertEndChild(h);
 	}
-	void writeInVec(Json::Value* list, vec4u8* color) {
-		Json::Value temp = color->r;
-		list->append(temp);
-		temp = color->g;
-		list->append(temp);
-		temp = color->b;
-		list->append(temp);
-		temp = color->a;
-		list->append(temp);
+	void vectoxml(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* elem, vec4u8 vec) {
+		using namespace tinyxml2;
+		XMLElement* r = doc.NewElement("r");
+		XMLElement* g = doc.NewElement("g");
+		XMLElement* b = doc.NewElement("b");
+		XMLElement* a = doc.NewElement("a");
+		r->SetText(vec.r);
+		g->SetText(vec.g);
+		b->SetText(vec.b);
+		a->SetText(vec.a);
+		elem->InsertEndChild(r);
+		elem->InsertEndChild(g);
+		elem->InsertEndChild(b);
+		elem->InsertEndChild(a);
+	}
+	vec4 xmltovec(tinyxml2::XMLElement* elem) {
+		vec4 geom = {
+			atoi(elem->FirstChildElement("x")->GetText()),
+			atoi(elem->FirstChildElement("y")->GetText()),
+			atoi(elem->FirstChildElement("w")->GetText()),
+			atoi(elem->FirstChildElement("h")->GetText())
+		};
+		return geom;
+	}
+	vec4u8 xmltouvec(tinyxml2::XMLElement* elem) {
+		vec4u8 color = {
+			(uint8_t)atoi(elem->FirstChildElement("r")->GetText()),
+			(uint8_t)atoi(elem->FirstChildElement("g")->GetText()),
+			(uint8_t)atoi(elem->FirstChildElement("b")->GetText()),
+			(uint8_t)atoi(elem->FirstChildElement("a")->GetText())
+		};
+		return color;
+	}
+
+	void dealWithAudio(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root) {
+		using namespace tinyxml2;
+
+		AudioPlayer::dump ad = AP_INSTANCE.Dump();
+		XMLElement* audio = doc.NewElement("Audio");
+
+		XMLElement* audioList = doc.NewElement("List");
+		for (int i = 0; i < ad.list.size(); ++i) {
+			XMLElement* listElem = doc.NewElement("a");
+			XMLElement* filename = doc.NewElement("filename");
+			std::string f = ad.list[i].first;
+			size_t offset = f.rfind("/");
+			f = f.substr(offset+1, f.size()-offset-1);
+			filename->SetText(f.c_str());
+			XMLElement* key = doc.NewElement("key");
+			key->SetText(ad.list[i].second.c_str());
+			listElem->InsertFirstChild(filename);
+			listElem->InsertEndChild(key);
+			audioList->InsertEndChild(listElem);
+		}
+		XMLElement* audioState = doc.NewElement("State");
+		XMLElement* mkey = doc.NewElement("mkey");
+		XMLElement* skey = doc.NewElement("skey");
+		XMLElement* plays = doc.NewElement("plays");
+		mkey->SetText(ad.s.mkey.c_str());
+		skey->SetText(ad.s.skey.c_str());
+		plays->SetText(ad.s.plays);
+		audioState->InsertEndChild(mkey);
+		audioState->InsertEndChild(skey);
+		audioState->InsertEndChild(plays);
+
+		audio->InsertEndChild(audioList);
+		audio->InsertEndChild(audioState);
+		root->InsertEndChild(audio);
+	}
+
+	void dealWithGraphic(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root, Artist* partist) {
+		using namespace tinyxml2;
+
+		Artist::dump dd = partist->Dumb();
+		XMLElement* graphic = doc.NewElement("Graphic");
+
+		XMLElement* textureList = doc.NewElement("List");
+		for (int i = 0; i < dd.list.size(); ++i) {
+			XMLElement* listelem = doc.NewElement("a");
+			XMLElement* f = doc.NewElement("filename");
+			XMLElement* k = doc.NewElement("key");
+			XMLElement* r = doc.NewElement("rows");
+			XMLElement* c = doc.NewElement("collumns");
+			f->SetText(dd.list[i].filename.c_str());
+			k->SetText(dd.list[i].key.c_str());
+			r->SetText(dd.list[i].r);
+			c->SetText(dd.list[i].c);
+			listelem->InsertEndChild(f);
+			listelem->InsertEndChild(k);
+			listelem->InsertEndChild(r);
+			listelem->InsertEndChild(c);
+			textureList->InsertEndChild(listelem);
+		}
+		graphic->InsertEndChild(textureList);
+
+		XMLElement* screen = doc.NewElement("Screen");
+		XMLElement* backColor = doc.NewElement("backgroundColor");
+		XMLElement* textureKey = doc.NewElement("textureKey");
+		XMLElement* drawBackPic = doc.NewElement("drawBackPic");
+		XMLElement* colorChanged = doc.NewElement("colorChanged");
+		XMLElement* dest = doc.NewElement("dest");
+		XMLElement* stretchState = doc.NewElement("stretchState");
+		XMLElement* q = doc.NewElement("q");
+		XMLElement* id = doc.NewElement("id");
+
+		vectoxml(doc, backColor, dd.s.backgroundColor);
+		textureKey->SetText(dd.s.textureKey.c_str());
+		drawBackPic->SetText(dd.s.drawBackPic);
+		colorChanged->SetText(dd.s.colorChanged);
+		vectoxml(doc, dest, dd.s.dest);
+		stretchState->SetText(dd.s.stretchState);
+		id->SetText(dd.s.id);
+
+		for (const auto& pair : dd.s.q) {
+			XMLElement* le = doc.NewElement("a");
+			XMLElement* id = doc.NewElement("id");
+			XMLElement* tk = doc.NewElement("textureKey");
+			XMLElement* s = doc.NewElement("source");
+			XMLElement* d = doc.NewElement("dest");
+			id->SetText(pair.first);
+			tk->SetText(pair.second.texture->key.c_str());
+			vectoxml(doc, s, pair.second.source);
+			vectoxml(doc, d, pair.second.destination);
+			le->InsertEndChild(id);
+			le->InsertEndChild(tk);
+			le->InsertEndChild(s);
+			le->InsertEndChild(d);
+			q->InsertEndChild(le);
+		}
+
+		screen->InsertEndChild(backColor);
+		screen->InsertEndChild(textureKey);
+		screen->InsertEndChild(drawBackPic);
+		screen->InsertEndChild(colorChanged);
+		screen->InsertEndChild(dest);
+		screen->InsertEndChild(stretchState);
+		screen->InsertEndChild(q);
+		screen->InsertEndChild(id);
+		graphic->InsertEndChild(screen);
+
+		root->InsertEndChild(graphic);
+	}
+
+	void dealWithWidgets(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root) {
+		using namespace tinyxml2;
+
+		WidgetsManager::dump wd = WM_INSTANCE.Dump();
+		XMLElement* widgets = doc.NewElement("Widgets");
+
+		XMLElement* ts = doc.NewElement("Texts");
+		XMLElement* bs = doc.NewElement("Buttons");
+		XMLElement* tbs = doc.NewElement("Textboxs");
+
+		for (const auto& t : wd.ts) {
+			XMLElement* le = doc.NewElement("a");
+			XMLElement* name = doc.NewElement("name");
+			XMLElement* geometry = doc.NewElement("geometry");
+			XMLElement* text = doc.NewElement("text");
+			XMLElement* font = doc.NewElement("font");
+			XMLElement* backimage= doc.NewElement("backimage");
+			XMLElement* textcolor= doc.NewElement("textcolor");
+			XMLElement* backcolor= doc.NewElement("backcolor");
+			XMLElement* bordercolor= doc.NewElement("bordercolor");
+			XMLElement* align= doc.NewElement("align");
+			XMLElement* shown= doc.NewElement("shown");
+			XMLElement* showborder= doc.NewElement("showborder");
+			XMLElement* backisswown= doc.NewElement("backisswown");
+			XMLElement* wrapped= doc.NewElement("wrapped");
+			XMLElement* hindent= doc.NewElement("hindent");
+			XMLElement* vindent= doc.NewElement("vindent");
+
+			name->SetText(t.first.c_str());
+			vectoxml(doc, geometry, t.second.geometry);
+			text->SetText(t.second.text.c_str());
+			font->SetText(t.second.font.c_str());
+			backimage->SetText(t.second.backimage.c_str());
+			vectoxml(doc, textcolor, t.second.textcolor);
+			vectoxml(doc, backcolor, t.second.backcolor);
+			vectoxml(doc, bordercolor, t.second.bordercolor);
+			align->SetText(t.second.align);
+			shown->SetText(t.second.shown);
+			showborder->SetText(t.second.showborder);
+			backisswown->SetText(t.second.backisshown);
+			wrapped->SetText(t.second.wrapped);
+			hindent->SetText(t.second.hindent);
+			vindent->SetText(t.second.vindent);
+
+			le->InsertEndChild(name);
+			le->InsertEndChild(geometry);
+			le->InsertEndChild(text);
+			le->InsertEndChild(font);
+			le->InsertEndChild(backimage);
+			le->InsertEndChild(textcolor);
+			le->InsertEndChild(backcolor);
+			le->InsertEndChild(bordercolor);
+			le->InsertEndChild(align);
+			le->InsertEndChild(shown);
+			le->InsertEndChild(showborder);
+			le->InsertEndChild(backisswown);
+			le->InsertEndChild(wrapped);
+			le->InsertEndChild(hindent);
+			le->InsertEndChild(vindent);
+			ts->InsertEndChild(le);
+		}
+
+		for (const auto& t : wd.bs) {
+			XMLElement* le = doc.NewElement("a");
+			XMLElement* name = doc.NewElement("name");
+			XMLElement* geometry = doc.NewElement("geometry");
+			XMLElement* text = doc.NewElement("text");
+			XMLElement* font = doc.NewElement("font");
+			XMLElement* backimage = doc.NewElement("backimage");
+			XMLElement* textcolor = doc.NewElement("textcolor");
+			XMLElement* backcolor = doc.NewElement("backcolor");
+			XMLElement* bordercolor = doc.NewElement("bordercolor");
+			XMLElement* align = doc.NewElement("align");
+			XMLElement* shown = doc.NewElement("shown");
+			XMLElement* showborder = doc.NewElement("showborder");
+			XMLElement* backisswown = doc.NewElement("backisswown");
+			XMLElement* wrapped = doc.NewElement("wrapped");
+			XMLElement* hindent = doc.NewElement("hindent");
+			XMLElement* vindent = doc.NewElement("vindent");
+			XMLElement* defaultborder = doc.NewElement("defaultborder");
+			XMLElement* focusborder = doc.NewElement("focusborder");
+
+			name->SetText(t.first.c_str());
+			vectoxml(doc, geometry, t.second.ts.geometry);
+			text->SetText(t.second.ts.text.c_str());
+			font->SetText(t.second.ts.font.c_str());
+			backimage->SetText(t.second.ts.backimage.c_str());
+			vectoxml(doc, textcolor, t.second.ts.textcolor);
+			vectoxml(doc, backcolor, t.second.ts.backcolor);
+			vectoxml(doc, bordercolor, t.second.ts.bordercolor);
+			align->SetText(t.second.ts.align);
+			shown->SetText(t.second.ts.shown);
+			showborder->SetText(t.second.ts.showborder);
+			backisswown->SetText(t.second.ts.backisshown);
+			wrapped->SetText(t.second.ts.wrapped);
+			hindent->SetText(t.second.ts.hindent);
+			vindent->SetText(t.second.ts.vindent);
+			vectoxml(doc, defaultborder, t.second.defaultborder);
+			vectoxml(doc, focusborder, t.second.focusborder);
+
+			le->InsertEndChild(name);
+			le->InsertEndChild(geometry);
+			le->InsertEndChild(text);
+			le->InsertEndChild(font);
+			le->InsertEndChild(backimage);
+			le->InsertEndChild(textcolor);
+			le->InsertEndChild(backcolor);
+			le->InsertEndChild(bordercolor);
+			le->InsertEndChild(align);
+			le->InsertEndChild(shown);
+			le->InsertEndChild(showborder);
+			le->InsertEndChild(backisswown);
+			le->InsertEndChild(wrapped);
+			le->InsertEndChild(hindent);
+			le->InsertEndChild(vindent);
+			le->InsertEndChild(defaultborder);
+			le->InsertEndChild(focusborder);
+			ts->InsertEndChild(le);
+		}
+
+		for (const auto& t : wd.tbs) {
+			XMLElement* le = doc.NewElement("a");
+			XMLElement* name = doc.NewElement("name");
+			XMLElement* geometry = doc.NewElement("geometry");
+			XMLElement* text = doc.NewElement("text");
+			XMLElement* font = doc.NewElement("font");
+			XMLElement* backimage = doc.NewElement("backimage");
+			XMLElement* textcolor = doc.NewElement("textcolor");
+			XMLElement* backcolor = doc.NewElement("backcolor");
+			XMLElement* bordercolor = doc.NewElement("bordercolor");
+			XMLElement* align = doc.NewElement("align");
+			XMLElement* shown = doc.NewElement("shown");
+			XMLElement* showborder = doc.NewElement("showborder");
+			XMLElement* backisswown = doc.NewElement("backisswown");
+			XMLElement* wrapped = doc.NewElement("wrapped");
+			XMLElement* hindent = doc.NewElement("hindent");
+			XMLElement* vindent = doc.NewElement("vindent");
+			XMLElement* currentstring = doc.NewElement("currentstring");
+			XMLElement* maxchar = doc.NewElement("maxchar");
+
+			name->SetText(t.first.c_str());
+			vectoxml(doc, geometry, t.second.ts.geometry);
+			text->SetText(t.second.ts.text.c_str());
+			font->SetText(t.second.ts.font.c_str());
+			backimage->SetText(t.second.ts.backimage.c_str());
+			vectoxml(doc, textcolor, t.second.ts.textcolor);
+			vectoxml(doc, backcolor, t.second.ts.backcolor);
+			vectoxml(doc, bordercolor, t.second.ts.bordercolor);
+			align->SetText(t.second.ts.align);
+			shown->SetText(t.second.ts.shown);
+			showborder->SetText(t.second.ts.showborder);
+			backisswown->SetText(t.second.ts.backisshown);
+			wrapped->SetText(t.second.ts.wrapped);
+			hindent->SetText(t.second.ts.hindent);
+			vindent->SetText(t.second.ts.vindent);
+			currentstring->SetText(t.second.currentString.c_str());
+			maxchar->SetText(t.second.maxchar);
+
+			le->InsertEndChild(name);
+			le->InsertEndChild(geometry);
+			le->InsertEndChild(text);
+			le->InsertEndChild(font);
+			le->InsertEndChild(backimage);
+			le->InsertEndChild(textcolor);
+			le->InsertEndChild(backcolor);
+			le->InsertEndChild(bordercolor);
+			le->InsertEndChild(align);
+			le->InsertEndChild(shown);
+			le->InsertEndChild(showborder);
+			le->InsertEndChild(backisswown);
+			le->InsertEndChild(wrapped);
+			le->InsertEndChild(hindent);
+			le->InsertEndChild(vindent);
+			le->InsertEndChild(currentstring);
+			le->InsertEndChild(maxchar);
+			ts->InsertEndChild(le);
+		}
+
+		widgets->InsertEndChild(ts);
+		widgets->InsertEndChild(bs);
+		widgets->InsertEndChild(tbs);
+		root->InsertEndChild(widgets);
 	}
 
 	void SaveLoad::Save(int number, Artist* partist) {
-		std::ofstream save((sSaveDir + std::to_string(number) + ".vns"),
-			std::fstream::out | std::fstream::trunc);
-		if (!save.is_open()) {
-			VN_LOGS_WARNING("Error on opening saving file for save, check presests.lua save path");
-			char buff[256];
-			strerror_s(buff, errno);
-			VN_LOGS_WARNING(buff);
-			return;
-		}
+		using namespace tinyxml2;
 
-		AudioPlayer::dump ad = AP_INSTANCE.Dump();
-		Artist::dump dd = partist->Dumb();
-		WidgetsManager::dump wd = WM_INSTANCE.Dump();
+		XMLDocument doc;
+		XMLDeclaration* dec = doc.NewDeclaration();
+		doc.InsertFirstChild(dec);
+		XMLElement* root = doc.NewElement("VNEngine_Save");
+
 		size_t sp = (size_t)SM_INSTANCE.GetTopReaderPos();
 
-		Json::Value Root;
-		Json::Value Audio;
-		Json::Value Graphic;
-		Json::Value Widgets;
-		Json::Value List(Json::arrayValue);
-		Json::Value tempList(Json::arrayValue);
-		Json::Value q(Json::arrayValue);
-		Json::Value v;
-		Json::Value z;
+		dealWithAudio(doc, root);
+		dealWithGraphic(doc,root,partist);
+		dealWithWidgets(doc, root);
+
+		XMLElement* readingpos = doc.NewElement("ReadingPos");
+		readingpos->SetText(sp);
+		root->InsertEndChild(readingpos);
 		
-		//	AUDIO
-		Audio["mkey"] = ad.s.mkey;
-		Audio["skey"] = ad.s.skey;
-		Audio["plays"] = ad.s.plays;
-		for (auto pair : ad.list) {
-			v = pair.first;
-			tempList.append(v);
-			v = pair.second;
-			tempList.append(v);
-			List.append(tempList);
-			tempList.clear();
-		}
-		Audio["list"] = List;
-		List.clear();
-
-		//	GRAPHICS
-		for (auto t : dd.list) {
-			v = t.filename;
-			tempList.append(v);
-			v = t.key;
-			tempList.append(v);
-			v = t.r;
-			tempList.append(v);
-			v = t.c;
-			tempList.append(v);
-			List.append(tempList);
-			tempList.clear();
-		}
-		Graphic["list"] = List;
-		List.clear();
-		z["textureKey"] = dd.s.textureKey;
-		z["colorChanged"] = dd.s.colorChanged;
-		z["drawBackPic"] = dd.s.drawBackPic;
-		z["id"] = dd.s.id;
-		z["stretchState"] = (uint8_t)dd.s.stretchState;
-		writeInVec(&List, &dd.s.dest);
-		z["dest"] = List;
-		List.clear();
-		writeInVec(&List, &dd.s.backgroundColor);
-		z["backgroundColor"] = List;
-		List.clear();
-		for (const auto& pair : dd.s.q) {
-			v = pair.first;
-			List.append(v);
-			v = pair.second.texture->key;
-			List.append(v);
-			writeInVec(&tempList, &(pair.second.source));
-			List.append(tempList);
-			tempList.clear();
-			writeInVec(&tempList, &(pair.second.destination));
-			List.append(tempList);
-			tempList.clear();
-			q.append(List);
-		}
-		z["q"] = q;
-		Graphic["Screen"] = z;
-
-		List.clear();
-		tempList.clear();
-		z.clear();
-		q.clear();
-
-		//	WIDGETS
-		for (auto w : wd.ts) {
-			v = w.text.c_str();
-			q.append(v);
-			writeInVec(&tempList,&w.geometry);
-			q.append(tempList);
-			tempList.clear();
-			v = w.font;
-			q.append(v);
-			v = w.backimage;
-			q.append(v);
-			writeInVec(&tempList, &w.textcolor);
-			q.append(tempList);
-			tempList.clear();
-			writeInVec(&tempList, &w.backcolor);
-			q.append(tempList);
-			tempList.clear();
-			writeInVec(&tempList, &w.bordercolor);
-			q.append(tempList);
-			tempList.clear();
-			v = w.align;
-			q.append(v);
-			v = w.shown;
-			q.append(v);
-			v = w.showborder;
-			q.append(v);
-			v = w.backisshown;
-			q.append(v);
-			v = w.wrapped;
-			q.append(v);
-			v = w.hindent;
-			q.append(v);
-			v = w.vindent;
-			q.append(v);
-			List.append(q);
-			q.clear();
-		}
-		Widgets["Texts"] = List;
-		List.clear();
-		q.clear();
-		for (auto w : wd.bs) {
-			v = w.ts.text.c_str();
-			q.append(v);
-			writeInVec(&tempList, &w.ts.geometry);
-			q.append(tempList);
-			tempList.clear();
-			v = w.ts.font;
-			q.append(v);
-			v = w.ts.backimage;
-			q.append(v);
-			writeInVec(&tempList, &w.ts.textcolor);
-			q.append(tempList);
-			tempList.clear();
-			writeInVec(&tempList, &w.ts.backcolor);
-			q.append(tempList);
-			tempList.clear();
-			writeInVec(&tempList, &w.ts.bordercolor);
-			q.append(tempList);
-			tempList.clear();
-			v = w.ts.align;
-			q.append(v);
-			v = w.ts.shown;
-			q.append(v);
-			v = w.ts.showborder;
-			q.append(v);
-			v = w.ts.backisshown;
-			q.append(v);
-			v = w.ts.wrapped;
-			q.append(v);
-			v = w.ts.hindent;
-			q.append(v);
-			v = w.ts.vindent;
-			q.append(v);
-			writeInVec(&tempList, &w.defaultborder);
-			q.append(tempList);
-			tempList.clear();
-			writeInVec(&tempList, &w.focusborder);
-			q.append(tempList);
-			tempList.clear();
-			List.append(q);
-			q.clear();
-		}
-		Widgets["Buttons"] = List;
-		List.clear();
-		q.clear();
-		for (auto w : wd.tbs) {
-			v = w.ts.text.c_str();
-			q.append(v);
-			writeInVec(&tempList, &w.ts.geometry);
-			q.append(tempList);
-			tempList.clear();
-			v = w.ts.font;
-			q.append(v);
-			v = w.ts.backimage;
-			q.append(v);
-			writeInVec(&tempList, &w.ts.textcolor);
-			q.append(tempList);
-			tempList.clear();
-			writeInVec(&tempList, &w.ts.backcolor);
-			q.append(tempList);
-			tempList.clear();
-			writeInVec(&tempList, &w.ts.bordercolor);
-			q.append(tempList);
-			tempList.clear();
-			v = w.ts.align;
-			q.append(v);
-			v = w.ts.shown;
-			q.append(v);
-			v = w.ts.showborder;
-			q.append(v);
-			v = w.ts.backisshown;
-			q.append(v);
-			v = w.ts.wrapped;
-			q.append(v);
-			v = w.ts.hindent;
-			q.append(v);
-			v = w.ts.vindent;
-			q.append(v);
-			v = w.currentString;
-			q.append(v);
-			v = w.maxchar;
-			q.append(v);
-			List.append(q);
-			q.clear();
-		}
-		Widgets["TextBoxes"] = List;
-		List.clear();
-		q.clear();
-
-		//	SAVING
-		Root["Audio"] = Audio;
-		Root["Graphic"] = Graphic;
-		Root["Widgets"] = Widgets;
-		Root["ReaderPosition"] = sp;
-
-		Json::StreamWriterBuilder builder;
-		const std::unique_ptr<Json::StreamWriter> writer(builder.newStreamWriter());
-		writer->write(Root, &save);
-		save.close();
+		doc.InsertEndChild(root);
+		doc.SaveFile((sSaveDir + std::to_string(number) + ".vns").c_str());
 	}
 	
-	void SaveLoad::Load(int number) {
+	void undealWithAudio(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root) {
+		using namespace tinyxml2;
 
+		AudioPlayer::dump d = {};
+		XMLElement* audio = root->FirstChildElement("Audio");
+
+		XMLElement* list = audio->FirstChildElement("List");
+		for (XMLElement* le = list->FirstChildElement("a"); le; le = le->NextSiblingElement("a")) {
+			XMLElement* f = le->FirstChildElement("filename");
+			XMLElement* k = le->FirstChildElement("key");
+			AP_INSTANCE.AddAudio(f->GetText(), k->GetText());
+		}
+
+		XMLElement* state = audio->FirstChildElement("State");
+		XMLElement* m = state->FirstChildElement("mkey");
+		XMLElement* s = state->FirstChildElement("skey");
+		XMLElement* p = state->FirstChildElement("plays");
+		bool plays = std::string(p->GetText()) == "true" ? true : false;
+		if (!plays) AP_INSTANCE.Mute();
+		if (m->GetText()) AP_INSTANCE.PlayMusic(m->GetText());
+		if (s->GetText()) AP_INSTANCE.PlaySound(s->GetText());
+		if (!plays) {
+			AP_INSTANCE.StopMusic();
+			AP_INSTANCE.Unmute();
+		}
+	}
+
+	void undealWithGraphic(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root, Artist* partist) {
+		using namespace tinyxml2;
+
+		Artist::dump dd = {};
+		XMLElement* graphic = root->FirstChildElement("Graphic");
+		XMLElement* list = graphic->FirstChildElement("List");
+		XMLElement* screen = graphic->FirstChildElement("Screen");
+
+		for (XMLElement* le = list->FirstChildElement("a"); le; le = le->NextSiblingElement("a")) {
+			TM_INSTANCE.addTexture(
+				le->FirstChildElement("key")->GetText(),
+				le->FirstChildElement("filename")->GetText(),
+				atoi(le->FirstChildElement("rows")->GetText()),
+				atoi(le->FirstChildElement("collumns")->GetText())
+			);
+		}
+
+		std::unordered_map<uint32_t, DrawnData> q;
+		XMLElement* queue = screen->FirstChildElement("q");
+		for (XMLElement* le = queue->FirstChildElement("a"); le; le = le->NextSiblingElement("a")) {
+			q[(atoi(le->FirstChildElement("id")->GetText()))] = {
+				TM_INSTANCE.getTexture(le->FirstChildElement("textureKey")->GetText()),
+				xmltovec(le->FirstChildElement("source")),
+				xmltovec(le->FirstChildElement("dest"))
+			};
+		}
+
+		Artist::screen s = {
+			xmltouvec(screen->FirstChildElement("backgroundColor")),
+			screen->FirstChildElement("textureKey")->GetText(),
+			std::string(screen->FirstChildElement("drawBackPic")->GetText()) == "true",
+			std::string(screen->FirstChildElement("colorChanged")->GetText()) == "true",
+			xmltovec(screen->FirstChildElement("dest")),
+			(Stretching)(uint8_t)atoi(screen->FirstChildElement("stretchState")->GetText()),
+			q,
+			(uint32_t)atoi(screen->FirstChildElement("id")->GetText())
+		};
+		partist->Load(s);
+	}
+	
+	void undealWithWidgets(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root) {
+		using namespace tinyxml2;
+
+		WidgetsManager::dump wd = {};
+		XMLElement* widgets = root->FirstChildElement("Widgets");
+		XMLElement* ts = widgets->FirstChildElement("Texts");
+		XMLElement* bs = widgets->FirstChildElement("Buttons");
+		XMLElement* tbs = widgets->FirstChildElement("Textboxs");
+
+		for (XMLElement* w = ts->FirstChildElement("a"); w; w = w->NextSiblingElement("a")) {
+			XMLElement* name = w->FirstChildElement("name");
+			XMLElement* geometry = w->FirstChildElement("geometry");
+			XMLElement* text = w->FirstChildElement("text");
+			XMLElement* font = w->FirstChildElement("font");
+			XMLElement* backimage = w->FirstChildElement("backimage");
+			XMLElement* textcolor = w->FirstChildElement("textcolor");
+			XMLElement* backcolor = w->FirstChildElement("backcolor");
+			XMLElement* bordercolor = w->FirstChildElement("bordercolor");
+			XMLElement* align = w->FirstChildElement("align");
+			XMLElement* shown = w->FirstChildElement("shown");
+			XMLElement* showborder = w->FirstChildElement("showborder");
+			XMLElement* backisswown = w->FirstChildElement("backisswown");
+			XMLElement* wrapped = w->FirstChildElement("wrapped");
+			XMLElement* hindent = w->FirstChildElement("hindent");
+			XMLElement* vindent = w->FirstChildElement("vindent");
+
+			textState t = {
+				xmltovec(geometry),
+				text->GetText() ? text->GetText() : std::string(),
+				font->GetText() ? font->GetText() : std::string(),
+				backimage->GetText() ? backimage->GetText() : std::string(),
+				xmltouvec(textcolor), xmltouvec(backcolor),xmltouvec(bordercolor),
+				(uint8_t)atoi(align->GetText()),
+				std::string(shown->GetText()) == "true" ? true : false,
+				std::string(showborder->GetText()) == "true" ? true : false,
+				std::string(backisswown->GetText()) == "true" ? true : false,
+				std::string(wrapped->GetText()) == "true" ? true : false,
+				atoi(hindent->GetText()), atoi(vindent->GetText())
+			};
+			wd.ts.push_back({name->GetText(),t});
+		}
+		for (XMLElement* w = bs->FirstChildElement("a"); w; w = w->NextSiblingElement("a")) {
+			XMLElement* name = w->FirstChildElement("name");
+			XMLElement* geometry = w->FirstChildElement("geometry");
+			XMLElement* text = w->FirstChildElement("text");
+			XMLElement* font = w->FirstChildElement("font");
+			XMLElement* backimage = w->FirstChildElement("backimage");
+			XMLElement* textcolor = w->FirstChildElement("textcolor");
+			XMLElement* backcolor = w->FirstChildElement("backcolor");
+			XMLElement* bordercolor = w->FirstChildElement("bordercolor");
+			XMLElement* align = w->FirstChildElement("align");
+			XMLElement* shown = w->FirstChildElement("shown");
+			XMLElement* showborder = w->FirstChildElement("showborder");
+			XMLElement* backisswown = w->FirstChildElement("backisswown");
+			XMLElement* wrapped = w->FirstChildElement("wrapped");
+			XMLElement* hindent = w->FirstChildElement("hindent");
+			XMLElement* vindent = w->FirstChildElement("vindent");
+			XMLElement* defaultborder = w->FirstChildElement("defaultborder");
+			XMLElement* focusborder = w->FirstChildElement("focusborder");
+
+			textState t = {
+				xmltovec(geometry),
+				text->GetText() ? text->GetText() : std::string(),
+				font->GetText() ? font->GetText() : std::string(),
+				backimage->GetText() ? backimage->GetText() : std::string(),
+				xmltouvec(textcolor), xmltouvec(backcolor),xmltouvec(bordercolor),
+				(uint8_t)atoi(align->GetText()),
+				std::string(shown->GetText()) == "true" ? true : false,
+				std::string(showborder->GetText()) == "true" ? true : false,
+				std::string(backisswown->GetText()) == "true" ? true : false,
+				std::string(wrapped->GetText()) == "true" ? true : false,
+				atoi(hindent->GetText()), atoi(vindent->GetText())
+			};
+			buttonState b = {
+				t, xmltouvec(defaultborder),xmltouvec(focusborder)
+			};
+			wd.bs.push_back({ name->GetText(),b });
+		}
+		for (XMLElement* w = tbs->FirstChildElement("a"); w; w = w->NextSiblingElement("a")) {
+			XMLElement* name = w->FirstChildElement("name");
+			XMLElement* geometry = w->FirstChildElement("geometry");
+			XMLElement* text = w->FirstChildElement("text");
+			XMLElement* font = w->FirstChildElement("font");
+			XMLElement* backimage = w->FirstChildElement("backimage");
+			XMLElement* textcolor = w->FirstChildElement("textcolor");
+			XMLElement* backcolor = w->FirstChildElement("backcolor");
+			XMLElement* bordercolor = w->FirstChildElement("bordercolor");
+			XMLElement* align = w->FirstChildElement("align");
+			XMLElement* shown = w->FirstChildElement("shown");
+			XMLElement* showborder = w->FirstChildElement("showborder");
+			XMLElement* backisswown = w->FirstChildElement("backisswown");
+			XMLElement* wrapped = w->FirstChildElement("wrapped");
+			XMLElement* hindent = w->FirstChildElement("hindent");
+			XMLElement* vindent = w->FirstChildElement("vindent");
+			XMLElement* currentstring = w->FirstChildElement("currentstring");
+			XMLElement* maxchar = w->FirstChildElement("maxchar");
+
+			textState t = {
+				xmltovec(geometry),
+				text->GetText() ? text->GetText() : std::string(),
+				font->GetText() ? font->GetText() : std::string(),
+				backimage->GetText() ? backimage->GetText() : std::string(),
+				xmltouvec(textcolor), xmltouvec(backcolor),xmltouvec(bordercolor),
+				(uint8_t)atoi(align->GetText()),
+				std::string(shown->GetText()) == "true" ? true : false,
+				std::string(showborder->GetText()) == "true" ? true : false,
+				std::string(backisswown->GetText()) == "true" ? true : false,
+				std::string(wrapped->GetText()) == "true" ? true : false,
+				atoi(hindent->GetText()), atoi(vindent->GetText())
+			};
+			textboxState tb = {
+				t, currentstring->GetText(), (uint32_t)atoi(maxchar->GetText())
+			};
+			wd.tbs.push_back({ name->GetText(),tb });
+		}
+
+		WM_INSTANCE.Load(wd);
+	}
+
+	int SaveLoad::Load(int number, Artist* partist) {
+		using namespace tinyxml2;
+
+		XMLDocument doc;
+		doc.LoadFile((sSaveDir + std::to_string(number) + ".vns").c_str());
+		XMLElement* root = doc.RootElement();
+
+		undealWithAudio(doc, root);
+		undealWithGraphic(doc, root, partist);
+		undealWithWidgets(doc, root);
+
+		std::string sps = root->FirstChildElement("ReadingPos")->GetText();
+		int sp = atoi(sps.c_str());
+
+		return sp;
 	}
 	
 	void SaveLoad::SetSaveDir(const std::string& path) {

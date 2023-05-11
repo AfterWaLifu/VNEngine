@@ -142,5 +142,7 @@ namespace VNEngine{
 			screen s;
 		};
 		dump Dumb();
+
+		void Load(const screen& s);
 	};
 }

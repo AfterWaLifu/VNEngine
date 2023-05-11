@@ -64,11 +64,12 @@ namespace VNEngine {
 		void WipeScreens();
 
 		struct dump {
-			std::vector<textState> ts;
-			std::vector<buttonState> bs;
-			std::vector<textboxState> tbs;
+			std::vector<std::pair<std::string,textState>> ts;
+			std::vector<std::pair<std::string, buttonState>> bs;
+			std::vector<std::pair<std::string, textboxState>> tbs;
 		};
 		dump Dump();
+		void Load(const dump& d);
 	};
 
 #define WM_INSTANCE WidgetsManager::Instance()

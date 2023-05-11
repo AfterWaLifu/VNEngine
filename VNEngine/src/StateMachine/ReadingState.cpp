@@ -10,6 +10,15 @@
 #include "LuaReaders/StoryTeller.h"
 
 namespace VNEngine {
+	
+	ReadingState::ReadingState(std::streampos startPos)
+		:m_Loaded(false)
+	{
+		if (startPos != 0) {
+			m_Loaded = true;
+			SetReaderPos(startPos);
+		}
+	}
 
 	void ReadingState::Handle() {
 		if (IH_INSTANCE.getMouseButtonState(RIGHT)) {
@@ -19,17 +28,17 @@ namespace VNEngine {
 		if (IH_INSTANCE.getMouseButtonState(LEFT) ||
 			IH_INSTANCE.isKeyPressed("space") || IH_INSTANCE.isKeyPressed("enter")) {
 			
-			if (m_ST.GetCompleted()) {
-				SM_INSTANCE.WipeStates();
-				SM_INSTANCE.ChangeState(new MenuState("mainmenu"));
-				return;
-			}
-
 			if (WM_INSTANCE.GetHiden()) {
 				WM_INSTANCE.SetHiden(false);
 			}
 			else {
 				m_ST.Go();
+			}
+
+			if (m_ST.GetCompleted()) {
+				SM_INSTANCE.WipeStates();
+				SM_INSTANCE.ChangeState(new MenuState("mainmenu"));
+				return;
 			}
 		}
 
@@ -47,8 +56,10 @@ namespace VNEngine {
 	}
 
 	bool ReadingState::onEnter() {
-		InterfaceCreator ic;
-		ic.Draw("game");
+		if (!m_Loaded) {
+			InterfaceCreator ic;
+			ic.Draw("game");
+		}
 		m_ST.DoFile("game.lua");
 
 		return true;

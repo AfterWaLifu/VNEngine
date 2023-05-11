@@ -30,6 +30,15 @@ namespace VNEngine {
 		s_InputString ? 0 : s_InputString = IH_INSTANCE.getTextInput();
 	}
 
+	TextBox::TextBox(const textboxState& tbs) : Text(tbs.ts)
+	{
+		SetValue(tbs.currentString);
+		SetMaxCharNumber(tbs.maxchar);
+
+		m_LineEnabled = true;
+		m_LineTimer = SDL_GetTicks64();
+	}
+
 	TextBox::~TextBox() {
 		IH_INSTANCE.setTextInputState(false);
 	}

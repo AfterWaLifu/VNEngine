@@ -25,6 +25,7 @@ namespace VNEngine {
 		Button(vec4 geometry, std::function<void(void)> onClick = nullptr, std::wstring text = L"",
 			vec4u8 BackgroundColor = {255,255,255,128}, vec4u8 textColor = {0,0,0,255},
 			const std::string& fontKey = "");
+		Button(const buttonState& bs);
 		virtual ~Button();
 
 		void Bind(std::function<void(void)> onClick);
