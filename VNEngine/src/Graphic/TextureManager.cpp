@@ -29,6 +29,8 @@ namespace VNEngine {
 
 	bool TextureManager::addTexture(const std::string& key, const std::string& path, int rows, int collumns)
 	{
+		if (!m_Textures.empty() && m_Textures.find(key) != m_Textures.end()) return true;
+
 		SDL_Surface* tempSurface = IMG_Load((m_ImagesPath + path).c_str());
 		if (tempSurface == nullptr) {
 			VN_LOGS_WARNING("Image file not found '" << m_ImagesPath + path << "', check error below");
@@ -85,8 +87,9 @@ namespace VNEngine {
 			m_Textures.erase(key);
 		}
 		
-		if (SDL_GetError()) {
+		if (strcmp(SDL_GetError(), "\0")) {
 			VN_LOGS_WARNING("Something went wrong on deleting texture '" << key << "'");
+			VN_LOGS_WARNING(SDL_GetError());
 		}
 		return true;
 	}

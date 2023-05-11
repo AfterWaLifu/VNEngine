@@ -75,6 +75,8 @@ namespace VNEngine {
 	}
 
 	void AudioPlayer::PlayMusic(const std::string& trackName) {
+		if (trackName.empty()) return;
+
 		int state = AL_STOPPED;
 		alGetSourcei(m_MusicSource, AL_SOURCE_STATE, &state);
 		if (state == AL_PLAYING && trackName == m_CurrentMusic) return;
@@ -131,6 +133,8 @@ namespace VNEngine {
 	}
 
 	void AudioPlayer::PlaySound(const std::string& trackName) {
+		if (trackName.empty()) return;
+
 		uint32_t buffer = m_AudioList.GetAudio(trackName);
 
 		if (buffer == UINT32_MAX) {

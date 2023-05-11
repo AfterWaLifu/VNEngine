@@ -27,6 +27,8 @@ namespace VNEngine {
 	}
 	
 	bool AudioList::AddAudio(std::string filename, std::string key) {
+        if (!m_SoundBufferList.empty() && m_SoundBufferList.find(key) != m_SoundBufferList.end()) return true;
+
         ALenum err, format;
         ALuint buffer;
         SNDFILE* sndfile;

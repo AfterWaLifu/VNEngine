@@ -39,4 +39,8 @@ Game.StopDrawing("g")
 who("Рассказчик")
 say("ВСЁ")
 
+Game.DelPicture("r")
+Game.DelPicture("g")
+Game.DelPicture("b")
+
 -- Game.Exit()
