@@ -65,7 +65,7 @@ namespace VNEngine {
 						else if (align[0] == 'R') a = ALIGN_RIGHT;
 						else a = ALIGN_HCENTER;
 						if (align[1] == 'T') a = (Alignment)(a | ALIGN_UP);
-						else if (align[1] == 'D') a = (Alignment)(a | ALIGN_DOWN);
+						else if (align[1] == 'B') a = (Alignment)(a | ALIGN_DOWN);
 						else a = (Alignment)(a | ALIGN_VCENTER);
 						textWidget->SetAlign(a);
 					}
@@ -115,7 +115,7 @@ namespace VNEngine {
 						else if (align[0] == 'R') a = ALIGN_RIGHT;
 						else a = ALIGN_HCENTER;
 						if (align[1] == 'T') a = (Alignment)(a | ALIGN_UP);
-						else if (align[1] == 'D') a = (Alignment)(a | ALIGN_DOWN);
+						else if (align[1] == 'B') a = (Alignment)(a | ALIGN_DOWN);
 						else a = (Alignment)(a | ALIGN_VCENTER);
 						buttonWidget->SetAlign(a);
 					}
@@ -174,7 +174,7 @@ namespace VNEngine {
 						else if (align[0] == 'R') a = ALIGN_RIGHT;
 						else a = ALIGN_HCENTER;
 						if (align[1] == 'T') a = (Alignment)(a | ALIGN_UP);
-						else if (align[1] == 'D') a = (Alignment)(a | ALIGN_DOWN);
+						else if (align[1] == 'B') a = (Alignment)(a | ALIGN_DOWN);
 						else a = (Alignment)(a | ALIGN_VCENTER);
 						textBoxWidget->SetAlign(a);
 					}
@@ -245,7 +245,7 @@ namespace VNEngine {
 					else if (align[0] == 'R') a = ALIGN_RIGHT;
 					else a = ALIGN_HCENTER;
 					if (align[1] == 'T') a = (Alignment)(a | ALIGN_UP);
-					else if (align[1] == 'D') a = (Alignment)(a | ALIGN_DOWN);
+					else if (align[1] == 'B') a = (Alignment)(a | ALIGN_DOWN);
 					else a = (Alignment)(a | ALIGN_VCENTER);
 					text->SetAlign(a);
 				}
@@ -292,7 +292,7 @@ namespace VNEngine {
 					else if (align[0] == 'R') a = ALIGN_RIGHT;
 					else a = ALIGN_HCENTER;
 					if (align[1] == 'T') a = (Alignment)(a | ALIGN_UP);
-					else if (align[1] == 'D') a = (Alignment)(a | ALIGN_DOWN);
+					else if (align[1] == 'B') a = (Alignment)(a | ALIGN_DOWN);
 					else a = (Alignment)(a | ALIGN_VCENTER);
 					button->SetAlign(a);
 				}
@@ -348,7 +348,7 @@ namespace VNEngine {
 					else if (align[0] == 'R') a = ALIGN_RIGHT;
 					else a = ALIGN_HCENTER;
 					if (align[1] == 'T') a = (Alignment)(a | ALIGN_UP);
-					else if (align[1] == 'D') a = (Alignment)(a | ALIGN_DOWN);
+					else if (align[1] == 'B') a = (Alignment)(a | ALIGN_DOWN);
 					else a = (Alignment)(a | ALIGN_VCENTER);
 					textbox->SetAlign(a);
 				}

@@ -45,7 +45,7 @@ function save()
 	Widget.Add(label)
 
 	saveButton = {type="button", name="save1",geometry={300,170,300,190}, textColor={0,0,0,255},text="YY.MM.DD HH:MM",
-					align="CD", font="r20", wrapped=false, vindent=3}
+					align="CB", font="r20", wrapped=false, vindent=3}
 	savePicture = {type="text", name="save1",geometry={330,175,240,160}, textColor={0,0,0,0}, text="",backPic="savePlaceholder"}
 	
 	saveButton.name = "save1"
@@ -104,7 +104,7 @@ function load()
 	Widget.Add(label)
 	
 	saveButton = {type="button", name="save1",geometry={300,170,300,190}, textColor={0,0,0,255},text="YY.MM.DD HH:MM",
-					align="CD", font="r20", wrapped=false, vindent=3}
+					align="CB", font="r20", wrapped=false, vindent=3}
 	savePicture = {type="text", name="save1",geometry={330,175,240,160}, textColor={0,0,0,0}, text="",backPic="savePlaceholder"}
 	
 	saveButton.name = "load1"
