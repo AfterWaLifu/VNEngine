@@ -28,6 +28,8 @@ namespace VNEngine {
 		* @param trackName Keycode of added audio
 		*/
 		void PlaySound(const std::string& trackName);
+		void PauseSound();	/// Pauses sound, may be resumed
+		void ResumeSoune();	/// Resumes paused sound
 		void StopSound();	/// Stops sound
 
 		/**
@@ -69,7 +71,8 @@ namespace VNEngine {
 
 		std::string GetCurrentMusic();	/// Returns a key of current music
 		std::string GetCurrentSound();	/// Returns a key of current sound
-		bool GetIfPlays();	// Returns true if music plays
+		bool GetIfMusicPlays();	/// Returns true if music plays
+		bool GetIfSoundPlays(); /// Returns true is sound plays
 
 		void PushState();
 		void PopState();
@@ -81,7 +84,8 @@ namespace VNEngine {
 		struct state {
 			std::string mkey;
 			std::string skey;
-			bool plays;
+			bool mplays;
+			bool splays;
 		};
 		struct dump {
 			std::vector<std::pair<std::string, std::string>> list;
@@ -122,7 +126,7 @@ namespace VNEngine {
 
 		std::string m_CurrentMusic;		/// current music key
 		std::string m_CurrentSound;		/// current sound key
-		bool m_plays;	// music is currently playing
+		bool m_musicPlays;	/// music is currently playing
 
 		std::vector<state> m_States;
 	};

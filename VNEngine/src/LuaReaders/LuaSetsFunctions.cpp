@@ -37,7 +37,7 @@ namespace VNEngine {
 		}
 
 		void PlayMusic(std::string key) {
-			if (AP_INSTANCE.GetIfPlays() && AP_INSTANCE.GetCurrentMusic() == key) {
+			if (AP_INSTANCE.GetIfMusicPlays() && AP_INSTANCE.GetCurrentMusic() == key) {
 				return;
 			}
 			AP_INSTANCE.PlayMusic(key);

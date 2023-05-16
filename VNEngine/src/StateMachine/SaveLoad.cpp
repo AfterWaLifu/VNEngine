@@ -85,13 +85,16 @@ namespace VNEngine {
 		XMLElement* audioState = doc.NewElement("State");
 		XMLElement* mkey = doc.NewElement("mkey");
 		XMLElement* skey = doc.NewElement("skey");
-		XMLElement* plays = doc.NewElement("plays");
+		XMLElement* mplays = doc.NewElement("mplays");
+		XMLElement* splays = doc.NewElement("splays");
 		mkey->SetText(ad.s.mkey.c_str());
 		skey->SetText(ad.s.skey.c_str());
-		plays->SetText(ad.s.plays);
+		mplays->SetText(ad.s.mplays);
+		splays->SetText(ad.s.splays);
 		audioState->InsertEndChild(mkey);
 		audioState->InsertEndChild(skey);
-		audioState->InsertEndChild(plays);
+		audioState->InsertEndChild(mplays);
+		audioState->InsertEndChild(splays);
 
 		audio->InsertEndChild(audioList);
 		audio->InsertEndChild(audioState);
@@ -391,17 +394,21 @@ namespace VNEngine {
 		}
 
 		XMLElement* state = audio->FirstChildElement("State");
-		XMLElement* m = state->FirstChildElement("mkey");
-		XMLElement* s = state->FirstChildElement("skey");
-		XMLElement* p = state->FirstChildElement("plays");
-		bool plays = std::string(p->GetText()) == "true" ? true : false;
-		if (!plays) AP_INSTANCE.Mute();
-		if (m->GetText()) AP_INSTANCE.PlayMusic(m->GetText());
-		if (s->GetText()) AP_INSTANCE.PlaySound(s->GetText());
-		if (!plays) {
-			AP_INSTANCE.StopMusic();
-			AP_INSTANCE.Unmute();
-		}
+		std::string m = state->FirstChildElement("mkey")->GetText();
+		std::string s = state->FirstChildElement("skey")->GetText();
+		XMLElement* mp = state->FirstChildElement("mplays");
+		XMLElement* sp = state->FirstChildElement("splays");
+		
+		bool musicplays = std::string(mp->GetText()) == "true";
+		bool soundplays = std::string(sp->GetText()) == "true";
+
+		bool notmuten = !(AP_INSTANCE.GetIfMute());
+		if (notmuten) AP_INSTANCE.Mute();
+		if (!m.empty()) AP_INSTANCE.PlayMusic(m);
+		if (!s.empty()) AP_INSTANCE.PlaySound(s);
+		if (!musicplays) AP_INSTANCE.StopMusic();
+		if (!soundplays) AP_INSTANCE.StopSound();
+		if (notmuten) AP_INSTANCE.Unmute();
 	}
 
 	void undealWithGraphic(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root, Artist* partist) {

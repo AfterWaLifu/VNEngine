@@ -13,7 +13,7 @@ namespace VNEngine {
 		m_MusicBuffer(0), m_SoundBuffer(0),
 		m_MusicVolume(1.0f), m_SoundVolume(1.0f),
 		m_AudioList(), m_Mute(false),
-		m_AudiofilesPath(""), m_plays(false)
+		m_AudiofilesPath(""), m_musicPlays(false)
 	{
 		m_pDevice = alcOpenDevice(nullptr);
 		if (!m_pDevice) {
@@ -94,7 +94,7 @@ namespace VNEngine {
 		}
 		alSourcePlay(m_MusicSource);
 		m_CurrentMusic = trackName;
-		m_plays = true;
+		m_musicPlays = true;
 	}
 
 	void AudioPlayer::PauseMusic() {
@@ -102,9 +102,7 @@ namespace VNEngine {
 		alGetSourcei(m_MusicSource, AL_SOURCE_STATE, &state);
 		if (state == AL_PLAYING) {
 			alSourcePause(m_MusicSource);
-		}
-		else {
-			VN_LOGS_WARNING("Attempted to pause music, but it is not playing");
+			m_musicPlays = false;
 		}
 	}
 
@@ -113,13 +111,7 @@ namespace VNEngine {
 		alGetSourcei(m_MusicSource, AL_SOURCE_STATE, &state);
 		if (state == AL_PAUSED) {
 			alSourcePlay(m_MusicSource);
-			m_plays = true;
-		}
-		else if (state == AL_STOPPED){
-			VN_LOGS_WARNING("Attempted to resume music, but it is stopped");
-		}
-		else {
-			VN_LOGS_WARNING("Attempted to resume music, but it is not paused");
+			m_musicPlays = true;
 		}
 	}
 
@@ -128,7 +120,7 @@ namespace VNEngine {
 		alGetSourcei(m_MusicSource, AL_SOURCE_STATE, &state);
 		if (state == AL_PLAYING) {
 			alSourceStop(m_MusicSource);
-			m_plays = false;
+			m_musicPlays = false;
 		}
 	}
 
@@ -148,6 +140,22 @@ namespace VNEngine {
 		}
 		alSourcePlay(m_SoundSource);
 		m_CurrentSound = trackName;
+	}
+
+	void AudioPlayer::PauseSound() {
+		int state = AL_STOPPED;
+		alGetSourcei(m_SoundSource, AL_SOURCE_STATE, &state);
+		if (state == AL_PLAYING) {
+			alSourcePause(m_SoundSource);
+		}
+	}
+
+	void AudioPlayer::ResumeSoune() {
+		int state = AL_STOPPED;
+		alGetSourcei(m_SoundSource, AL_SOURCE_STATE, &state);
+		if (state == AL_PAUSED) {
+			alSourcePlay(m_SoundSource);
+		}
 	}
 
 	void AudioPlayer::StopSound() {
@@ -223,12 +231,22 @@ namespace VNEngine {
 		return m_CurrentSound;
 	}
 
-	bool AudioPlayer::GetIfPlays() {
-		return m_plays;
+	bool AudioPlayer::GetIfMusicPlays() {
+		return m_musicPlays;
+	}
+
+	bool AudioPlayer::GetIfSoundPlays()
+	{
+		int state = AL_STOPPED;
+		alGetSourcei(m_SoundSource, AL_SOURCE_STATE, &state);
+		return (state == AL_PLAYING);
 	}
 
 	void AudioPlayer::PushState() {
-		m_States.push_back({m_CurrentMusic,m_CurrentSound,m_plays});
+		int state = AL_STOPPED;
+		alGetSourcei(m_SoundSource, AL_SOURCE_STATE, &state);
+		bool splays = state == AL_PLAYING;
+		m_States.push_back({m_CurrentMusic,m_CurrentSound,m_musicPlays, splays});
 		m_CurrentMusic = "";
 		m_CurrentSound = "";
 		StopMusic();
@@ -241,7 +259,7 @@ namespace VNEngine {
 		m_States.pop_back();
 		m_CurrentMusic = s.mkey;
 		m_CurrentSound = s.mkey;
-		if (s.plays) {
+		if (s.mplays) {
 			PlayMusic(m_CurrentMusic);
 		}
 		else {
@@ -268,11 +286,11 @@ namespace VNEngine {
 	}
 
 	AudioPlayer::dump AudioPlayer::Dump() {
+		if (m_States.empty()) return dump({});
 		dump d = {
 			m_AudioList.Dump(),
-			{m_States.back().mkey,m_States.back().skey,m_States.back().plays}
+			{m_States.back().mkey,m_States.back().skey,m_States.back().mplays, m_States.back().splays}
 		};
 		return d;
 	}
-
 }
