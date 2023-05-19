@@ -37,6 +37,8 @@ namespace VNEngine {
 
 		m_LineEnabled = true;
 		m_LineTimer = SDL_GetTicks64();
+
+		s_ActiveTextBox = this;
 	}
 
 	TextBox::~TextBox() {
@@ -53,11 +55,13 @@ namespace VNEngine {
 			mousePos.y < m_Geometry.y + m_Geometry.h) {
 			s_ActiveTextBox = this;
 			if (IH_INSTANCE.getTextInputState() == false) IH_INSTANCE.setTextInputState(true);
-			*s_InputString = m_CurrentString;
+			if (!s_InputString) return;
+			if (m_CurrentString.empty()) *s_InputString = "";
+			else *s_InputString = m_CurrentString;
 			return;
 		}
 		
-		if (this == s_ActiveTextBox &&
+		if (this == s_ActiveTextBox && !m_CurrentString.empty() &&
 			m_CurrentString != *s_InputString &&
 			m_Text.length() < m_MaxCharNumber) {
 			m_CurrentString = *s_InputString;

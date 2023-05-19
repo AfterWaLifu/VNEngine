@@ -312,6 +312,7 @@ namespace VNEngine {
 	}
 
 	void Text::SetBackImage(std::string key) {
+		if (key.empty()) return;
 		m_Image = TM_INSTANCE.getTexture(key);
 		if (m_Image) m_BackImage = key;
 	}

@@ -12,6 +12,7 @@ function mainmenu()
 	-- VNApp text above
 	table = {type="text", name="title", geometry={65,65,500,100},textColor={255,255,255,255},text="VNApp", align="LT", font="r60"}
 	Widget.Add(table)
+	table.type = "textbox"
 
 	if (reading) then
 		table = {type="button", name="save", geometry={50,165,200,80},textColor={0,0,0,255},text="Save", align="CC", font="r32"}
