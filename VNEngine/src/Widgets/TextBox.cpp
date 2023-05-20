@@ -39,6 +39,9 @@ namespace VNEngine {
 		m_LineTimer = SDL_GetTicks64();
 
 		s_ActiveTextBox = this;
+
+		IH_INSTANCE.setTextInputState(true);
+		s_InputString ? 0 : s_InputString = IH_INSTANCE.getTextInput();
 	}
 
 	TextBox::~TextBox() {
@@ -46,6 +49,35 @@ namespace VNEngine {
 	}
 
 	void TextBox::Check() {
+		if (IH_INSTANCE.getMouseButtonState(LEFT)) {
+			vec2 mousepos = IH_INSTANCE.getMousePos();
+
+			if (mousepos.x >= m_Geometry.x &&
+				mousepos.y >= m_Geometry.y &&
+				mousepos.x <= m_Geometry.x + m_Geometry.w &&
+				mousepos.y <= m_Geometry.y + m_Geometry.h) {
+				
+				s_ActiveTextBox = this;
+
+				if (IH_INSTANCE.getTextInputState() == false) IH_INSTANCE.setTextInputState(true);
+
+				if (s_InputString) {
+					m_CurrentString.empty() ? *s_InputString = "" : *s_InputString = m_CurrentString;
+				}
+			}
+		}
+
+		if (this == s_ActiveTextBox && s_InputString) {
+			s_InputString->empty() ? m_CurrentString = "" : m_CurrentString = *s_InputString;
+			s_ActiveTextBox->SetText(m_CurrentString);
+		}
+
+		if (m_CurrentString.length() > m_MaxCharNumber) {
+			s_InputString->pop_back();
+			m_CurrentString.pop_back();
+		}
+
+		/*
 		vec2 mousePos = IH_INSTANCE.getMousePos();
 
 		if (IH_INSTANCE.getMouseButtonState(LEFT) &&
@@ -71,6 +103,7 @@ namespace VNEngine {
 		if (m_Text.length() >= m_MaxCharNumber) {
 			s_InputString->pop_back();
 		}
+		*/
 	}
 
 	void TextBox::Draw() {
@@ -87,7 +120,7 @@ namespace VNEngine {
 		}
 
 		uint64_t time = SDL_GetTicks64();
-		if ((time - m_LineTimer) > 500) {
+		if ((time - m_LineTimer) > 300) {
 			m_LineTimer = time;
 			m_LineEnabled = !m_LineEnabled;
 		}
