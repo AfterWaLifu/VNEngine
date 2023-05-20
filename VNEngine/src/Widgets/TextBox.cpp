@@ -76,34 +76,6 @@ namespace VNEngine {
 			s_InputString->pop_back();
 			m_CurrentString.pop_back();
 		}
-
-		/*
-		vec2 mousePos = IH_INSTANCE.getMousePos();
-
-		if (IH_INSTANCE.getMouseButtonState(LEFT) &&
-			mousePos.x >= m_Geometry.x &&
-			mousePos.x < m_Geometry.x + m_Geometry.w &&
-			mousePos.y > m_Geometry.y &&
-			mousePos.y < m_Geometry.y + m_Geometry.h) {
-			s_ActiveTextBox = this;
-			if (IH_INSTANCE.getTextInputState() == false) IH_INSTANCE.setTextInputState(true);
-			if (!s_InputString) return;
-			if (m_CurrentString.empty()) *s_InputString = "";
-			else *s_InputString = m_CurrentString;
-			return;
-		}
-		
-		if (this == s_ActiveTextBox && !m_CurrentString.empty() &&
-			m_CurrentString != *s_InputString &&
-			m_Text.length() < m_MaxCharNumber) {
-			m_CurrentString = *s_InputString;
-			s_ActiveTextBox->SetText(cvt(m_CurrentString));
-		}
-
-		if (m_Text.length() >= m_MaxCharNumber) {
-			s_InputString->pop_back();
-		}
-		*/
 	}
 
 	void TextBox::Draw() {
