@@ -31,7 +31,7 @@ function mainmenu()
 		Widget.Add(table)
 		table.name = "settings"; table.geometry = {50,375,200,80}; table.text = "Settings"
 		Widget.Add(table)
-		table.name = "exit"; table.geometry = {50,480,200,80}; table.text = "Exit"
+		table.name = "exit"; table.geometry = {50,480,200,80}; table.text = "Exit"; table.func = Game.Exit
 		Widget.Add(table)
 	end
 

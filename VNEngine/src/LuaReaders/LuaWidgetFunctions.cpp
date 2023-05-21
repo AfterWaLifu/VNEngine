@@ -118,7 +118,7 @@ namespace VNEngine {
 						{{ 0,0,100,100 }, "",FM_INSTANCE.GetDefaultFont(),
 						"", {0,0,0,255}, {255,255,255,128},{ 215,215,215,255 },
 						4 | 8, true, true,true,true,3,3 },
-						{215,215,215,255},{175,175,175,255}
+						{215,215,215,255},{175,175,175,255}, nullptr
 					};
 					vec4u8 color = {};
 
@@ -163,6 +163,7 @@ namespace VNEngine {
 						tableIntoVec(color, t["borderColorFocus"]);
 						bs.focusborder = color;
 					}
+					if (t["func"].isFunction()) bs.function = new LuaRef(t["func"]);
 					
 					WM_INSTANCE.AddWidget(codename, new Button(bs));
 				}
@@ -428,8 +429,7 @@ namespace VNEngine {
 				table["borderActive"] = ts.showborder;
 			}
 			else if (b) {
-				buttonState bs = {};
-				bs = b->Dump();
+				buttonState bs = b->Dump();
 				table["shown"] = bs.ts.shown;
 				table["geometry"] = vecIntoTable(bs.ts.geometry, L);
 				table["textColor"] = vecIntoTable(bs.ts.textcolor, L);
@@ -445,6 +445,7 @@ namespace VNEngine {
 				table["borderActive"] = bs.ts.showborder;
 				table["borderColorDefault"] = vecIntoTable(bs.defaultborder, L);
 				table["borderColorFocus"] = vecIntoTable(bs.focusborder, L);
+				table["func"] = bs.function;
 			}
 			else if (tb) {
 				textboxState tbs = {};

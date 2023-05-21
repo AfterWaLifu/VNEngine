@@ -2,12 +2,15 @@
 #include "vnepch.h"
 
 #include "Controls/InputHandler.h"
+#include "Widgets/WidgetsManager.h"
 
 namespace VNEngine {
 
+	static std::vector<luabridge::LuaRef> s_LuaFuncs;
+
 	Button::Button(vec4 geometry, std::function<void(void)> onClick, std::wstring text,
 		vec4u8 BackgroundColor, vec4u8 textColor, const std::string& fontKey)
-		: Text(geometry, text, textColor, fontKey)
+		: Text(geometry, text, textColor, fontKey), m_OnClickLua(nullptr)
 	{
 		Bind(onClick);
 		m_BackgroundColor = BackgroundColor;
@@ -28,18 +31,30 @@ namespace VNEngine {
 		m_Focused = false;
 	}
 
-	Button::Button(const buttonState& bs) : Text(bs.ts)
+	Button::Button(const buttonState& bs) : Text(bs.ts), m_OnClickLua(nullptr)
 	{
 		m_DefaultBorder = bs.defaultborder;
 		m_FocusBorder = bs.focusborder;
 		m_Focused = false;
+		if (bs.function != nullptr) {
+			s_LuaFuncs.push_back(*(bs.function));
+			m_OnClickLua = &(s_LuaFuncs.back());
+		}
 	}
 
 	Button::~Button() {
+		if (m_OnClickLua && !s_LuaFuncs.empty()) {
+			auto search = std::find(s_LuaFuncs.begin(), s_LuaFuncs.end(), *m_OnClickLua);
+			if (search != s_LuaFuncs.end()) s_LuaFuncs.erase(search);
+		}
 	}
 
 	void Button::Bind(std::function<void(void)> onClick) {
 		if (onClick != nullptr) m_OnClick = onClick;
+	}
+
+	void Button::Bind(luabridge::LuaRef onClick) {
+		if (onClick.isFunction()) m_OnClickLua = onClick;
 	}
 
 	void Button::Check() {
@@ -57,9 +72,10 @@ namespace VNEngine {
 			m_BorderColor = m_DefaultBorder;
 		}
 
-		if (m_OnClick == nullptr) return;
-		if (m_Focused && IH_INSTANCE.getMouseButtonState(LEFT))
-			m_OnClick();
+		if (IH_INSTANCE.getMouseButtonState(LEFT) && m_Focused) {
+			if (m_OnClick) m_OnClick();
+			if (m_OnClickLua) (*m_OnClickLua)();
+		}
 	}
 
 	void Button::Draw() {
@@ -68,10 +84,7 @@ namespace VNEngine {
 
 	bool Button::Pressed()
 	{
-		if (m_Focused && IH_INSTANCE.getMouseButtonState(LEFT)) {
-			return true;
-		}
-		return false;
+		return m_Focused && IH_INSTANCE.getMouseButtonState(LEFT);
 	}
 
 	bool Button::Focused() {
@@ -98,7 +111,7 @@ namespace VNEngine {
 		textState t = Text::Dump();
 		buttonState b = {
 			t,
-			m_DefaultBorder, m_FocusBorder
+			m_DefaultBorder, m_FocusBorder, m_OnClickLua
 		};
 		return b;
 	}

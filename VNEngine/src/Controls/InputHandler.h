@@ -51,6 +51,7 @@ namespace VNEngine {
 		static void InputHandlerInit(bool* isRunning);
 
 		void Update();
+		void Clean();
 
 		/**
 		* @brief Function to get a state of mouse button

@@ -70,13 +70,14 @@ namespace VNEngine {
 		}
 	}
 
-	bool InputHandler::getMouseButtonState(MouseButtons button)
-	{
-		if (m_mouseButtonStates[button]) {
-			m_mouseButtonStates[button] = false;
-			return true;
-		}
-		return false;
+	void InputHandler::Clean() {
+		m_mouseScrollAmount = 0;
+		for (int i = 0; i < 3; i++) m_mouseButtonStates.push_back(false);
+		m_keysPressed.clear();
+	}
+
+	bool InputHandler::getMouseButtonState(MouseButtons button) {
+		return m_mouseButtonStates[button];
 	}
 
 	const vec2& InputHandler::getMousePos() {

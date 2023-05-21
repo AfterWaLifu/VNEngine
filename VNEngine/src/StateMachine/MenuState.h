@@ -2,12 +2,16 @@
 
 #include "State.h"
 
+#include "LuaReaders/InterfaceCreator.h"
+
 namespace VNEngine {
 
 	class MenuState : public State
 	{
 		std::string m_MenuState;
 		std::string m_ScreenToStart;
+
+		InterfaceCreator m_ic;
 
 		void handleSettings();
 		void handleSave();

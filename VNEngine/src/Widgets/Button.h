@@ -6,16 +6,21 @@
 
 #include <functional>
 
+#include <lua.hpp>
+#include <LuaBridge/LuaBridge.h>
+
 namespace VNEngine {
 
 	struct buttonState {
 		textState ts;
 		vec4u8 defaultborder, focusborder;
+		luabridge::LuaRef* function;
 	};
 
 	class Button : public Text {
 
 		std::function<void(void)> m_OnClick;
+		luabridge::LuaRef* m_OnClickLua;
 		bool m_Focused;
 
 		vec4u8 m_DefaultBorder;
@@ -29,6 +34,7 @@ namespace VNEngine {
 		virtual ~Button();
 
 		void Bind(std::function<void(void)> onClick);
+		void Bind(luabridge::LuaRef onClick);
 		void Check();
 		void Draw();
 		bool Pressed();

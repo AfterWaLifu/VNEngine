@@ -525,7 +525,7 @@ namespace VNEngine {
 				atoi(hindent->GetText()), atoi(vindent->GetText())
 			};
 			buttonState b = {
-				t, xmltouvec(defaultborder),xmltouvec(focusborder)
+				t, xmltouvec(defaultborder),xmltouvec(focusborder), nullptr
 			};
 			wd.bs.push_back({ name->GetText(),b });
 		}

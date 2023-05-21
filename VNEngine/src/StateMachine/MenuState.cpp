@@ -5,7 +5,6 @@
 #include "StateMachine/StateMachine.h"
 #include "StateMachine/ReadingState.h"
 #include "Widgets/WidgetsManager.h"
-#include "LuaReaders/InterfaceCreator.h"
 #include "Audio/AudioPlayer.h"
 #include "StateMachine/SaveLoad.h"
 
@@ -46,11 +45,6 @@ namespace VNEngine {
 			if (WM_INSTANCE.GetButton("mainmenu")->Pressed()) {
 				SM_INSTANCE.WipeStates();
 				SM_INSTANCE.ChangeState(new MenuState("mainmenu"));
-			}
-		}
-		if (WM_INSTANCE.ExistsButton("exit")) {
-			if (WM_INSTANCE.GetButton("exit")->Pressed()) {
-				IH_INSTANCE.exit();
 			}
 		}
 
@@ -147,8 +141,7 @@ namespace VNEngine {
 	}
 	
 	bool MenuState::onEnter() {
-		InterfaceCreator ic;
-		ic.Draw(m_ScreenToStart);
+		m_ic.Draw(m_ScreenToStart);
 
 		return true;
 	}
