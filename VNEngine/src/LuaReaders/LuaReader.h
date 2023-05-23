@@ -13,6 +13,7 @@ namespace VNEngine {
 
 		void RegisterInterfaceFunctions();
 		void RegisterSettingsFunctons();
+		void RegisterFSMFunctuins();
 	public:
 		LuaReader();
 		virtual ~LuaReader();

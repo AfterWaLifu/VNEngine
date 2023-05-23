@@ -37,6 +37,11 @@ namespace VNEngine {
 				return;
 			}
 
+			if (std::string(typeid(m_States.back()).name())
+				== std::string(typeid(state).name())) {
+
+			}
+
 			if (m_States.back()->onExit()) {
 				delete m_States.back();
 				m_States.pop_back();
@@ -105,5 +110,14 @@ namespace VNEngine {
 			sp = r->GetReaderPos();
 		}
 		return sp;
+	}
+	
+	std::string StateMachine::GetTopStateID() {
+		if (m_States.empty()) return "";
+		else return m_States.back()->GetStateId();
+	}
+	
+	Artist* StateMachine::GetCurrentDrawer() {
+		return State::s_pDrawer;
 	}
 }

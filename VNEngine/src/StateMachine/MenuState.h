@@ -13,12 +13,9 @@ namespace VNEngine {
 
 		InterfaceCreator m_ic;
 
-		void handleSettings();
-		void handleSave();
-		void handleLoad();
-
 	public:
 		MenuState(const std::string& screen);
+		void Redraw(const std::string& screen);
 
 		void Handle() override;
 		void Update() override;

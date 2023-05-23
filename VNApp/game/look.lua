@@ -15,21 +15,29 @@ function mainmenu()
 
 	if (reading) then
 		table = {type="button", name="save", geometry={50,165,200,80},textColor={0,0,0,255},text="Save", align="CC", font="r32"}
+		table.func = function() Game.ToMenu("save") end
 		Widget.Add(table)
 		table.name = "load"; table.geometry = {50,250,200,80}; table.text = "Load"
+		table.func = function() Game.ToMenu("load") end
 		Widget.Add(table)
 		table.name = "settings"; table.geometry = {50,335,200,80}; table.text = "Settings"
+		table.func = function() Game.ToMenu("settings") end
 		Widget.Add(table)
 		table.name = "mainmenu"; table.geometry = {50,460,200,80}; table.text = "Main menu"
+		table.func = function() Game.WipeStates(); Game.ToMenu("mainmenu") end
 		Widget.Add(table)
 		table.name = "exit"; table.geometry = {50,545,200,80}; table.text = "Exit"
+		table.func = Game.Exit
 		Widget.Add(table)
 	else
 		table = {type="button", name="start", geometry={50,165,200,80},textColor={0,0,0,255},text="Start", align="CC", font="r32"}
+		table.func = function() Game.ToGame() end
 		Widget.Add(table)
 		table.name = "load"; table.geometry = {50,270,200,80}; table.text = "Load"
+		table.func = function() Game.ToMenu("load") end
 		Widget.Add(table)
 		table.name = "settings"; table.geometry = {50,375,200,80}; table.text = "Settings"
+		table.func = function() Game.ToMenu("settings") end
 		Widget.Add(table)
 		table.name = "exit"; table.geometry = {50,480,200,80}; table.text = "Exit"; table.func = Game.Exit
 		Widget.Add(table)
@@ -53,6 +61,7 @@ function save()
 	savePicture.name = saveButton.name
 	saveButton.geometry = {300,170,300,190}
 	savePicture.geometry = { 330, 175, 240,160 }
+	saveButton.func = function() Game.Save(1) end
 	Widget.Add(saveButton)
 	Widget.Add(savePicture)
 	
@@ -61,6 +70,7 @@ function save()
 	savePicture.name = saveButton.name
 	saveButton.geometry = {610,170,300,190}
 	savePicture.geometry = { 640, 175, 240,160 }
+	saveButton.func = function() Game.Save(2) end
 	Widget.Add(saveButton)
 	Widget.Add(savePicture)
 	
@@ -69,6 +79,7 @@ function save()
 	savePicture.name = saveButton.name
 	saveButton.geometry = {920,170,300,190}
 	savePicture.geometry = { 950, 175, 240,160 }
+	saveButton.func = function() Game.Save(3) end
 	Widget.Add(saveButton)
 	Widget.Add(savePicture)
 	
@@ -77,6 +88,7 @@ function save()
 	savePicture.name = saveButton.name
 	saveButton.geometry = {300,385,300,190}
 	savePicture.geometry = { 330, 390, 240,160 }
+	saveButton.func = function() Game.Save(4) end
 	Widget.Add(saveButton)
 	Widget.Add(savePicture)
 	
@@ -85,6 +97,7 @@ function save()
 	savePicture.name = saveButton.name
 	saveButton.geometry = {610,385,300,190}
 	savePicture.geometry = { 640, 390, 240,160 }
+	saveButton.func = function() Game.Save(5) end
 	Widget.Add(saveButton)
 	Widget.Add(savePicture)
 	
@@ -93,6 +106,7 @@ function save()
 	savePicture.name = saveButton.name
 	saveButton.geometry = {920,385,300,190}
 	savePicture.geometry = { 950, 390, 240,160 }
+	saveButton.func = function() Game.Save(6) end
 	Widget.Add(saveButton)
 	Widget.Add(savePicture)
 end
@@ -112,6 +126,7 @@ function load()
 	savePicture.name = saveButton.name
 	saveButton.geometry = {300,170,300,190}
 	savePicture.geometry = { 330, 175, 240,160 }
+	saveButton.func = function() Game.Load(1) end
 	Widget.Add(saveButton)
 	Widget.Add(savePicture)
 	
@@ -120,6 +135,7 @@ function load()
 	savePicture.name = saveButton.name
 	saveButton.geometry = {610,170,300,190}
 	savePicture.geometry = { 640, 175, 240,160 }
+	saveButton.func = function() Game.Load(2) end
 	Widget.Add(saveButton)
 	Widget.Add(savePicture)
 	
@@ -128,6 +144,7 @@ function load()
 	savePicture.name = saveButton.name
 	saveButton.geometry = {920,170,300,190}
 	savePicture.geometry = { 950, 175, 240,160 }
+	saveButton.func = function() Game.Load(3) end
 	Widget.Add(saveButton)
 	Widget.Add(savePicture)
 	
@@ -136,6 +153,7 @@ function load()
 	savePicture.name = saveButton.name
 	saveButton.geometry = {300,385,300,190}
 	savePicture.geometry = { 330, 390, 240,160 }
+	saveButton.func = function() Game.Load(4) end
 	Widget.Add(saveButton)
 	Widget.Add(savePicture)
 	
@@ -144,6 +162,7 @@ function load()
 	savePicture.name = saveButton.name
 	saveButton.geometry = {610,385,300,190}
 	savePicture.geometry = { 640, 390, 240,160 }
+	saveButton.func = function() Game.Load(5) end
 	Widget.Add(saveButton)
 	Widget.Add(savePicture)
 	
@@ -152,6 +171,7 @@ function load()
 	savePicture.name = saveButton.name
 	saveButton.geometry = {920,385,300,190}
 	savePicture.geometry = { 950, 390, 240,160 }
+	saveButton.func = function() Game.Load(6) end
 	Widget.Add(saveButton)
 	Widget.Add(savePicture)
 end

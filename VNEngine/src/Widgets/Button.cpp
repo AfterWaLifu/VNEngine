@@ -6,8 +6,6 @@
 
 namespace VNEngine {
 
-	static std::vector<luabridge::LuaRef> s_LuaFuncs;
-
 	Button::Button(vec4 geometry, std::function<void(void)> onClick, std::wstring text,
 		vec4u8 BackgroundColor, vec4u8 textColor, const std::string& fontKey)
 		: Text(geometry, text, textColor, fontKey), m_OnClickLua(nullptr)
@@ -36,17 +34,11 @@ namespace VNEngine {
 		m_DefaultBorder = bs.defaultborder;
 		m_FocusBorder = bs.focusborder;
 		m_Focused = false;
-		if (bs.function != nullptr) {
-			s_LuaFuncs.push_back(*(bs.function));
-			m_OnClickLua = &(s_LuaFuncs.back());
-		}
+		if (bs.function) m_OnClickLua = bs.function;
 	}
 
 	Button::~Button() {
-		if (m_OnClickLua && !s_LuaFuncs.empty()) {
-			auto search = std::find(s_LuaFuncs.begin(), s_LuaFuncs.end(), *m_OnClickLua);
-			if (search != s_LuaFuncs.end()) s_LuaFuncs.erase(search);
-		}
+		if (m_OnClickLua) delete m_OnClickLua;
 	}
 
 	void Button::Bind(std::function<void(void)> onClick) {

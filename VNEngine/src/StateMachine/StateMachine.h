@@ -30,6 +30,9 @@ namespace VNEngine {
 		bool isThereAReading();
 
 		std::streampos GetTopReaderPos();
+
+		std::string GetTopStateID();
+		Artist* GetCurrentDrawer();
 	};
 
 #define SM_INSTANCE StateMachine::Instance()

@@ -4,6 +4,7 @@
 #include "Core/Logger.h"
 #include "LuaReaders/LuaWidgetFunctions.h"
 #include "LuaReaders/LuaSetsFunctions.h"
+#include "LuaReaders/LuaFSMFunctions.h"
 
 #include <LuaBridge/LuaBridge.h>
 
@@ -79,6 +80,19 @@ namespace VNEngine {
 			addFunction("FontDel", LS::FontDel).
 			addFunction("FontExist", LS::FontExist).
 			addFunction("Exit", LS::ExitWithIH).
+			endNamespace();
+	}
+	
+	void LuaReader::RegisterFSMFunctuins() {
+		using namespace luabridge;
+		getGlobalNamespace(L).
+			beginNamespace("Game").
+			addFunction("Save", LSM::Save).
+			addFunction("Load", LSM::Load).
+			addFunction("ToMenu", LSM::ToMenu).
+			addFunction("ToGame", LSM::GameStart).
+			addFunction("IsThereReading", LSM::GetIfReadingExist).
+			addFunction("WipeStates", LSM::WipeStates).
 			endNamespace();
 	}
 }

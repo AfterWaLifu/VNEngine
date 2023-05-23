@@ -5,7 +5,7 @@
 
 namespace VNEngine {
 
-	WidgetsManager::WidgetsManager() : m_AllHiden(false)
+	WidgetsManager::WidgetsManager() : m_AllHiden(false), m_Wiped(false)
 	{
 	}
 
@@ -64,6 +64,7 @@ namespace VNEngine {
 		m_Widgets.m_AllTexts.clear();
 		m_Widgets.m_AllButtons.clear();
 		m_Widgets.m_AllTextBoxs.clear();
+		m_Wiped = true;
 	}
 
 	Text* WidgetsManager::GetText(const std::string& key) {
@@ -130,6 +131,10 @@ namespace VNEngine {
 		if (!m_Widgets.m_AllButtons.empty()) {
 			for (auto b : m_Widgets.m_AllButtons) {
 				b.second->Check();
+				if (m_Wiped) {
+					m_Wiped = false;
+					return;
+				}
 			}
 		}
 		if (!m_Widgets.m_AllTextBoxs.empty()) {

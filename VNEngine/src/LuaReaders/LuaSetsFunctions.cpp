@@ -219,10 +219,6 @@ namespace VNEngine {
 			return FM_INSTANCE.Exist(key);
 		}
 
-		bool GetIfReadingExist() {
-			return SM_INSTANCE.isThereAReading();
-		}
-
 		void ExitWithIH() {
 			IH_INSTANCE.exit();
 		}

@@ -49,9 +49,6 @@ namespace VNEngine {
 		void FontDel(std::string key);
 		bool FontExist(std::string key);
 
-		//	state machine functions
-		bool GetIfReadingExist();
-
 		void ExitWithIH();
 	}
 }

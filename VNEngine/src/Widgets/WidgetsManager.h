@@ -25,6 +25,7 @@ namespace VNEngine {
 		widgets m_Widgets;
 
 		bool m_AllHiden;
+		bool m_Wiped;
 
 		WidgetsManager();
 		~WidgetsManager();
