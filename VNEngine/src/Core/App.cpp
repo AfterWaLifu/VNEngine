@@ -39,7 +39,6 @@ namespace VNEngine {
 		IH_INSTANCE.Update();
 		WM_INSTANCE.Handle();
 		SM_INSTANCE.Update();
-		IH_INSTANCE.Clean();
 	}
 
 	void App::Draw() {

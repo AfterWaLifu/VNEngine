@@ -21,11 +21,11 @@ namespace VNEngine {
 	}
 
 	void ReadingState::Handle() {
-		if (IH_INSTANCE.getMouseButtonState(RIGHT)) {
+		if (IH_INSTANCE.getMouseButtonClicked(RIGHT)) {
 			SM_INSTANCE.PushState(new MenuState("save"));
 		}
 
-		if (IH_INSTANCE.getMouseButtonState(LEFT) ||
+		if (IH_INSTANCE.getMouseButtonClicked(LEFT) ||
 			IH_INSTANCE.isKeyPressed("space") || IH_INSTANCE.isKeyPressed("enter")) {
 			
 			if (WM_INSTANCE.GetHiden()) {
@@ -42,7 +42,7 @@ namespace VNEngine {
 			}
 		}
 
-		if (IH_INSTANCE.isKeyPressed("lctrl") || IH_INSTANCE.isKeyPressed("rctrl")) m_ST.SetSkip(true);
+		if (IH_INSTANCE.isKeyHeld("lctrl") || IH_INSTANCE.isKeyHeld("rctrl")) m_ST.SetSkip(true);
 		
 		if (IH_INSTANCE.isKeyPressed("h")) {
 			WM_INSTANCE.SetHiden(!(WM_INSTANCE.GetHiden()));

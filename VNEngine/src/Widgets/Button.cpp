@@ -64,9 +64,11 @@ namespace VNEngine {
 			m_BorderColor = m_DefaultBorder;
 		}
 
-		if (IH_INSTANCE.getMouseButtonState(LEFT) && m_Focused) {
-			if (m_OnClick) m_OnClick();
-			if (m_OnClickLua) (*m_OnClickLua)();
+		if (m_Focused && (m_OnClickLua || m_OnClick)) {
+			if (IH_INSTANCE.getMouseButtonClicked(LEFT)) {
+				if (m_OnClick) m_OnClick();
+				if (m_OnClickLua) (*m_OnClickLua)();
+			}
 		}
 	}
 
@@ -76,7 +78,7 @@ namespace VNEngine {
 
 	bool Button::Pressed()
 	{
-		return m_Focused && IH_INSTANCE.getMouseButtonState(LEFT);
+		return m_Focused && IH_INSTANCE.getMouseButtonClicked(LEFT);
 	}
 
 	bool Button::Focused() {

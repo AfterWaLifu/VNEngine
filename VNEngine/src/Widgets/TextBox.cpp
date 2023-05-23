@@ -49,7 +49,7 @@ namespace VNEngine {
 	}
 
 	void TextBox::Check() {
-		if (IH_INSTANCE.getMouseButtonState(LEFT)) {
+		if (IH_INSTANCE.getMouseButtonClicked(LEFT)) {
 			vec2 mousepos = IH_INSTANCE.getMousePos();
 
 			if (mousepos.x >= m_Geometry.x &&

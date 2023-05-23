@@ -70,13 +70,16 @@ namespace VNEngine {
 		}
 	}
 
-	void InputHandler::Clean() {
-		m_mouseScrollAmount = 0;
-		for (int i = 0; i < 3; i++) m_mouseButtonStates.push_back(false);
-		m_keysPressed.clear();
+	bool InputHandler::getMouseButtonClicked(MouseButtons button) {
+		if (m_mouseButtonStates[button]) {
+			m_mouseButtonStates[button] = false;
+			return true;
+		}
+		else return false;
 	}
 
-	bool InputHandler::getMouseButtonState(MouseButtons button) {
+	bool InputHandler::getMouseButtonHeld(MouseButtons button)
+	{
 		return m_mouseButtonStates[button];
 	}
 
@@ -100,13 +103,28 @@ namespace VNEngine {
 		//if (m_keystates == nullptr) return false;
 		auto search = std::find(m_keysPressed.begin(), m_keysPressed.end(), scancode);
 		if (search != m_keysPressed.end()) {
-			if (scancode != SDL_SCANCODE_LCTRL && scancode != SDL_SCANCODE_RCTRL)
-				m_keysPressed.erase(search);
+			m_keysPressed.erase(search);
 			return true;
 		}
 		else return false;
 
 		//return !!(m_keystates[K[key]]);
+	}
+
+	bool InputHandler::isKeyHeld(const std::string& key)
+	{
+		if (m_keysPressed.empty()) return false;
+		using namespace Keys;
+		auto scancode = getScancodeFromKey(key.c_str());
+		if (scancode == SDL_SCANCODE_UNKNOWN) {
+			VN_LOGS_WARNING("Attemp to check non-existing button " << key);
+			return false;
+		}
+		auto search = std::find(m_keysPressed.begin(), m_keysPressed.end(), scancode);
+		if (search != m_keysPressed.end()) {
+			return true;
+		}
+		else return false;
 	}
 
 	bool InputHandler::getIfWindowResized() {

@@ -14,7 +14,7 @@ namespace VNEngine {
 	}
 
 	void MenuState::Handle() {
-		if (IH_INSTANCE.getMouseButtonState(RIGHT) && SM_INSTANCE.isThereAReading()) {
+		if (IH_INSTANCE.getMouseButtonClicked(RIGHT) && SM_INSTANCE.isThereAReading()) {
 			SM_INSTANCE.PopState();
 		}
 	}

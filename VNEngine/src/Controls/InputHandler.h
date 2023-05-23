@@ -51,14 +51,20 @@ namespace VNEngine {
 		static void InputHandlerInit(bool* isRunning);
 
 		void Update();
-		void Clean();
 
 		/**
 		* @brief Function to get a state of mouse button
 		* @param button A member of enum MouseButtons
 		* @return True if preesed and false if not
 		*/
-		bool getMouseButtonState(MouseButtons button);
+		bool getMouseButtonClicked(MouseButtons button);
+
+		/**
+		* @brief Function to get a state of mouse button w/out reseting
+		* @param button A member of enum MouseButtons
+		* @return True if held and false if not
+		*/
+		bool getMouseButtonHeld(MouseButtons button);
 
 		/**
 		* @brief Function to get a mouse cursor position
@@ -78,6 +84,13 @@ namespace VNEngine {
 		* @return True if pressed (and not holded)
 		*/
 		bool isKeyPressed(const std::string& key);
+
+		/**
+		* @brief To get if key being held
+		* @param key Button sign or name (check Keys.h)
+		* @return True if pressed
+		*/
+		bool isKeyHeld(const std::string& key);
 
 		/**
 		* @brief Cheching for state of window size
