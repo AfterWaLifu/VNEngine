@@ -8,14 +8,14 @@ namespace VNEngine {
 
 	class MenuState : public State
 	{
-		std::string m_MenuState;
+		std::string m_MenuState = "menu";
 		std::string m_ScreenToStart;
 
 		InterfaceCreator m_ic;
 
 	public:
 		MenuState(const std::string& screen);
-		void Redraw(const std::string& screen);
+		void Redraw(const MenuState& state);
 
 		void Handle() override;
 		void Update() override;

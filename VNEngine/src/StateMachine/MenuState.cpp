@@ -10,7 +10,7 @@
 
 namespace VNEngine {
 	
-	MenuState::MenuState(const std::string& screen) : m_ScreenToStart(screen), m_MenuState(screen) {
+	MenuState::MenuState(const std::string& screen) : m_ScreenToStart(screen) {
 	}
 
 	void MenuState::Handle() {
@@ -25,15 +25,14 @@ namespace VNEngine {
 	void MenuState::Render() {
 	}
 
-	void MenuState::Redraw(const std::string& screen) {
+	void MenuState::Redraw(const MenuState& state) {
 		WM_INSTANCE.WipeWidgets();
-		m_ScreenToStart = screen;
+		m_ScreenToStart = state.m_ScreenToStart;
 		m_ic.Draw(m_ScreenToStart);
 	}
 	
 	bool MenuState::onEnter() {
 		m_ic.Draw(m_ScreenToStart);
-
 		return true;
 	}
 

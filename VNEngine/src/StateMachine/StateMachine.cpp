@@ -33,13 +33,10 @@ namespace VNEngine {
 	void StateMachine::ChangeState(State* state) {
 		if (!m_States.empty()) {
 
-			if (m_States.back()->GetStateId() == state->GetStateId()) {
+			if (m_States.back()->GetStateId() == "menu" && state->GetStateId() == "menu") {
+				((MenuState*)m_States.back())->Redraw(*((MenuState*)state));
+				delete state;
 				return;
-			}
-
-			if (std::string(typeid(m_States.back()).name())
-				== std::string(typeid(state).name())) {
-
 			}
 
 			if (m_States.back()->onExit()) {
