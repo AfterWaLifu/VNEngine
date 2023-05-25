@@ -5,7 +5,7 @@
 
 namespace VNEngine {
 
-	WidgetsManager::WidgetsManager() : m_AllHiden(false), m_Wiped(false)
+	WidgetsManager::WidgetsManager() : m_AllHiden(false), m_Wiped(false), m_ButtonDeleted(false)
 	{
 	}
 
@@ -51,6 +51,7 @@ namespace VNEngine {
 			break;
 		case WIDGET_BUTTON:
 			m_Widgets.m_AllButtons.erase(key);
+			m_ButtonDeleted = true;
 			break;
 		case WIDGET_TEXTBOX:
 			m_Widgets.m_AllTextBoxs.erase(key);
@@ -128,13 +129,17 @@ namespace VNEngine {
 	}
 
 	void WidgetsManager::Handle() {
+	start:
+		m_ButtonDeleted = false;
 		if (!m_Widgets.m_AllButtons.empty()) {
 			for (auto b : m_Widgets.m_AllButtons) {
-				b.second->Check();
+				if (b.second)
+					b.second->Check();
 				if (m_Wiped) {
 					m_Wiped = false;
 					return;
 				}
+				if (m_ButtonDeleted) goto start;
 			}
 		}
 		if (!m_Widgets.m_AllTextBoxs.empty()) {

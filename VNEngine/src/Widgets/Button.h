@@ -14,7 +14,8 @@ namespace VNEngine {
 	struct buttonState {
 		textState ts;
 		vec4u8 defaultborder, focusborder;
-		luabridge::LuaRef* function;
+		luabridge::LuaRef* functionLua;
+		std::function<void(void)> function;
 	};
 
 	class Button : public Text {

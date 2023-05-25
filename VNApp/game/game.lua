@@ -31,16 +31,18 @@ say("не делает")
 who("Красный")
 say("уходим")
 
+q = {"yes", "no"}
+choose("result", q)
+
 who("Зелёный")
 say("согласен")
 
 Game.StopDrawing("r")
 Game.StopDrawing("g")
+
 who("Рассказчик")
 say("ВСЁ")
 
 Game.DelPicture("r")
 Game.DelPicture("g")
 Game.DelPicture("b")
-
--- Game.Exit()

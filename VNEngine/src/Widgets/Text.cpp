@@ -186,6 +186,7 @@ namespace VNEngine {
 	}
 
 	void Text::SetFont(std::string font) {
+		if (font.empty()) font = FM_INSTANCE.GetDefaultFont();
 		Font* f = FM_INSTANCE.getFont(font);
 		if (f && f->font) m_FontKey = font;
 		if (!m_Text.empty()) SetText(m_Text);

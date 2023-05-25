@@ -20,5 +20,7 @@ namespace VNEngine {
 		bool WidgetButtonFocused(std::string name);
 
 		std::string WidgetTextboxValue(std::string name);
+
+		void SetDefaultChoiseButton(luabridge::LuaRef t);
 	}
 }

@@ -34,7 +34,8 @@ namespace VNEngine {
 		m_DefaultBorder = bs.defaultborder;
 		m_FocusBorder = bs.focusborder;
 		m_Focused = false;
-		if (bs.function) m_OnClickLua = bs.function;
+		if (bs.functionLua) m_OnClickLua = bs.functionLua;
+		if (bs.function) m_OnClick = bs.function;
 	}
 
 	Button::~Button() {

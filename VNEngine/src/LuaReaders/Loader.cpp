@@ -10,6 +10,8 @@
 #include "LuaReaders/StoryTeller.h"
 #include "StateMachine/SaveLoad.h"
 
+#include "LuaReaders/LuaGameFunctions.h"
+
 #include <LuaBridge/LuaBridge.h>
 
 #define lb	luabridge
@@ -80,6 +82,7 @@ namespace VNEngine {
 		if (luaL_dofile(L, ((StoryTeller::GetScriptsPath() + "preload.lua").c_str()))) {
 			VN_LOGS_WARNING("Error on preloading resources stage");
 		}
+		LG::SetDrawwerToGetWindowSize(m_pApp->m_Drawer.get());
 	}
 
 	Loader::Loader(App* app) : LuaReader()

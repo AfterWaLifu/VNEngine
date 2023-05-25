@@ -37,6 +37,7 @@ namespace VNEngine {
 			addFunction("GetButtonClicked",	LW::WidgetButtonClicked).
 			addFunction("GetButtonFocused",	LW::WidgetButtonFocused).
 			addFunction("GetTextboxValue",	LW::WidgetTextboxValue).
+			addFunction("SetDefChoiseButton",LW::SetDefaultChoiseButton).
 			endNamespace();
 	}
 

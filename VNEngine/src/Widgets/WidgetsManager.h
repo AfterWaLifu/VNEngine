@@ -26,6 +26,7 @@ namespace VNEngine {
 
 		bool m_AllHiden;
 		bool m_Wiped;
+		bool m_ButtonDeleted;
 
 		WidgetsManager();
 		~WidgetsManager();

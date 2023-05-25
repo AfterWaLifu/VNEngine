@@ -5,6 +5,8 @@
 #include "Widgets/FontManager.h"
 #include "Core/Logger.h"
 
+#include "LuaReaders/LuaGameFunctions.h"
+
 namespace VNEngine {
 	
 	namespace LW {
@@ -118,7 +120,7 @@ namespace VNEngine {
 						{{ 0,0,100,100 }, "",FM_INSTANCE.GetDefaultFont(),
 						"", {0,0,0,255}, {255,255,255,128},{ 215,215,215,255 },
 						4 | 8, true, true,true,true,3,3 },
-						{215,215,215,255},{175,175,175,255}, nullptr
+						{215,215,215,255},{175,175,175,255}, nullptr, nullptr
 					};
 					vec4u8 color = {};
 
@@ -163,7 +165,7 @@ namespace VNEngine {
 						tableIntoVec(color, t["borderColorFocus"]);
 						bs.focusborder = color;
 					}
-					if (t["func"].isFunction()) bs.function = new LuaRef(t["func"]);
+					if (t["func"].isFunction()) bs.functionLua = new LuaRef(t["func"]);
 					
 					WM_INSTANCE.AddWidget(codename, new Button(bs));
 				}
@@ -480,6 +482,57 @@ namespace VNEngine {
 
 		std::string WidgetTextboxValue(std::string name) {
 			return WM_INSTANCE.GetTextBox(name)->Value();
+		}
+
+		void SetDefaultChoiseButton(luabridge::LuaRef t) {
+			buttonState bs = {
+				{{ 0,0,0,0 }, "",FM_INSTANCE.GetDefaultFont(),
+				"", {0,0,0,255}, {255,255,255,128},{ 215,215,215,255 },
+				4 | 8, true, true,true,true,3,3 },
+				{215,215,215,255},{175,175,175,255}, nullptr, nullptr
+			};
+			bool withGeom = false;
+			if (t.isTable()) {
+				vec4u8 color = {};
+				if (t["font"].isString()) bs.ts.font = t["font"].tostring();
+				if (t["wrapped"].isBool()) bs.ts.wrapped = t["wrapped"].cast<bool>();
+				if (t["align"].isString()) {
+					std::string align = t["align"].tostring();
+					Alignment a;
+					if (align[0] == 'L') a = ALIGN_LEFT;
+					else if (align[0] == 'R') a = ALIGN_RIGHT;
+					else a = ALIGN_HCENTER;
+					if (align[1] == 'T') a = (Alignment)(a | ALIGN_UP);
+					else if (align[1] == 'B') a = (Alignment)(a | ALIGN_DOWN);
+					else a = (Alignment)(a | ALIGN_VCENTER);
+					bs.ts.align = (uint8_t)a;
+				}
+				if (t["vindent"].isNumber()) bs.ts.vindent = t["vindent"].cast<int>();
+				if (t["hindent"].isNumber()) bs.ts.hindent = t["hindent"].cast<int>();
+				if (t["backPic"].isString()) bs.ts.backimage = t["backPic"].tostring();
+				if (t["textColor"].isTable()) {
+					tableIntoVec(color, t["textColor"]);
+					bs.ts.textcolor = color;
+				}
+				if (t["backColor"].isTable()) {
+					tableIntoVec(color, t["backColor"]);
+					bs.ts.backcolor = color;
+				}
+				if (t["borderColor"].isTable()) {
+					tableIntoVec(color, t["borderColor"]);
+					bs.ts.bordercolor = color;
+				}
+				if (t["borderActive"].isBool()) bs.ts.showborder = t["borderActive"].cast<bool>();
+				if (t["borderColorDefault"].isTable()) {
+					tableIntoVec(color, t["borderColorDefault"]);
+					bs.defaultborder = color;
+				}
+				if (t["borderColorFocus"].isTable()) {
+					tableIntoVec(color, t["borderColorFocus"]);
+					bs.focusborder = color;
+				}
+			}
+			LG::setDefaultChooseButton(&bs,withGeom);
 		}
 	}
 }

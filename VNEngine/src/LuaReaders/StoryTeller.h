@@ -19,6 +19,7 @@ namespace VNEngine {
 
 		bool m_Go;
 		bool m_Skip;
+		bool m_Choosing;
 		bool m_Completed;
 
 		void goReadGoReadGo();
@@ -39,6 +40,7 @@ namespace VNEngine {
 
 		void Go();
 		void Wait();
+		void Choosing(bool sure = true);
 		void SetSkip(bool skip);
 		bool GetSkip();
 

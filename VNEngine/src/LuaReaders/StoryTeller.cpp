@@ -20,7 +20,7 @@ namespace VNEngine {
 
 	void StoryTeller::goReadGoReadGo() {
 		char buffer[256];
-		while (m_Go && m_LuaFile.getline(buffer, 256, '\n')) {
+		while (m_Go && !m_Choosing && m_LuaFile.getline(buffer, 256, '\n')) {
 			++m_CurrentLine;
 			m_PosInLua = m_LuaFile.tellg();
 			auto error = luaL_dostring(L, buffer);
@@ -75,16 +75,23 @@ namespace VNEngine {
 		getGlobalNamespace(L).
 			addFunction("say", LG::say).
 			addFunction("who", LG::who).
-			addFunction("wait", LG::wait);
+			addFunction("wait", LG::wait).
+			addFunction("stop", LG::stop).
+			addFunction("choose", LG::choose);
 	}
 
 	void StoryTeller::Go() {
+		if (m_Choosing) return;
 		m_Go = true;
 		goReadGoReadGo();
 	}
 
 	void StoryTeller::Wait() {
 		m_Go = false;
+	}
+
+	void StoryTeller::Choosing(bool sure) {
+		m_Choosing = sure;
 	}
 	
 	void StoryTeller::SetSkip(bool skip) {
