@@ -37,7 +37,6 @@ namespace VNEngine {
 			addFunction("GetButtonClicked",	LW::WidgetButtonClicked).
 			addFunction("GetButtonFocused",	LW::WidgetButtonFocused).
 			addFunction("GetTextboxValue",	LW::WidgetTextboxValue).
-			addFunction("SetDefChoiseButton",LW::SetDefaultChoiseButton).
 			endNamespace();
 	}
 
@@ -69,7 +68,9 @@ namespace VNEngine {
 			addFunction("GetBackgroundPicture", LS::GetBackgroundPicture).
 			addFunction("GetDrawingBackPicture", LS::GetDrawingBackPicture).
 			addFunction("Draw", LS::Draw).
-			addFunction("DrawByRowCollumn", LS::DrawRC).
+			addFunction("DrawLeft", LS::DrawLeft).
+			addFunction("DrawCenter", LS::DrawCenter).
+			addFunction("DrawRight", LS::DrawRight).
 			addFunction("StopDrawing", LS::StopDrawing).
 			addFunction("StopDrawingById", LS::StopDrawingID).
 			addFunction("WipeScreen", LS::WipeScreen).
@@ -80,6 +81,7 @@ namespace VNEngine {
 			addFunction("FontAdd", LS::FontAdd).
 			addFunction("FontDel", LS::FontDel).
 			addFunction("FontExist", LS::FontExist).
+			addFunction("SetDefChoiseButton", LW::SetDefaultChoiseButton).
 			addFunction("Exit", LS::ExitWithIH).
 			endNamespace();
 	}

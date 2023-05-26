@@ -12,3 +12,6 @@ Game.AddPicture("urban.png","menuBack", 1,1)
 Game.AddPicture("savePlaceholder.png", "savePlaceholder",1,1)
 
 Game.AddAudio("moom.mp3","mainmenu")
+
+table = {font="r32", backColor={200,200,200,255}, textColor={0,0,0,255}}
+Game.SetDefChoiseButton(table)

@@ -493,7 +493,15 @@ namespace VNEngine {
 			};
 			bool withGeom = false;
 			if (t.isTable()) {
-				vec4u8 color = {};
+				vec4u8 color{};
+				vec4 geom{};
+				if (t["geometry"].isTable()) {
+					if (tableIntoVec(geom, t["geometry"])) {
+						bs.ts.geometry.w = geom.w;
+						bs.ts.geometry.h = geom.h;
+						withGeom = true;
+					}
+				}
 				if (t["font"].isString()) bs.ts.font = t["font"].tostring();
 				if (t["wrapped"].isBool()) bs.ts.wrapped = t["wrapped"].cast<bool>();
 				if (t["align"].isString()) {

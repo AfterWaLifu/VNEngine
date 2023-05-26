@@ -23,6 +23,39 @@ namespace VNEngine {
 			table[4] = vec.a;
 			return table;
 		}
+		bool tableIntoVec(vec4& vec, luabridge::LuaRef lr) {
+			using namespace luabridge;
+			if (lr.isTable() &&
+				lr[1].isNumber() && lr[2].isNumber() &&
+				lr[3].isNumber() && lr[4].isNumber()) {
+				vec = {
+					lr[1].cast<int>(), lr[2].cast<int>(),
+					lr[3].cast<int>(), lr[4].cast<int>()
+				};
+				return true;
+			}
+			return false;
+		}
+		bool tableIntoVec(vec4u8& vec, luabridge::LuaRef lr) {
+			if (lr.isTable() &&
+				lr[1].isNumber() && lr[2].isNumber() &&
+				lr[3].isNumber() && lr[4].isNumber()) {
+				vec = {
+					lr[1].cast<uint8_t>(), lr[2].cast<uint8_t>(),
+					lr[3].cast<uint8_t>(), lr[4].cast<uint8_t>()
+				};
+				return true;
+			}
+			return false;
+		}
+		bool tableIntoVec(vec2& vec, luabridge::LuaRef lr) {
+			using namespace luabridge;
+			if (lr.isTable() && lr[1].isNumber() && lr[2].isNumber()) {
+				vec = { lr[1].cast<int>(), lr[1].cast<int>() };
+				return true;
+			}
+			else return false;
+		}
 
 		void InitDrawingForLua(Artist* artist) {
 			s_ArtistToDraw = artist;
@@ -97,14 +130,9 @@ namespace VNEngine {
 		
 		void SetBackgroundColor(luabridge::LuaRef color) {
 			using namespace luabridge;
-			if (color.isTable() && 
-				color[1].isNumber() && color[2].isNumber() &&
-				color[3].isNumber() && color[4].isNumber()) {
-				vec4u8 vecColor = {
-					color[1].cast<uint8_t>(), color[2].cast<uint8_t>(),
-					color[3].cast<uint8_t>(), color[4].cast<uint8_t>()
-				};
-				s_ArtistToDraw->SetBackground(vecColor);
+			vec4u8 colorvec{};
+			if (tableIntoVec(colorvec, color)) {
+				s_ArtistToDraw->SetBackground(colorvec);
 			}
 			else {
 				VN_LOGS_WARNING("Attemp to set a color with a thing below" << color.tostring());
@@ -131,38 +159,139 @@ namespace VNEngine {
 			return s_ArtistToDraw->GetDrawingPictureOrColor();
 		}
 		
-		uint32_t Draw(std::string key, luabridge::LuaRef destination, int tileNum) {
-			vec4 dest = {};
-			if (destination.isTable() && 
-				destination[1].isNumber() && destination[2].isNumber() &&
-				destination[3].isNumber() && destination[4].isNumber()) {
-				dest = {
-					destination[1].cast<int>(), destination[2].cast<int>(),
-					destination[3].cast<int>(), destination[4].cast<int>()
-				};
+		uint32_t Draw(luabridge::LuaRef key, luabridge::LuaRef destination, luabridge::LuaRef tileOrRow, luabridge::LuaRef collumnOrNil) {
+			if (key.isString() && destination.isTable()) {
+				vec4 dest4 = {};
+				vec4 dest2 = {};
+				if (destination[1].isNumber() && destination[2].isNumber() &&
+					destination[1].isNumber() && destination[4].isNumber()) {
+					tableIntoVec(dest4, destination);
+					if (tileOrRow.isNil() && collumnOrNil.isNil()) {
+						return s_ArtistToDraw->DrawR(key.tostring(), 0, dest4);
+					}
+					if (tileOrRow.isNumber() && collumnOrNil.isNumber()) {
+						return s_ArtistToDraw->DrawR(key.tostring(), tileOrRow.cast<int>(),
+							collumnOrNil.cast<int>(), dest4);
+					}
+					else if (tileOrRow.isNumber()) {
+						return s_ArtistToDraw->DrawR(key.tostring(), tileOrRow.cast<int>(), dest4);
+					}
+				}
+				else if (destination[1].isNumber() && destination[2].isNumber()) {
+					dest2 = { destination[1].cast<int>(),destination[2].cast<int>() };
+					auto t = TM_INSTANCE.getTexture(key.tostring());
+					if (!t) return UINT32_MAX;
+					dest2.w = t->w, dest2.h = t->h;
+					if (tileOrRow.isNil() && collumnOrNil.isNil()) {
+						return s_ArtistToDraw->DrawR(key.tostring(), 0, dest2);
+					}
+					if (tileOrRow.isNumber() && collumnOrNil.isNumber()) {
+						return s_ArtistToDraw->DrawR(key.tostring(), tileOrRow.cast<int>(),
+							collumnOrNil.cast<int>(), dest2);
+					}
+					else if (tileOrRow.isNumber()) {
+						return s_ArtistToDraw->DrawR(key.tostring(), tileOrRow.cast<int>(), dest2);
+					}
+				}
+				{
+					VN_LOGS_WARNING("To draw destination table of 2 (xy) or 4(xywh) is needed");
+					return UINT32_MAX;
+				}
 			}
 			else {
-				VN_LOGS_WARNING("Attemp to draw w/out destination");
+				VN_LOGS_WARNING("To draw key and destination are needed");
+				return UINT32_MAX;
 			}
-
-			return s_ArtistToDraw->DrawR(key, tileNum, dest);
 		}
-		
-		uint32_t DrawRC(std::string key, luabridge::LuaRef destination, int row, int collumn) {
-			vec4 dest = {};
-			if (destination.isTable() &&
-				destination[1].isNumber() && destination[2].isNumber() &&
-				destination[3].isNumber() && destination[4].isNumber()) {
-				dest = {
-					destination[1].cast<int>(), destination[2].cast<int>(),
-					destination[3].cast<int>(), destination[4].cast<int>()
+
+		uint32_t DrawLeft(luabridge::LuaRef key, luabridge::LuaRef tileOrRow, luabridge::LuaRef collumnOrNil) {
+			if (key.isString()) {
+				auto winsize = s_ArtistToDraw->GetWindowSize();
+				auto t = TM_INSTANCE.getTexture(key.tostring());
+				vec4 dest = {
+					(winsize.x / 2 - t->w) / 2,
+					(t->h < winsize.y / 4) ? winsize.y * 3 / 4 - t->h : winsize.y - t->h,
+					t->w, t->h
 				};
+				if (tileOrRow.isNil() && collumnOrNil.isNil()) {
+					return s_ArtistToDraw->DrawR(key.tostring(), 0, dest);
+				}
+				if (tileOrRow.isNumber() && collumnOrNil.isNumber()) {
+					return s_ArtistToDraw->DrawR(key.tostring(), tileOrRow.cast<int>(),
+						collumnOrNil.cast<int>(), dest);
+				}
+				else if (tileOrRow.isNumber()) {
+					return s_ArtistToDraw->DrawR(key.tostring(), tileOrRow.cast<int>(), dest);
+				}
+				else {
+					VN_LOGS_WARNING("To draw destination table of 2 (xy) or 4(xywh) is needed");
+					return UINT32_MAX;
+				}
 			}
 			else {
-				VN_LOGS_WARNING("Attemp to draw w/out destination");
+				VN_LOGS_WARNING("To draw key and destination are needed");
+				return UINT32_MAX;
 			}
+		}
 
-			return s_ArtistToDraw->DrawR(key, row, collumn, dest);
+		uint32_t DrawCenter(luabridge::LuaRef key, luabridge::LuaRef tileOrRow, luabridge::LuaRef collumnOrNil) {
+			if (key.isString()) {
+				auto winsize = s_ArtistToDraw->GetWindowSize();
+				auto t = TM_INSTANCE.getTexture(key.tostring());
+				vec4 dest = {
+					(winsize.x - t->w) / 2,
+					(t->h < winsize.y / 4) ? winsize.y * 3 - t->h / 4 : winsize.y - t->h,
+					t->w, t->h
+				};
+				if (tileOrRow.isNil() && collumnOrNil.isNil()) {
+					return s_ArtistToDraw->DrawR(key.tostring(), 0, dest);
+				}
+				if (tileOrRow.isNumber() && collumnOrNil.isNumber()) {
+					return s_ArtistToDraw->DrawR(key.tostring(), tileOrRow.cast<int>(),
+						collumnOrNil.cast<int>(), dest);
+				}
+				else if (tileOrRow.isNumber()) {
+					return s_ArtistToDraw->DrawR(key.tostring(), tileOrRow.cast<int>(), dest);
+				}
+				else {
+					VN_LOGS_WARNING("To draw destination table of 2 (xy) or 4(xywh) is needed");
+					return UINT32_MAX;
+				}
+			}
+			else {
+				VN_LOGS_WARNING("To draw key and destination are needed");
+				return UINT32_MAX;
+			}
+		}
+
+		uint32_t DrawRight(luabridge::LuaRef key, luabridge::LuaRef tileOrRow, luabridge::LuaRef collumnOrNil) {
+			if (key.isString()) {
+				auto winsize = s_ArtistToDraw->GetWindowSize();
+				auto t = TM_INSTANCE.getTexture(key.tostring());
+				vec4 dest = {
+					(winsize.x * 3 / 2 - t->w) / 2,
+					(t->h < winsize.y / 4) ? winsize.y * 3 / 4 - t->h : winsize.y - t->h,
+					t->w, t->h
+				};
+				if (tileOrRow.isNil() && collumnOrNil.isNil()) {
+					return s_ArtistToDraw->DrawR(key.tostring(), 0, dest);
+				}
+				if (tileOrRow.isNumber() && collumnOrNil.isNumber()) {
+					return s_ArtistToDraw->DrawR(key.tostring(), tileOrRow.cast<int>(),
+						collumnOrNil.cast<int>(), dest);
+				}
+				else if (tileOrRow.isNumber()) {
+					return s_ArtistToDraw->DrawR(key.tostring(), tileOrRow.cast<int>(), dest);
+				}
+				else {
+					VN_LOGS_WARNING("To draw destination table of 2 (xy) or 4(xywh) is needed");
+					return UINT32_MAX;
+				}
+			}
+			else {
+				VN_LOGS_WARNING("To draw key and destination are needed");
+				return UINT32_MAX;
+			}
 		}
 		
 		void StopDrawing(std::string key) {

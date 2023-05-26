@@ -34,8 +34,11 @@ namespace VNEngine {
 		luabridge::LuaRef GetBackgroundColor(lua_State* L);
 		std::string GetBackgroundPicture();
 		bool GetDrawingBackPicture();
-		uint32_t Draw(std::string key, luabridge::LuaRef destination, int tileNum = 0);
-		uint32_t DrawRC(std::string key, luabridge::LuaRef destination, int row = 0, int collumn = 0);
+		uint32_t Draw(luabridge::LuaRef key, luabridge::LuaRef destination,
+			luabridge::LuaRef tileOrRow, luabridge::LuaRef collumnOrNil);
+		uint32_t DrawLeft(luabridge::LuaRef key, luabridge::LuaRef tileOrRow, luabridge::LuaRef collumnOrNil);
+		uint32_t DrawCenter(luabridge::LuaRef key, luabridge::LuaRef tileOrRow, luabridge::LuaRef collumnOrNil);
+		uint32_t DrawRight(luabridge::LuaRef key, luabridge::LuaRef tileOrRow, luabridge::LuaRef collumnOrNil);
 		void StopDrawing(std::string key);
 		void StopDrawingID(uint32_t id);
 		void WipeScreen();

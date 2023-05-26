@@ -9,15 +9,15 @@ Game.AddPicture("background.png", "b",1,1)
 Game.AddAudio("alarmclock.mp3","clock")
 
 Game.SetBackgroundPicture("b")
-Game.Draw("g", {500,300,256,256},0)
+Game.DrawCenter("g")
 
 who("Зелёный")
 say("abcdef")
 say("раз раз раз")
 
 Game.StopDrawing("g")
-Game.Draw("g", {200,300,300,300},0)
-Game.Draw("r", {700,300,300,300},0)
+Game.DrawLeft("g")
+Game.DrawRight("r")
 who("Красный")
 say("а теперь")
 
