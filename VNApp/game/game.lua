@@ -4,20 +4,21 @@ Game.SetBackgroundColor({0,0,0,255})
 
 Game.AddPicture("red.png","r", 1,1)
 Game.AddPicture("green.png", "g", 1,1)
+Game.AddPicture("gr.png", "gr", 1,2)
 Game.AddPicture("background.png", "b",1,1)
 
 Game.AddAudio("alarmclock.mp3","clock")
 
 Game.SetBackgroundPicture("b")
-Game.DrawCenter("g")
+Game.DrawCenter("gr", 0)
 
 who("Зелёный")
 say("abcdef")
 say("раз раз раз")
 
-Game.StopDrawing("g")
-Game.DrawLeft("g")
-Game.DrawRight("r")
+Game.StopDrawing("gr")
+Game.DrawLeft("gr", 0)
+Game.DrawRight("gr", 1)
 who("Красный")
 say("а теперь")
 
@@ -37,8 +38,8 @@ choose("result", q)
 who("Зелёный")
 say("согласен")
 
-Game.StopDrawing("r")
-Game.StopDrawing("g")
+Game.StopDrawing("gr")
+Game.StopDrawing("gr")
 
 who("Рассказчик")
 say("ВСЁ")

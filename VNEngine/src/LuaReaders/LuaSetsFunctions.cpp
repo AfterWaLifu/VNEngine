@@ -121,7 +121,7 @@ namespace VNEngine {
 		}
 
 		void AddPicture(std::string filename, std::string key, int rows, int collumns) {
-			s_ArtistToDraw->AddTexture(key, filename);
+			s_ArtistToDraw->AddTexture(key, filename, rows, collumns);
 		}
 
 		void DelPicture(std::string key) {
@@ -209,9 +209,10 @@ namespace VNEngine {
 				auto winsize = s_ArtistToDraw->GetWindowSize();
 				auto t = TM_INSTANCE.getTexture(key.tostring());
 				vec4 dest = {
-					(winsize.x / 2 - t->w) / 2,
-					(t->h < winsize.y / 4) ? winsize.y * 3 / 4 - t->h : winsize.y - t->h,
-					t->w, t->h
+					(winsize.x / 2 - (t->w/t->c)) / 2,
+					(t->h < winsize.y / 4) ? winsize.y * 3 - (t->h / t->r) / 4 : winsize.y - (t->h / t->r),
+					t->w / t->c,
+					t->h / t->r
 				};
 				if (tileOrRow.isNil() && collumnOrNil.isNil()) {
 					return s_ArtistToDraw->DrawR(key.tostring(), 0, dest);
@@ -239,9 +240,10 @@ namespace VNEngine {
 				auto winsize = s_ArtistToDraw->GetWindowSize();
 				auto t = TM_INSTANCE.getTexture(key.tostring());
 				vec4 dest = {
-					(winsize.x - t->w) / 2,
-					(t->h < winsize.y / 4) ? winsize.y * 3 - t->h / 4 : winsize.y - t->h,
-					t->w, t->h
+					(winsize.x - (t->w / t->c)) / 2,
+					(t->h < winsize.y / 4) ? winsize.y * 3 - (t->h/t->r) / 4 : winsize.y - (t->h/t->r),
+					t->w / t->c,
+					t->h / t->r
 				};
 				if (tileOrRow.isNil() && collumnOrNil.isNil()) {
 					return s_ArtistToDraw->DrawR(key.tostring(), 0, dest);
@@ -269,9 +271,10 @@ namespace VNEngine {
 				auto winsize = s_ArtistToDraw->GetWindowSize();
 				auto t = TM_INSTANCE.getTexture(key.tostring());
 				vec4 dest = {
-					(winsize.x * 3 / 2 - t->w) / 2,
-					(t->h < winsize.y / 4) ? winsize.y * 3 / 4 - t->h : winsize.y - t->h,
-					t->w, t->h
+					(winsize.x * 3 / 2 - (t->w/(t->c))) / 2,
+					(t->h < winsize.y / 4) ? winsize.y * 3 - (t->h / t->r) / 4 : winsize.y - (t->h / t->r),
+					t->w / t->c,
+					t->h / t->r
 				};
 				if (tileOrRow.isNil() && collumnOrNil.isNil()) {
 					return s_ArtistToDraw->DrawR(key.tostring(), 0, dest);
