@@ -33,6 +33,7 @@ namespace VNEngine{
 		SDL_Window* m_pWindow;
 		SDL_Renderer* m_pRenderer;
 
+		vec2 m_BaseWindowSize;
 		vec2 m_WindowSize;
 		vec2 m_PrevWindowSize;	// needed for correct scaling
 		vec4 m_PrevBackgroundSize;
@@ -99,6 +100,8 @@ namespace VNEngine{
 		*/
 		uint32_t Draw(const std::string& key, int tileNum = 0, vec4 destination = {0,0,100,100});
 		uint32_t Draw(const std::string& key, int row = 0, int collumn = 0, vec4 destination = { 0,0,100,100 });
+		uint32_t DrawR(const std::string& key, int tileNum = 0, vec4 destination = { 0,0,100,100 });
+		uint32_t DrawR(const std::string& key, int row = 0, int collumn = 0, vec4 destination = { 0,0,100,100 });
 		void StopDrawing(const std::string& key);
 		/**
 		* @brief Removing sprite from the queue on drawing
@@ -116,6 +119,8 @@ namespace VNEngine{
 		void SetWindowResizable(bool resizable = true);
 		void SetWindowSize(vec2 size);
 		vec2 GetWindowSize();
+		void SetBaseWinSize(vec2 size);
+		vec2 GetBaseWinSize();
 		void SetWindowTitle(std::string title);
 		void SetWindowFullscreen(bool fullscreen = true);
 		bool GetWindowFullscreen();

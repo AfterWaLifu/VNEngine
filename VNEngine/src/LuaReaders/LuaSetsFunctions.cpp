@@ -145,7 +145,7 @@ namespace VNEngine {
 				VN_LOGS_WARNING("Attemp to draw w/out destination");
 			}
 
-			return s_ArtistToDraw->Draw(key, tileNum, dest);
+			return s_ArtistToDraw->DrawR(key, tileNum, dest);
 		}
 		
 		uint32_t DrawRC(std::string key, luabridge::LuaRef destination, int row, int collumn) {
@@ -162,7 +162,7 @@ namespace VNEngine {
 				VN_LOGS_WARNING("Attemp to draw w/out destination");
 			}
 
-			return s_ArtistToDraw->Draw(key, row, collumn, dest);
+			return s_ArtistToDraw->DrawR(key, row, collumn, dest);
 		}
 		
 		void StopDrawing(std::string key) {

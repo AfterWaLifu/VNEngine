@@ -41,7 +41,7 @@ namespace VNEngine {
 
 	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
 		: m_pWindow(nullptr), m_pRenderer(nullptr), m_DrawId(0), m_Background({}),
-		m_WindowSize({width,height}), m_PrevWindowSize({0,0}),
+		m_WindowSize({width,height}), m_BaseWindowSize({ width,height }), m_PrevWindowSize({0,0}),
 		m_PrevBackgroundSize({0,0,0,0}), m_Fullscreen(fullscreen)
 	{
 
@@ -247,6 +247,54 @@ namespace VNEngine {
 		return m_DrawId;
 	}
 
+	uint32_t Artist::DrawR(const std::string& key, int tileNum, vec4 destination) {
+		FindFirstEmptyId();
+
+		Texture* tempTexture = TM_INSTANCE.getTexture(key);
+		if (tempTexture == nullptr) return UINT32_MAX;
+		vec4 tempSourceRect = GetTileRect(tempTexture, tileNum, key);
+		if (m_BaseWindowSize.x != m_WindowSize.x || m_BaseWindowSize.y != m_WindowSize.y) {
+			float relatex, relatey;
+			if (m_Background.stretchState == STRETCHED) {
+				relatex = (float)m_Background.dest.w / (float)m_BaseWindowSize.x;
+				relatey = (float)m_Background.dest.h / (float)m_BaseWindowSize.y;
+				destination.x = m_Background.dest.x + (int)((float)destination.x * relatex);
+				destination.y = m_Background.dest.y + (int)((float)destination.y * relatey);
+				destination.w = (int)((float)destination.w * relatex);
+				destination.h = (int)((float)destination.h * relatey);
+			}
+			else {
+				relatex = (float)m_WindowSize.x / (float)m_BaseWindowSize.x;
+				relatey = (float)m_WindowSize.y / (float)m_BaseWindowSize.y;
+				destination.x = (int)((float)destination.x * relatex);
+				destination.y = (int)((float)destination.y * relatey);
+				destination.w = (int)((float)destination.w * relatex);
+				destination.h = (int)((float)destination.h * relatey);
+			}
+		}
+		m_Queue[m_DrawId] = { tempTexture, tempSourceRect, destination };
+
+		return m_DrawId;
+	}
+	uint32_t Artist::DrawR(const std::string& key, int row, int collumn, vec4 destination) {
+		FindFirstEmptyId();
+
+		Texture* tempTexture = TM_INSTANCE.getTexture(key);
+		if (tempTexture == nullptr) return UINT32_MAX;
+		vec4 tempSourceRect = GetTileRect(tempTexture, row, collumn, key);
+		if (m_BaseWindowSize.x != m_WindowSize.x || m_BaseWindowSize.y != m_WindowSize.y) {
+			float relatex = (float)m_WindowSize.x / (float)m_BaseWindowSize.x;
+			float relatey = (float)m_WindowSize.y / (float)m_BaseWindowSize.y;
+			destination.x = (int)((float)destination.x * relatex);
+			destination.y = (int)((float)destination.y * relatey);
+			destination.w = (int)((float)destination.w * relatex);
+			destination.h = (int)((float)destination.h * relatey);
+		}
+		m_Queue[m_DrawId] = { tempTexture, tempSourceRect, destination };
+
+		return m_DrawId;
+	}
+
 	void Artist::StopDrawing(const std::string& key) {
 		int counter = 0;
 
@@ -365,6 +413,14 @@ namespace VNEngine {
 	
 	vec2 Artist::GetWindowSize() {
 		return m_WindowSize;
+	}
+
+	void Artist::SetBaseWinSize(vec2 size) {
+		m_BaseWindowSize = size;
+	}
+
+	vec2 Artist::GetBaseWinSize() {
+		return m_BaseWindowSize;
 	}
 
 	void Artist::SetWindowTitle(std::string title) {
