@@ -27,6 +27,7 @@ namespace VNEngine {
 	protected:
 		SDL_Texture* m_TextTexture;
 		
+		vec4 m_GeometryStart;
 		vec4 m_TextNativeGeometry;
 		vec4 m_TextDestination;
 		int m_IndentVertical, m_IndentHorizontal;

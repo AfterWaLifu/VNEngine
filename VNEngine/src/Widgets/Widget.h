@@ -22,6 +22,7 @@ namespace VNEngine {
 		SDL_Renderer* renderer;
 		vec2* windowSizeCurr;
 		vec2* windowSizePrev;
+		vec2* windowSizeBase;
 		vec4* backgrSizeCurr;
 		vec4* backgrSizePrev;
 		uint8_t* stretching;	// 1 full, 2 stretch
@@ -49,9 +50,10 @@ namespace VNEngine {
 		static void TurnOnWidgets(WindowData wd) {
 			sWD.renderer = wd.renderer; 
 			sWD.windowSizeCurr = wd.windowSizeCurr;
-			sWD.windowSizePrev= wd.windowSizePrev;
-			sWD.backgrSizeCurr= wd.backgrSizeCurr;
-			sWD.backgrSizePrev= wd.backgrSizePrev;
+			sWD.windowSizePrev = wd.windowSizePrev;
+			sWD.windowSizeBase = wd.windowSizeBase;
+			sWD.backgrSizeCurr = wd.backgrSizeCurr;
+			sWD.backgrSizePrev = wd.backgrSizePrev;
 			sWD.stretching= wd.stretching;
 		}
 

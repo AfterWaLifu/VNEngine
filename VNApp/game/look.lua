@@ -224,7 +224,7 @@ function game()
 	saybox = {
 		type = "text",
 		name = "say",
-		geometry = {0,windowsize[2] - 200, windowsize[1],200},
+		geometry = {0,520, 1280,200},
 		text = "A",
 		align = "LT",
 		font = "r20",
@@ -238,7 +238,7 @@ function game()
 	whobox = {
 		type = "text",
 		name = "who",
-		geometry = {0,windowsize[2] - 300, 200,100},
+		geometry = {0,420, 200,100},
 		text = "AA",
 		align = "CC",
 		font = "r32",

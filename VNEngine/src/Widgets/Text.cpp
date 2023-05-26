@@ -53,7 +53,8 @@ namespace VNEngine {
 	Text::Text(vec4 geometry, std::wstring text, vec4u8 textColor, const std::string& fontKey)
 		: Widget()
 	{
-		m_Geometry = geometry;
+		m_GeometryStart = geometry;
+		m_Geometry = m_GeometryStart;
 		m_BackgroundColor = { 0,0,0,0 };
 		m_Image = nullptr;
 
@@ -68,13 +69,16 @@ namespace VNEngine {
 		m_BorderColor = { 0,0,0,0 };
 		m_Wraped = true;
 
+		SetGeometry(m_Geometry);
+
 		if (!text.empty()) {
 			SetText(text);
 		}
 	}
 
 	Text::Text(const textState& ts) {
-		m_Geometry = ts.geometry;
+		m_GeometryStart = ts.geometry;
+		m_Geometry = m_GeometryStart;
 		SetFont(ts.font);
 		SetBackgroundColor(ts.backcolor);
 		SetBackImage(ts.backimage);
@@ -90,6 +94,7 @@ namespace VNEngine {
 		SetVerticalIndent(ts.vindent);
 		SetAlign((Alignment)ts.align);
 		SetText(ts.text);
+		SetGeometry(m_Geometry);
 	}
 
 	Text::~Text() {
@@ -108,23 +113,19 @@ namespace VNEngine {
 		if (*Widget::sWD.stretching == 2) { /*stretching*/
 			float wratio = (float)Widget::sWD.backgrSizeCurr->w / (float)Widget::sWD.backgrSizePrev->w;
 			float hratio = (float)Widget::sWD.backgrSizeCurr->h / (float)Widget::sWD.backgrSizePrev->h;
-			vec2 coordsAtBack = {
-				m_Geometry.x - Widget::sWD.backgrSizePrev->x,
-				m_Geometry.y - Widget::sWD.backgrSizePrev->y
-			};
-			m_Geometry.x = Widget::sWD.backgrSizeCurr->x + (int)round((float)coordsAtBack.x * wratio);
-			m_Geometry.y = Widget::sWD.backgrSizeCurr->y + (int)round((float)coordsAtBack.y * hratio);
-			m_Geometry.w = (int)round((float)m_Geometry.w * wratio);
-			m_Geometry.h = (int)round((float)m_Geometry.h * hratio);
+			m_Geometry.x = Widget::sWD.backgrSizeCurr->x + (int)((float)m_GeometryStart.x * wratio);
+			m_Geometry.y = Widget::sWD.backgrSizeCurr->y + (int)((float)m_GeometryStart.y * wratio);
+			m_Geometry.w = (int)((float)m_GeometryStart.w * wratio);
+			m_Geometry.h = (int)((float)m_GeometryStart.h * wratio);
 		}
 		else {/*everything else*/
 			float vertRation = (float)Widget::sWD.windowSizeCurr->y / (float)Widget::sWD.windowSizePrev->y;
 			float horzRation = (float)Widget::sWD.windowSizeCurr->x / (float)Widget::sWD.windowSizePrev->x;
 			m_Geometry = {
-				(int)round((float)m_Geometry.x * horzRation),
-				(int)round((float)m_Geometry.y * vertRation),
-				(int)round((float)m_Geometry.w * horzRation),
-				(int)round((float)m_Geometry.h * vertRation)
+				(int)round((float)m_GeometryStart.x * horzRation),
+				(int)round((float)m_GeometryStart.y * vertRation),
+				(int)round((float)m_GeometryStart.w * horzRation),
+				(int)round((float)m_GeometryStart.h * vertRation)
 			};
 		}
 		SetAlign(m_Alignment);
@@ -222,8 +223,7 @@ namespace VNEngine {
 		m_BorderColor = color;
 	}
 
-	vec4u8 Text::GetBorderColor()
-	{
+	vec4u8 Text::GetBorderColor() {
 		return m_BorderColor;
 	}
 
@@ -322,14 +322,29 @@ namespace VNEngine {
 		return m_BackImage;
 	}
 
-	void Text::SetGeometry(vec4 geometry)
-	{
+	void Text::SetGeometry(vec4 geometry) {
 		m_Geometry = geometry;
+		float relatex, relatey;
+		if (*Widget::sWD.stretching == 2) { /*stretched*/
+			relatex = (float)Widget::sWD.backgrSizeCurr->w / (float)Widget::sWD.windowSizeBase->x;
+			relatey = (float)Widget::sWD.backgrSizeCurr->h / (float)Widget::sWD.windowSizeBase->y;
+			m_Geometry.x = Widget::sWD.backgrSizeCurr->x + (int)((float)m_Geometry.x * relatex);
+			m_Geometry.y = Widget::sWD.backgrSizeCurr->y + (int)((float)m_Geometry.y * relatey);
+			m_Geometry.w = (int)((float)m_Geometry.w * relatex);
+			m_Geometry.h = (int)((float)m_Geometry.h * relatey);
+		}
+		else {
+			relatex = (float)Widget::sWD.windowSizeCurr->x / (float)Widget::sWD.windowSizeBase->x;
+			relatey = (float)Widget::sWD.windowSizeCurr->y / (float)Widget::sWD.windowSizeBase->y;
+			m_Geometry.x = (int)((float)m_Geometry.x * relatex);
+			m_Geometry.y = (int)((float)m_Geometry.y * relatey);
+			m_Geometry.w = (int)((float)m_Geometry.w * relatex);
+			m_Geometry.h = (int)((float)m_Geometry.h * relatey);
+		}
 		SetAlign(m_Alignment);
 	}
 
-	vec4 Text::GetGeometry()
-	{
+	vec4 Text::GetGeometry() {
 		return m_Geometry;
 	}
 
