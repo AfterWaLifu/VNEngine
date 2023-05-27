@@ -35,7 +35,7 @@ namespace VNEngine {
 		virtual ~Button();
 
 		void Bind(std::function<void(void)> onClick);
-		void Bind(luabridge::LuaRef onClick);
+		void Bind(luabridge::LuaRef* onClick);
 		void Check();
 		void Draw();
 		bool Pressed();

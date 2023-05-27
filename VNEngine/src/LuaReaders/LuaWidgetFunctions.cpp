@@ -81,7 +81,7 @@ namespace VNEngine {
 					vec4u8 color = {};
 
 					ts.geometry = geometry;
-					if (t["text"].isString()) ts.text = t["text"].tostring();
+					if (!t["text"].isNil())ts.text = t["text"].tostring();
 					if (t["shown"].isBool() && !(t["shown"].cast<bool>())) ts.shown = false;
 					if (t["font"].isString()) ts.font = t["font"].tostring();
 					if (t["wrapped"].isBool()) ts.wrapped = t["wrapped"].cast<bool>();
@@ -222,22 +222,25 @@ namespace VNEngine {
 			}
 		}
 
-		void WidgetUpdate(std::string type, std::string name, luabridge::LuaRef t)
+		void WidgetUpdate(luabridge::LuaRef t)
 		{
 			Text* text = nullptr;
 			Button* button = nullptr;
 			TextBox* textbox = nullptr;
-			if (type == std::string("text")) {
-				text = WM_INSTANCE.GetText(name);
+			if (t["type"].tostring() == std::string("text")) {
+				text = WM_INSTANCE.GetText(t["name"].tostring());
 			}
-			else if (type == std::string("button")) {
-				button = WM_INSTANCE.GetButton(name);
+			else if (t["type"].tostring() == std::string("button")) {
+				button = WM_INSTANCE.GetButton(t["name"].tostring());
 			}
-			else if (type == std::string("textbox")) {
-				textbox = WM_INSTANCE.GetTextBox(name);
+			else if (t["type"].tostring() == std::string("textbox")) {
+				textbox = WM_INSTANCE.GetTextBox(t["name"].tostring());
 			}
 
+			vec4u8 color{};
+			vec4 geom{};
 			if (text) {
+				if (t["text"]) text->SetText(t["text"].tostring());
 				if (t["shown"].isBool() && !(t["shown"].cast<bool>())) text->Hide();
 				if (t["font"].isString()) text->SetFont(t["font"].tostring());
 				if (t["wrapped"].isBool() && !(t["wrapped"].cast<bool>())) text->SetWraped(t["wrapped"].cast<bool>());
@@ -255,36 +258,19 @@ namespace VNEngine {
 				if (t["vindent"].isNumber()) text->SetVerticalIndent(t["vindent"].cast<int>());
 				if (t["hindent"].isNumber()) text->SetHorizontalIndent(t["hindent"].cast<int>());
 				if (t["backPic"].isString()) text->SetBackImage(t["backPic"].tostring());
-				if (t["textColor"].isTable() &&
-					t["textColor"][1].isNumber() && t["textColor"][2].isNumber() &&
-					t["textColor"][3].isNumber() && t["textColor"][4].isNumber()) {
-					vec4u8 backcolor = {
-						t["textColor"][1].cast<uint8_t>() , t["textColor"][2].cast<uint8_t>(),
-						t["textColor"][3].cast<uint8_t>() , t["textColor"][4].cast<uint8_t>()
-					};
-					text->SetTextColor(backcolor);
+				if (tableIntoVec(color, t["textColor"])) {
+					button->SetTextColor(color);
 				}
-				if (t["backColor"].isTable() &&
-					t["backColor"][1].isNumber() && t["backColor"][2].isNumber() &&
-					t["backColor"][3].isNumber() && t["backColor"][4].isNumber()) {
-					vec4u8 backcolor = {
-						t["backColor"][1].cast<uint8_t>() , t["backColor"][2].cast<uint8_t>(),
-						t["backColor"][3].cast<uint8_t>() , t["backColor"][4].cast<uint8_t>()
-					};
-					text->SetBackgroundColor(backcolor);
+				if (tableIntoVec(color, t["backColor"])) {
+					button->SetBackgroundColor(color);
 				}
-				if (t["borderColor"].isTable() &&
-					t["borderColor"][1].isNumber() && t["borderColor"][2].isNumber() &&
-					t["borderColor"][3].isNumber() && t["borderColor"][4].isNumber()) {
-					vec4u8 backcolor = {
-						t["borderColor"][1].cast<uint8_t>() , t["borderColor"][2].cast<uint8_t>(),
-						t["borderColor"][3].cast<uint8_t>() , t["borderColor"][4].cast<uint8_t>()
-					};
-					text->SetBorderColor(backcolor);
+				if (tableIntoVec(color, t["borderColor"])) {
+					button->SetBorderColor(color);
 				}
 				if (t["borderActive"].isBool() && t["borderActive"].cast<bool>()) text->SetDrawingBorder();
 			}
 			else if (button) {
+				if (t["text"]) button->SetText(t["text"].tostring());
 				if (t["shown"].isBool() && !(t["shown"].cast<bool>())) button->Hide();
 				if (t["font"].isString()) button->SetFont(t["font"].tostring());
 				if (t["wrapped"].isBool() && !(t["wrapped"].cast<bool>())) button->SetWraped(t["wrapped"].cast<bool>());
@@ -302,45 +288,26 @@ namespace VNEngine {
 				if (t["vindent"].isNumber()) button->SetVerticalIndent(t["vindent"].cast<int>());
 				if (t["hindent"].isNumber()) button->SetHorizontalIndent(t["hindent"].cast<int>());
 				if (t["backPic"].isString()) button->SetBackImage(t["backPic"].tostring());
-				if (t["textColor"].isTable() &&
-					t["textColor"][1].isNumber() && t["textColor"][2].isNumber() &&
-					t["textColor"][3].isNumber() && t["textColor"][4].isNumber()) {
-					vec4u8 backcolor = {
-						t["textColor"][1].cast<uint8_t>() , t["textColor"][2].cast<uint8_t>(),
-						t["textColor"][3].cast<uint8_t>() , t["textColor"][4].cast<uint8_t>()
-					};
-					button->SetTextColor(backcolor);
+				if (tableIntoVec(color,t["textColor"])) {
+					button->SetTextColor(color);
 				}
-				if (t["backColor"].isTable() &&
-					t["backColor"][1].isNumber() && t["backColor"][2].isNumber() &&
-					t["backColor"][3].isNumber() && t["backColor"][4].isNumber()) {
-					vec4u8 backcolor = {
-						t["backColor"][1].cast<uint8_t>() , t["backColor"][2].cast<uint8_t>(),
-						t["backColor"][3].cast<uint8_t>() , t["backColor"][4].cast<uint8_t>()
-					};
-					button->SetBackgroundColor(backcolor);
+				if (tableIntoVec(color,t["backColor"])) {
+					button->SetBackgroundColor(color);
 				}
-				if (t["borderColor"].isTable() &&
-					t["borderColor"][1].isNumber() && t["borderColor"][2].isNumber() &&
-					t["borderColor"][3].isNumber() && t["borderColor"][4].isNumber()) {
-					vec4u8 backcolor = {
-						t["borderColor"][1].cast<uint8_t>() , t["borderColor"][2].cast<uint8_t>(),
-						t["borderColor"][3].cast<uint8_t>() , t["borderColor"][4].cast<uint8_t>()
-					};
-					button->SetBorderColor(backcolor);
+				if (tableIntoVec(color, t["borderColor"])) {
+					button->SetBorderColor(color);
 				}
-				if (t["borderFocusColor"].isTable() &&
-					t["borderFocusColor"][1].isNumber() && t["borderFocusColor"][2].isNumber() &&
-					t["borderFocusColor"][3].isNumber() && t["borderFocusColor"][4].isNumber()) {
-					vec4u8 backcolor = {
-						t["borderFocusColor"][1].cast<uint8_t>() , t["borderFocusColor"][2].cast<uint8_t>(),
-						t["borderFocusColor"][3].cast<uint8_t>() , t["borderFocusColor"][4].cast<uint8_t>()
-					};
-					button->SetFocusBorderColor(backcolor);
+				if (tableIntoVec(color, t["borderFocusColor"])) {
+					button->SetFocusBorderColor(color);
 				}
 				if (t["borderActive"].isBool() && !(t["borderActive"].cast<bool>())) button->SetDrawingBorder(false);
+				if (t["func"].isFunction()) button->Bind(new luabridge::LuaRef(t["func"]));
 			}
 			else if (textbox) {
+				if (t["text"]) {
+					textbox->SetText(t["text"].tostring());
+					textbox->SetValue(t["text"].tostring());
+				}
 				if (t["shown"].isBool() && !(t["shown"].cast<bool>())) textbox->Hide();
 				if (t["font"].isString()) textbox->SetFont(t["font"].tostring());
 				if (t["wrapped"].isBool() && !(t["wrapped"].cast<bool>())) textbox->SetWraped(t["wrapped"].cast<bool>());
@@ -358,32 +325,14 @@ namespace VNEngine {
 				if (t["vindent"].isNumber()) textbox->SetVerticalIndent(t["vindent"].cast<int>());
 				if (t["hindent"].isNumber()) textbox->SetHorizontalIndent(t["hindent"].cast<int>());
 				if (t["backPic"].isString()) textbox->SetBackImage(t["backPic"].tostring());
-				if (t["textColor"].isTable() &&
-					t["textColor"][1].isNumber() && t["textColor"][2].isNumber() &&
-					t["textColor"][3].isNumber() && t["textColor"][4].isNumber()) {
-					vec4u8 backcolor = {
-						t["textColor"][1].cast<uint8_t>() , t["textColor"][2].cast<uint8_t>(),
-						t["textColor"][3].cast<uint8_t>() , t["textColor"][4].cast<uint8_t>()
-					};
-					textbox->SetTextColor(backcolor);
+				if (tableIntoVec(color, t["textColor"])) {
+					button->SetTextColor(color);
 				}
-				if (t["backColor"].isTable() &&
-					t["backColor"][1].isNumber() && t["backColor"][2].isNumber() &&
-					t["backColor"][3].isNumber() && t["backColor"][4].isNumber()) {
-					vec4u8 backcolor = {
-						t["backColor"][1].cast<uint8_t>() , t["backColor"][2].cast<uint8_t>(),
-						t["backColor"][3].cast<uint8_t>() , t["backColor"][4].cast<uint8_t>()
-					};
-					textbox->SetBackgroundColor(backcolor);
+				if (tableIntoVec(color, t["backColor"])) {
+					button->SetBackgroundColor(color);
 				}
-				if (t["borderColor"].isTable() &&
-					t["borderColor"][1].isNumber() && t["borderColor"][2].isNumber() &&
-					t["borderColor"][3].isNumber() && t["borderColor"][4].isNumber()) {
-					vec4u8 backcolor = {
-						t["borderColor"][1].cast<uint8_t>() , t["borderColor"][2].cast<uint8_t>(),
-						t["borderColor"][3].cast<uint8_t>() , t["borderColor"][4].cast<uint8_t>()
-					};
-					textbox->SetBorderColor(backcolor);
+				if (tableIntoVec(color, t["borderColor"])) {
+					button->SetBorderColor(color);
 				}
 				if (t["borderActive"].isBool() && !(t["borderActive"].cast<bool>())) textbox->SetDrawingBorder(false);
 				if (t["maxCharQuantity"].isNumber()) textbox->SetMaxCharNumber(t["maxCharQuantity"].cast<uint32_t>());

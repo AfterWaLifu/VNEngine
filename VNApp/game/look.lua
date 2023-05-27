@@ -182,23 +182,41 @@ function settings()
 	label = {type="text",name="label",text="Settings",geometry={300,90,920,50}, textColor={255,255,255,255}, align="CT",font="r40"}
 	Widget.Add(label)
 
-	volume = Game.GetMusicVolume()
-	volume = tonumber(string.format("%.2f", volume))
-	number = {type="text",name="musicVolume", geometry={450,170,150,100},text=volume, textColor={255,255,255,255}, align="CC", font="r40"}
+	volume = Game.GetMusicVolume() * 100
+	number = {type="text",name="musicVolume", geometry={450,170,150,100},text=math.floor(volume), textColor={255,255,255,255}, align="CC", font="r40"}
 	Widget.Add(number)
-	volume = Game.GetSoundVolume()
-	volume = tonumber(string.format("%.2f", volume))
-	number.name = "soundVolume"; number.geometry[1] = 920; number.text = volume
+	volume = Game.GetSoundVolume() * 100
+	number.name = "soundVolume"; number.geometry[1] = 920; number.text = math.floor(volume)
 	Widget.Add(number)
 	
+	function cm(c)
+		volume = Game.GetMusicVolume() + c
+		volume = math.floor((volume + 0.001)*100)/100
+		if volume > 1.0 then volume = 1.0 
+		elseif volume < 0 then volume = 0 end
+		Game.SetMusicVolume(volume)
+		Widget.Update({type="text",name="musicVolume",text=math.floor(volume*100)})
+	end
+	function sm(c)
+		volume = Game.GetSoundVolume() + c
+		volume = math.floor((volume + 0.001)*100)/100
+		if volume > 1.0 then volume = 1.0 
+		elseif volume < 0 then volume = 0 end
+		Game.SetSoundVolume(volume)
+		Widget.Update({type="text",name="soundVolume",text=math.floor(volume*100)})
+	end
 	change = {type="button",name="music-",geometry={325,170,100,100},text="-",align="CC",font="r72"}
+	change.func = function() cm(-0.05) end
 	Widget.Add(change)
 	change.name = "sound-"; change.geometry[1] = 795
+	change.func = function() sm(-0.05) end
 	Widget.Add(change)
 
 	change = {type="button",name="music+",geometry={625,170,100,100},text="+",align="CC",font="r60"}
+	change.func = function() cm(0.05) end
 	Widget.Add(change)
 	change.name = "sound+"; change.geometry[1] = 1095
+	change.func = function() sm(0.05) end
 	Widget.Add(change)
 
 	label.name = "musicLabel"
@@ -208,13 +226,24 @@ function settings()
 	Widget.Add(label)
 	label.name = "soundLabel"
 	label.text = "Sound"
-	label.geometry[1] = 900
+	label.geometry[1] = 770
 	Widget.Add(label)
 
+
+	function muting()
+		Game.Mute()
+		Widget.Update({type="button",name="muteButton",text="Unmute", func=unmuting})
+	end
+	function unmuting()
+		Game.Unmute()
+		Widget.Update({type="button",name="muteButton",text="Mute", func=muting})
+	end
 	muteButton = {type="button",name="muteButton",geometry={625,370,270,50},font="r32",text="Mute", align="CC"}
-	muted = Game.AudioIsMuted()
+	muteButton.func = muting
+	muted = Game.IsMuted()
 	if (muted) then
-		muteButton.text="Unmute"
+		muteButton.text = "Unmute"
+		muteButton.func = unmuting
 	end
 	Widget.Add(muteButton)
 end

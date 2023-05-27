@@ -47,6 +47,15 @@ namespace VNEngine {
 		if (IH_INSTANCE.isKeyPressed("h")) {
 			WM_INSTANCE.SetHiden(!(WM_INSTANCE.GetHiden()));
 		}
+
+		if (IH_INSTANCE.isKeyPressed("f") ||
+			((IH_INSTANCE.isKeyHeld("lalt") || IH_INSTANCE.isKeyHeld("ralt")) &&
+				IH_INSTANCE.isKeyPressed("enter"))) {
+			auto f = State::s_pDrawer->GetWindowFullscreen();
+			State::s_pDrawer->SetWindowFullscreen(!f);
+		}
+
+		if (IH_INSTANCE.isKeyPressed("s")) State::s_pDrawer->SaveScreenshot();
 	}
 
 	void ReadingState::Update() {

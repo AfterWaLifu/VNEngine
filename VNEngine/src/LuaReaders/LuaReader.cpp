@@ -56,9 +56,9 @@ namespace VNEngine {
 			addFunction("SetSoundVolume", LS::SetSoundVolume).
 			addFunction("GetMusicVolume", LS::GetMusicVolume).
 			addFunction("GetSoundVolume", LS::GetSoundVolume).
-			addFunction("AudioMute", LS::Mute).
-			addFunction("AudioUnmute", LS::Unmute).
-			addFunction("AudioIsMuted", LS::IsMuted).
+			addFunction("Mute", LS::Mute).
+			addFunction("Unmute", LS::Unmute).
+			addFunction("IsMuted", LS::IsMuted).
 			addFunction("AddPicture", LS::AddPicture).
 			addFunction("DelPicture", LS::DelPicture).
 			addFunction("SetBackgroundColor", LS::SetBackgroundColor).

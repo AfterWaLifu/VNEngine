@@ -444,12 +444,15 @@ namespace VNEngine {
 			SDL_SetWindowFullscreen(m_pWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
 			m_PrevWindowSize = m_WindowSize;
 			SDL_GetWindowSize(m_pWindow, &m_WindowSize.x, &m_WindowSize.y);
+			WindowResized();
 			IH_INSTANCE.setIfWindowResized(true);
 		}
 		else {
 			if (m_PrevWindowSize.x == 0 && m_PrevWindowSize.y == 0) return;
 			SDL_SetWindowFullscreen(m_pWindow, 0);
 			SetWindowSize(m_PrevWindowSize);
+			WindowResized();
+			IH_INSTANCE.setIfWindowResized(true);
 		}
 	}
 

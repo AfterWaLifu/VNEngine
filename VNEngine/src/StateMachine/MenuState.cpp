@@ -17,6 +17,12 @@ namespace VNEngine {
 		if (IH_INSTANCE.getMouseButtonClicked(RIGHT) && SM_INSTANCE.isThereAReading()) {
 			SM_INSTANCE.PopState();
 		}
+		if (IH_INSTANCE.isKeyPressed("f") ||
+			((IH_INSTANCE.isKeyHeld("lalt") || IH_INSTANCE.isKeyHeld("ralt")) &&
+				IH_INSTANCE.isKeyPressed("enter"))) {
+			auto f = State::s_pDrawer->GetWindowFullscreen();
+			State::s_pDrawer->SetWindowFullscreen(!f);
+		}
 	}
 	
 	void MenuState::Update() {

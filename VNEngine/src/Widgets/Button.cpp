@@ -46,8 +46,8 @@ namespace VNEngine {
 		if (onClick != nullptr) m_OnClick = onClick;
 	}
 
-	void Button::Bind(luabridge::LuaRef onClick) {
-		if (onClick.isFunction()) m_OnClickLua = onClick;
+	void Button::Bind(luabridge::LuaRef* onClick) {
+		if (onClick->isFunction()) m_OnClickLua = onClick;
 	}
 
 	void Button::Check() {

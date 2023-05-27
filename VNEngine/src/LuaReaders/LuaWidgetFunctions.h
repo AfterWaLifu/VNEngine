@@ -9,7 +9,7 @@ namespace VNEngine {
 
 		void WidgetAdding(luabridge::LuaRef t);
 
-		void WidgetUpdate(std::string type, std::string name, luabridge::LuaRef t);
+		void WidgetUpdate(luabridge::LuaRef t);
 
 		void WidgetRemove(std::string type, std::string name);
 
