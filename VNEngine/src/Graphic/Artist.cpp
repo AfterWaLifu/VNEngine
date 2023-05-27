@@ -153,7 +153,8 @@ namespace VNEngine {
 
 	void Artist::SetStretchingState(Stretching state) {
 		m_Background.stretchState = state;
-		if (m_Background.ptexture != nullptr) {
+		if (m_Background.ptexture) {
+			m_PrevBackgroundSize = m_Background.dest;
 			vec2 source = { m_Background.ptexture->w,m_Background.ptexture->h };
 			switch (m_Background.stretchState) {
 			case CENTERED:
@@ -163,7 +164,7 @@ namespace VNEngine {
 				break;
 
 			case STRETCHED:
-				m_PrevBackgroundSize = m_Background.dest;
+//				m_PrevBackgroundSize = m_Background.dest;
 				if (m_PrevWindowSize.x > m_WindowSize.x ||
 					m_PrevWindowSize.y < m_WindowSize.y) {
 					float imageAspectRation = (float)m_WindowSize.x / source.x;

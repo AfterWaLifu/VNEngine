@@ -88,7 +88,7 @@ namespace VNEngine {
 			}
 		}
 		m_pApp->m_Drawer = std::make_unique<Artist>(
-			title, width, height, foolscreen);
+			title, bwidth, bheight, foolscreen);
 		if (width != bwidth || height != bheight) m_pApp->m_Drawer->SetWindowSize({width,height});
 		m_pApp->m_Drawer->SetWindowResizable(resizable);
 		m_pApp->m_Drawer->SetStretchingState((Stretching)stretching);
@@ -182,9 +182,9 @@ namespace VNEngine {
 	}
 
 	void Loader::Load() {
+		InputHandler::InputHandlerInit(&(m_pApp->m_IsRunning));
 		readPresets();
 		readSettings();
-		InputHandler::InputHandlerInit(&(m_pApp->m_IsRunning));
 		State::InitDrawingForStates(m_pApp->m_Drawer.get());
 		LS::InitDrawingForLua(m_pApp->m_Drawer.get());
 		preload();

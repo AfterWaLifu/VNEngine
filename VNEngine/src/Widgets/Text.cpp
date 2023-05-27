@@ -109,10 +109,12 @@ namespace VNEngine {
 	}
 
 	void Text::windowResized() {
-		if (Widget::sWD.renderer != nullptr)
+		if (Widget::sWD.renderer == nullptr) return;
 		if (*Widget::sWD.stretching == 2) { /*stretching*/
-			float wratio = (float)Widget::sWD.backgrSizeCurr->w / (float)Widget::sWD.backgrSizePrev->w;
-			float hratio = (float)Widget::sWD.backgrSizeCurr->h / (float)Widget::sWD.backgrSizePrev->h;
+			auto backgrPrev = *Widget::sWD.backgrSizePrev;
+			if (backgrPrev.x == -1 && backgrPrev.y == -1 && backgrPrev.w == 1 && backgrPrev.h == 1) return;
+			float wratio = (float)Widget::sWD.backgrSizeCurr->w / (float)backgrPrev.w;
+			float hratio = (float)Widget::sWD.backgrSizeCurr->h / (float)backgrPrev.h;
 			m_Geometry.x = Widget::sWD.backgrSizeCurr->x + (int)((float)m_GeometryStart.x * wratio);
 			m_Geometry.y = Widget::sWD.backgrSizeCurr->y + (int)((float)m_GeometryStart.y * wratio);
 			m_Geometry.w = (int)((float)m_GeometryStart.w * wratio);
