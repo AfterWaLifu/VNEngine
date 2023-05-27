@@ -42,7 +42,7 @@ namespace VNEngine {
 	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
 		: m_pWindow(nullptr), m_pRenderer(nullptr), m_DrawId(0), m_Background({}),
 		m_WindowSize({width,height}), m_BaseWindowSize({ width,height }), m_PrevWindowSize({0,0}),
-		m_PrevBackgroundSize({0,0,0,0}), m_Fullscreen(fullscreen)
+		m_PrevBackgroundSize({0,0,0,0}), m_Fullscreen(fullscreen), m_WindowTitle(title), m_Resizable(true)
 	{
 
 		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
@@ -51,7 +51,7 @@ namespace VNEngine {
 		}
 
 		m_pWindow = SDL_CreateWindow(
-			title.c_str(),
+			m_WindowTitle.c_str(),
 			SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 			m_WindowSize.x, m_WindowSize.y,
 			SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
@@ -402,6 +402,11 @@ namespace VNEngine {
 	
 	void Artist::SetWindowResizable(bool resizable) {
 		SDL_SetWindowResizable(m_pWindow, (SDL_bool)resizable);
+		m_Resizable = resizable;
+	}
+
+	bool Artist::GetWindowResizable() {
+		return m_Resizable;
 	}
 
 	void Artist::SetWindowSize(vec2 size) {
@@ -423,8 +428,13 @@ namespace VNEngine {
 		return m_BaseWindowSize;
 	}
 
-	void Artist::SetWindowTitle(std::string title) {
+	void Artist::SetWindowTitle(const std::string& title) {
 		SDL_SetWindowTitle(m_pWindow, title.c_str());
+		m_WindowTitle = title;
+	}
+
+	std::string Artist::GetWindowTitle() {
+		return m_WindowTitle;
 	}
 
 	void Artist::SetWindowFullscreen(bool fullscreen) {

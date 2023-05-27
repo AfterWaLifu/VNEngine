@@ -11,10 +11,14 @@ namespace VNEngine {
 
 		void readPresets();
 		void readSettings();
+		void writeSettings();
 		void preload();
 
 	public:
 		Loader(App* app);
 		~Loader();
+
+		void Load();
+		void Save();
 	};
 }

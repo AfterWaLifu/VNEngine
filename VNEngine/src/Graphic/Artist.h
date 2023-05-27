@@ -33,11 +33,13 @@ namespace VNEngine{
 		SDL_Window* m_pWindow;
 		SDL_Renderer* m_pRenderer;
 
+		std::string m_WindowTitle;
 		vec2 m_BaseWindowSize;
 		vec2 m_WindowSize;
 		vec2 m_PrevWindowSize;	// needed for correct scaling
 		vec4 m_PrevBackgroundSize;
 		bool m_Fullscreen;	/// True if window fullscreen
+		bool m_Resizable;
 
 		std::unordered_map<uint32_t, DrawnData> m_Queue;	/// Queue on drawing (data and indexes)
 		uint32_t m_DrawId;									/// First empty ID to draw
@@ -117,11 +119,13 @@ namespace VNEngine{
 		void DeleteTexture(const std::string& key);
 
 		void SetWindowResizable(bool resizable = true);
+		bool GetWindowResizable();
 		void SetWindowSize(vec2 size);
 		vec2 GetWindowSize();
 		void SetBaseWinSize(vec2 size);
 		vec2 GetBaseWinSize();
-		void SetWindowTitle(std::string title);
+		void SetWindowTitle(const std::string& title);
+		std::string GetWindowTitle();
 		void SetWindowFullscreen(bool fullscreen = true);
 		bool GetWindowFullscreen();
 

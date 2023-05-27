@@ -6,7 +6,8 @@ namespace VNEngine {
 	App::App()
 		:m_Drawer(nullptr), m_IsRunning(false)
 	{
-		Loader loader = Loader(this);
+		Loader l= Loader(this);
+		l.Load();
 
 		m_IsRunning = true;
 
@@ -14,6 +15,8 @@ namespace VNEngine {
 	}
 
 	App::~App() {
+		Loader l(this);
+		l.Save();
 	}
 	
 	void App::Run() {
