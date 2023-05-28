@@ -54,7 +54,8 @@ function save()
 
 	saveButton = {type="button", name="save1",geometry={300,170,300,190}, textColor={0,0,0,255},text="YY.MM.DD HH:MM",
 					align="CB", font="r20", wrapped=false, vindent=3}
-	savePicture = {type="text", name="save1",geometry={330,175,240,160}, textColor={0,0,0,0}, text="",backPic="savePlaceholder"}
+	savePicture = {type="text", name="save1",geometry={330,175,240,160},
+		textColor={0,0,0,0}, text="",backPic="savePlaceholder",backIsShown=true}
 	
 	saveButton.name = "save1"
 	saveButton.text = "1"
@@ -119,7 +120,8 @@ function load()
 	
 	saveButton = {type="button", name="save1",geometry={300,170,300,190}, textColor={0,0,0,255},text="YY.MM.DD HH:MM",
 					align="CB", font="r20", wrapped=false, vindent=3}
-	savePicture = {type="text", name="save1",geometry={330,175,240,160}, textColor={0,0,0,0}, text="",backPic="savePlaceholder"}
+	savePicture = {type="text", name="save1",geometry={330,175,240,160}, textColor={0,0,0,0},
+		text="",backPic="savePlaceholder", backIsShown=true}
 	
 	saveButton.name = "load1"
 	saveButton.text = "1"

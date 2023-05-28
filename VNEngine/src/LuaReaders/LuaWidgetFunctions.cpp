@@ -112,6 +112,7 @@ namespace VNEngine {
 						ts.bordercolor = color;
 					}
 					if (t["borderActive"].isBool()) ts.showborder = t["borderActive"].cast<bool>();
+					if (t["backIsShown"].isBool()) ts.backisshown = t["backIsShown"].cast<bool>();
 
 					WM_INSTANCE.AddWidget(codename, new Text(ts));
 				}
@@ -144,6 +145,7 @@ namespace VNEngine {
 					if (t["vindent"].isNumber()) bs.ts.vindent = t["vindent"].cast<int>();
 					if (t["hindent"].isNumber()) bs.ts.hindent = t["hindent"].cast<int>();
 					if (t["backPic"].isString()) bs.ts.backimage = t["backPic"].tostring();
+					if (t["backIsShown"].isBool()) bs.ts.backisshown = t["backIsShown"].cast<bool>();
 					if (t["textColor"].isTable()) {
 						tableIntoVec(color, t["textColor"]);
 						bs.ts.textcolor = color;
@@ -198,6 +200,7 @@ namespace VNEngine {
 					if (t["vindent"].isNumber()) tbs.ts.vindent = t["vindent"].cast<int>();
 					if (t["hindent"].isNumber()) tbs.ts.hindent = t["hindent"].cast<int>();
 					if (t["backPic"].isString()) tbs.ts.backimage = t["backPic"].tostring();
+					if (t["backIsShown"].isBool()) tbs.ts.backisshown = t["backIsShown"].cast<bool>();
 					if (t["textColor"].isTable()) {
 						tableIntoVec(color, t["textColor"]);
 						tbs.ts.textcolor = color;
