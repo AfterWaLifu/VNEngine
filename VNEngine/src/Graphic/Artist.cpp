@@ -164,7 +164,6 @@ namespace VNEngine {
 				break;
 
 			case STRETCHED:
-//				m_PrevBackgroundSize = m_Background.dest;
 				if (m_PrevWindowSize.x > m_WindowSize.x ||
 					m_PrevWindowSize.y < m_WindowSize.y) {
 					float imageAspectRation = (float)m_WindowSize.x / source.x;
@@ -353,7 +352,6 @@ namespace VNEngine {
 	}
 
 	void Artist::WindowResized() {
-		m_PrevWindowSize = m_WindowSize;
 		SDL_GetWindowSize(m_pWindow, &m_WindowSize.x, &m_WindowSize.y );
 		if (m_PrevWindowSize.x == m_WindowSize.x && m_PrevWindowSize.y == m_WindowSize.y) return;
 		SetStretchingState(m_Background.stretchState);
@@ -443,15 +441,12 @@ namespace VNEngine {
 		if (m_Fullscreen) {
 			SDL_SetWindowFullscreen(m_pWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
 			m_PrevWindowSize = m_WindowSize;
-			SDL_GetWindowSize(m_pWindow, &m_WindowSize.x, &m_WindowSize.y);
-			WindowResized();
 			IH_INSTANCE.setIfWindowResized(true);
 		}
 		else {
 			if (m_PrevWindowSize.x == 0 && m_PrevWindowSize.y == 0) return;
 			SDL_SetWindowFullscreen(m_pWindow, 0);
 			SetWindowSize(m_PrevWindowSize);
-			WindowResized();
 			IH_INSTANCE.setIfWindowResized(true);
 		}
 	}
