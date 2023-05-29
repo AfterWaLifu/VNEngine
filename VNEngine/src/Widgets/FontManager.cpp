@@ -37,7 +37,6 @@ namespace VNEngine {
 
 	Font* FontManager::getFont(const std::string& key) {		
 		if ( !(m_Fonts.empty()) && m_Fonts.find(key) == m_Fonts.end() && key != "") {
-			VN_LOGS_WARNING("Attemp to get a non-existing font");
 			if (m_DefaultFont.font == nullptr) {
 				m_DefaultFont.font = TTF_OpenFont((sFontPath+sDefaultFont).c_str(), 16);
 				m_DefaultFont.fontName = sDefaultFont;

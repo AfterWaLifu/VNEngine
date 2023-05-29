@@ -40,7 +40,7 @@ namespace VNEngine {
 	}
 
 	Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
-		: m_pWindow(nullptr), m_pRenderer(nullptr), m_DrawId(0), m_Background({}),
+		: m_pWindow(nullptr), m_pRenderer(nullptr), m_GameScreen(nullptr), m_DrawId(0), m_Background({}),
 		m_WindowSize({width,height}), m_BaseWindowSize({ width,height }), m_PrevWindowSize({0,0}),
 		m_PrevBackgroundSize({0,0,0,0}), m_Fullscreen(fullscreen), m_WindowTitle(title), m_Resizable(true)
 	{
@@ -60,6 +60,8 @@ namespace VNEngine {
 			VN_LOGS_ERROR("Window creation error");
 			return;
 		}
+
+		m_GameScreen = SDL_CreateRGBSurfaceWithFormat(0, m_WindowSize.x, m_WindowSize.y, 32, SDL_PIXELFORMAT_ARGB8888);
 
 		if (TTF_Init() != 0) {
 			VN_LOGS_ERROR("Fonts can't be initialized");
@@ -99,6 +101,7 @@ namespace VNEngine {
 	Artist::~Artist() {
 		m_Queue.clear();
 		TextureManager::TextureManagerTerminate();
+		SDL_FreeSurface(m_GameScreen);
 		SDL_DestroyRenderer(m_pRenderer);
 		SDL_DestroyWindow(m_pWindow);
 		SDL_Quit();
@@ -472,8 +475,21 @@ namespace VNEngine {
 		VN_LOGS_WARNING(SDL_GetError());
 		SDL_FreeSurface(surface);
 	}
+
+	SDL_Surface* Artist::GetScreenshot(vec2 size) {
+		SDL_Surface* rsurface = SDL_CreateRGBSurface(m_GameScreen->flags, size.x, size.y, 32,
+			m_GameScreen->format->Rmask, m_GameScreen->format->Gmask, 
+			m_GameScreen->format->Bmask, m_GameScreen->format->Amask);
+		SDL_Rect rrr = { 0,0,size.x,size.y };
+		SDL_FillRect(rsurface, &rrr, SDL_MapRGBA(rsurface->format, 0, 0, 0, 255));
+		SDL_BlitScaled(m_GameScreen, nullptr, rsurface, nullptr);
+		return rsurface;
+	}
 	
 	void Artist::SaveScreen() {
+		SDL_FreeSurface(m_GameScreen);
+		m_GameScreen = SDL_CreateRGBSurfaceWithFormat(0, m_WindowSize.x, m_WindowSize.y, 32, SDL_PIXELFORMAT_ARGB8888);
+		SDL_RenderReadPixels(m_pRenderer, NULL, SDL_PIXELFORMAT_ARGB8888, m_GameScreen->pixels, m_GameScreen->pitch);
 		m_Screens.push_back({ m_Background, m_Queue, m_DrawId });
 		WipeDrawing();
 	}

@@ -27,6 +27,8 @@ namespace VNEngine {
 
 		if (luaL_dofile(L, (StoryTeller::GetScriptsPath() + "look.lua").c_str())) {
 			VN_LOGS_WARNING("Can't open 'look.lua' in a scripts folder");
+			VN_LOGS_WARNING(lua_tostring(L, -1));
+			lua_pop(L, 1);
 		}
 
 		lb::LuaRef lr = lb::getGlobal(L, what.c_str());

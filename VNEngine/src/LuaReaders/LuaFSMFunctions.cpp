@@ -14,8 +14,10 @@ namespace VNEngine {
 		}
 
 		void Load(int num) {
+			int pos = SaveLoad::Load(num, SM_INSTANCE.GetCurrentDrawer());
+			if (pos < 0) return;
 			SM_INSTANCE.WipeStates();
-			SM_INSTANCE.PushState(new ReadingState(SaveLoad::Load(num, SM_INSTANCE.GetCurrentDrawer())));
+			SM_INSTANCE.PushState(new ReadingState(pos));
 		}
 
 		void ToMenu(std::string menuState) {

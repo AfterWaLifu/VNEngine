@@ -22,6 +22,8 @@ namespace VNEngine {
 	void Loader::readPresets() {
 		if (luaL_dofile(L, "game/presets.lua")) {
 			VN_LOGS_WARNING("Cant load Lua presets");
+			VN_LOGS_WARNING(lua_tostring(L, -1));
+			lua_pop(L, 1);
 			return;
 		}
 		lb::LuaRef t = lb::getGlobal(L, "scripts");
@@ -167,6 +169,8 @@ namespace VNEngine {
 	void Loader::preload() {
 		if (luaL_dofile(L, ((StoryTeller::GetScriptsPath() + "preload.lua").c_str()))) {
 			VN_LOGS_WARNING("Error on preloading resources stage");
+			VN_LOGS_WARNING(lua_tostring(L, -1));
+			lua_pop(L, 1);
 		}
 		LG::SetDrawwerToGetWindowSize(m_pApp->m_Drawer.get());
 	}

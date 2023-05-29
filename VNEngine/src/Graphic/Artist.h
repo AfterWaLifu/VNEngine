@@ -32,6 +32,7 @@ namespace VNEngine{
 	private:
 		SDL_Window* m_pWindow;
 		SDL_Renderer* m_pRenderer;
+		SDL_Surface* m_GameScreen;
 
 		std::string m_WindowTitle;
 		vec2 m_BaseWindowSize;
@@ -130,6 +131,7 @@ namespace VNEngine{
 		bool GetWindowFullscreen();
 
 		void SaveScreenshot();
+		SDL_Surface* GetScreenshot(vec2 size);
 
 		void SaveScreen();
 		void PopScreen();

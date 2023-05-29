@@ -8,6 +8,7 @@
 #include "StateMachine/StateMachine.h"
 
 #include <tinyxml2.h>
+#include <SDL2/SDL_image.h>
 
 #include <filesystem>
 
@@ -361,6 +362,11 @@ namespace VNEngine {
 	void SaveLoad::Save(int number, Artist* partist) {
 		using namespace tinyxml2;
 
+		if (!SM_INSTANCE.isThereAReading()) return;
+
+		if (!(std::filesystem::exists(sSaveDir)))
+			std::filesystem::create_directory(sSaveDir);
+
 		XMLDocument doc;
 		XMLDeclaration* dec = doc.NewDeclaration();
 		doc.InsertFirstChild(dec);
@@ -378,6 +384,11 @@ namespace VNEngine {
 		
 		doc.InsertEndChild(root);
 		doc.SaveFile((sSaveDir + std::to_string(number) + ".vns").c_str());
+
+		if (!(std::filesystem::exists(TM_INSTANCE.GetImagesPath() + "savescreens")))
+			std::filesystem::create_directory(TM_INSTANCE.GetImagesPath() + "savescreens");
+		auto savescreen = partist->GetScreenshot({640,360});
+		IMG_SavePNG(savescreen, (TM_INSTANCE.GetImagesPath() + "savescreens/" + std::to_string(number) + ".png").c_str());
 	}
 	
 	void undealWithAudio(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root) {
@@ -572,6 +583,8 @@ namespace VNEngine {
 
 	int SaveLoad::Load(int number, Artist* partist) {
 		using namespace tinyxml2;
+
+		if (!(std::filesystem::exists(sSaveDir + std::to_string(number) + ".vns"))) return -1;
 
 		XMLDocument doc;
 		doc.LoadFile((sSaveDir + std::to_string(number) + ".vns").c_str());

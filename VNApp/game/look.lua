@@ -57,59 +57,27 @@ function save()
 	savePicture = {type="text", name="save1",geometry={330,175,240,160},
 		textColor={0,0,0,0}, text="",backPic="savePlaceholder",backIsShown=true}
 	
-	saveButton.name = "save1"
-	saveButton.text = "1"
-	savePicture.name = saveButton.name
-	saveButton.geometry = {300,170,300,190}
-	savePicture.geometry = { 330, 175, 240,160 }
-	saveButton.func = function() Game.Save(1) end
-	Widget.Add(saveButton)
-	Widget.Add(savePicture)
-	
-	saveButton.name = "save2"
-	saveButton.text = "2"
-	savePicture.name = saveButton.name
-	saveButton.geometry = {610,170,300,190}
-	savePicture.geometry = { 640, 175, 240,160 }
-	saveButton.func = function() Game.Save(2) end
-	Widget.Add(saveButton)
-	Widget.Add(savePicture)
-	
-	saveButton.name = "save3"
-	saveButton.text = "3"
-	savePicture.name = saveButton.name
-	saveButton.geometry = {920,170,300,190}
-	savePicture.geometry = { 950, 175, 240,160 }
-	saveButton.func = function() Game.Save(3) end
-	Widget.Add(saveButton)
-	Widget.Add(savePicture)
-	
-	saveButton.name = "save4"
-	saveButton.text = "4"
-	savePicture.name = saveButton.name
-	saveButton.geometry = {300,385,300,190}
-	savePicture.geometry = { 330, 390, 240,160 }
-	saveButton.func = function() Game.Save(4) end
-	Widget.Add(saveButton)
-	Widget.Add(savePicture)
-	
-	saveButton.name = "save5"
-	saveButton.text = "5"
-	savePicture.name = saveButton.name
-	saveButton.geometry = {610,385,300,190}
-	savePicture.geometry = { 640, 390, 240,160 }
-	saveButton.func = function() Game.Save(5) end
-	Widget.Add(saveButton)
-	Widget.Add(savePicture)
-	
-	saveButton.name = "save6"
-	saveButton.text = "6"
-	savePicture.name = saveButton.name
-	saveButton.geometry = {920,385,300,190}
-	savePicture.geometry = { 950, 390, 240,160 }
-	saveButton.func = function() Game.Save(6) end
-	Widget.Add(saveButton)
-	Widget.Add(savePicture)
+	for i = 1,6 do
+		saveButton.name = "save"..i
+		saveButton.text = ""..i
+		savePicture.name = saveButton.name
+		saveButton.geometry = {300 + (310 * ((i-1)%3)),170 + (215 * math.floor(i/4)),300,190}
+		savePicture.geometry = { saveButton.geometry[1]+30, saveButton.geometry[2]+5, 240,160 }
+		if file_exists("game/images/savescreens/"..i..".png") then
+			savePicture.backPic="savescreennumber"..i
+			Game.AddPicture("savescreens/"..i..".png","savescreennumber"..i,1,1)
+		else 
+			savePicture.backPic="savePlaceholder"
+		end
+		saveButton.func = function()
+				Game.Save(i)
+				Game.DelPicture("savescreennumber"..i)
+				Game.AddPicture("savescreens/"..i..".png","savescreennumber"..i,1,1)
+				Widget.Update({type="text",name="save"..i,backPic="savescreennumber"..i })
+			end
+		Widget.Add(saveButton)
+		Widget.Add(savePicture)
+	end
 end
 
 function load()
@@ -123,59 +91,22 @@ function load()
 	savePicture = {type="text", name="save1",geometry={330,175,240,160}, textColor={0,0,0,0},
 		text="",backPic="savePlaceholder", backIsShown=true}
 	
-	saveButton.name = "load1"
-	saveButton.text = "1"
-	savePicture.name = saveButton.name
-	saveButton.geometry = {300,170,300,190}
-	savePicture.geometry = { 330, 175, 240,160 }
-	saveButton.func = function() Game.Load(1) end
-	Widget.Add(saveButton)
-	Widget.Add(savePicture)
-	
-	saveButton.name = "load2"
-	saveButton.text = "2"
-	savePicture.name = saveButton.name
-	saveButton.geometry = {610,170,300,190}
-	savePicture.geometry = { 640, 175, 240,160 }
-	saveButton.func = function() Game.Load(2) end
-	Widget.Add(saveButton)
-	Widget.Add(savePicture)
-	
-	saveButton.name = "load3"
-	saveButton.text = "3"
-	savePicture.name = saveButton.name
-	saveButton.geometry = {920,170,300,190}
-	savePicture.geometry = { 950, 175, 240,160 }
-	saveButton.func = function() Game.Load(3) end
-	Widget.Add(saveButton)
-	Widget.Add(savePicture)
-	
-	saveButton.name = "load4"
-	saveButton.text = "4"
-	savePicture.name = saveButton.name
-	saveButton.geometry = {300,385,300,190}
-	savePicture.geometry = { 330, 390, 240,160 }
-	saveButton.func = function() Game.Load(4) end
-	Widget.Add(saveButton)
-	Widget.Add(savePicture)
-	
-	saveButton.name = "load5"
-	saveButton.text = "5"
-	savePicture.name = saveButton.name
-	saveButton.geometry = {610,385,300,190}
-	savePicture.geometry = { 640, 390, 240,160 }
-	saveButton.func = function() Game.Load(5) end
-	Widget.Add(saveButton)
-	Widget.Add(savePicture)
-	
-	saveButton.name = "load6"
-	saveButton.text = "6"
-	savePicture.name = saveButton.name
-	saveButton.geometry = {920,385,300,190}
-	savePicture.geometry = { 950, 390, 240,160 }
-	saveButton.func = function() Game.Load(6) end
-	Widget.Add(saveButton)
-	Widget.Add(savePicture)
+		for i = 1,6 do
+		saveButton.name = "load"..i
+		saveButton.text = ""..i
+		savePicture.name = saveButton.name
+		saveButton.geometry = {300 + (310 * ((i-1)%3)),170 + (215 * math.floor(i/4)),300,190}
+		savePicture.geometry = { saveButton.geometry[1]+30, saveButton.geometry[2]+5, 240,160 }
+		if file_exists("game/images/savescreens/"..i..".png") then
+			savePicture.backPic="savescreennumber"..i
+			Game.AddPicture("savescreens/"..i..".png","savescreennumber"..i,1,1)
+		else 
+			savePicture.backPic="savePlaceholder"
+		end
+		saveButton.func = function() Game.Load(i) end
+		Widget.Add(saveButton)
+		Widget.Add(savePicture)
+	end
 end
 
 function settings()
@@ -282,4 +213,10 @@ function game()
 	}
 	Widget.Add(saybox)
 	Widget.Add(whobox)
+end
+
+-- used somewhere
+function file_exists(name)
+   local f=io.open(name,"r")
+   if f~=nil then io.close(f) return true else return false end
 end

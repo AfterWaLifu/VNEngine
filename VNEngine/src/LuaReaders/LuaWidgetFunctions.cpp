@@ -496,4 +496,3 @@ namespace VNEngine {
 		}
 	}
 }
-
