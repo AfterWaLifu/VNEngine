@@ -14,7 +14,8 @@ namespace VNEngine {
 	}
 
 	void MenuState::Handle() {
-		if (IH_INSTANCE.getMouseButtonClicked(RIGHT) && SM_INSTANCE.isThereAReading()) {
+		if ((IH_INSTANCE.getMouseButtonClicked(RIGHT) || IH_INSTANCE.isKeyPressed("escape"))
+			&& SM_INSTANCE.isThereAReading()) {
 			SM_INSTANCE.PopState();
 		}
 		if (IH_INSTANCE.isKeyPressed("f") ||

@@ -21,7 +21,7 @@ namespace VNEngine {
 	}
 
 	void ReadingState::Handle() {
-		if (IH_INSTANCE.getMouseButtonClicked(RIGHT)) {
+		if (IH_INSTANCE.getMouseButtonClicked(RIGHT) || IH_INSTANCE.isKeyPressed("escape")) {
 			SM_INSTANCE.PushState(new MenuState("save"));
 		}
 
