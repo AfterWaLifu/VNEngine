@@ -14,9 +14,9 @@ namespace VNEngine {
 		}
 
 		void Load(int num) {
+			SM_INSTANCE.WipeStates();
 			int pos = SaveLoad::Load(num, SM_INSTANCE.GetCurrentDrawer());
 			if (pos < 0) return;
-			SM_INSTANCE.WipeStates();
 			SM_INSTANCE.PushState(new ReadingState(pos));
 		}
 

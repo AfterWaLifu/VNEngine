@@ -385,9 +385,10 @@ namespace VNEngine {
 		doc.InsertEndChild(root);
 		doc.SaveFile((sSaveDir + std::to_string(number) + ".vns").c_str());
 
+		auto s = partist->GetWindowSize();
 		if (!(std::filesystem::exists(TM_INSTANCE.GetImagesPath() + "savescreens")))
 			std::filesystem::create_directory(TM_INSTANCE.GetImagesPath() + "savescreens");
-		auto savescreen = partist->GetScreenshot({640,360});
+		auto savescreen = partist->GetScreenshot({s.x/4,s.y/4});
 		IMG_SavePNG(savescreen, (TM_INSTANCE.GetImagesPath() + "savescreens/" + std::to_string(number) + ".png").c_str());
 	}
 	
@@ -404,9 +405,12 @@ namespace VNEngine {
 			AP_INSTANCE.AddAudio(f->GetText(), k->GetText());
 		}
 
+		std::string m, s;
 		XMLElement* state = audio->FirstChildElement("State");
-		std::string m = state->FirstChildElement("mkey")->GetText();
-		std::string s = state->FirstChildElement("skey")->GetText();
+		auto xm = state->FirstChildElement("mkey");
+		auto xs = state->FirstChildElement("skey");
+		xm->GetText() ? m = xm->GetText() : m = "";
+		xs->GetText() ? s = xs->GetText() : s = "";
 		XMLElement* mp = state->FirstChildElement("mplays");
 		XMLElement* sp = state->FirstChildElement("splays");
 		
