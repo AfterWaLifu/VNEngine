@@ -17,8 +17,8 @@ say("abcdef")
 say("раз раз раз")
 
 Game.StopDrawing("gr")
-Game.DrawLeft("gr", 0)
-Game.DrawRight("gr", 1)
+Game.DrawLeft("g")
+Game.DrawRight("r")
 who("Красный")
 say("а теперь")
 
@@ -28,6 +28,7 @@ say("будильник делает бррр")
 who("Зелёный")
 Game.StopSound()
 say("не делает")
+goto finale
 
 who("Красный")
 say("уходим")
@@ -35,11 +36,24 @@ say("уходим")
 q = {"yes", "no"}
 choose("result", q)
 
+::yes::
+
 who("Зелёный")
 say("согласен")
 
-Game.StopDrawing("gr")
-Game.StopDrawing("gr")
+Game.StopDrawing("g")
+Game.StopDrawing("r")
+
+::no::
+
+who("Зелёный")
+say("niht")
+
+Game.StopDrawing("g")
+Game.StopDrawing("r")
+Game.DrawCenter("g")
+
+::finale::
 
 who("Рассказчик")
 say("ВСЁ")

@@ -3,6 +3,7 @@
 #include "LuaReaders/LuaReader.h"
 
 #include <fstream>
+#include <vector>
 
 namespace VNEngine {
 
@@ -12,7 +13,14 @@ namespace VNEngine {
 
 		std::ifstream m_LuaFile;
 		std::string m_CurrentFile;
-		int m_CurrentLine;
+		size_t m_CurrentLine;
+
+		struct gotomark {
+			std::streampos pos;
+			size_t linenum;
+			std::string name;
+		};
+		std::vector<gotomark> m_gotoMarks;
 
 		bool m_PosLoaded;
 		std::streampos m_PosInLua;
@@ -22,6 +30,8 @@ namespace VNEngine {
 		bool m_Choosing;
 		bool m_Completed;
 
+		void parseFile();
+		bool handleJump(const std::string& line);
 		void goReadGoReadGo();
 
 	public:
