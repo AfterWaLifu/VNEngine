@@ -28,13 +28,18 @@ say("будильник делает бррр")
 who("Зелёный")
 Game.StopSound()
 say("не делает")
-goto finale
 
 who("Красный")
 say("уходим")
 
 q = {"yes", "no"}
 choose("result", q)
+
+if result == 1 then
+	goto yes
+else
+	goto no
+end
 
 ::yes::
 
@@ -43,6 +48,8 @@ say("согласен")
 
 Game.StopDrawing("g")
 Game.StopDrawing("r")
+
+goto finale
 
 ::no::
 

@@ -15,12 +15,20 @@ namespace VNEngine {
 		std::string m_CurrentFile;
 		size_t m_CurrentLine;
 
-		struct gotomark {
+		struct mark {
 			std::streampos pos;
 			size_t linenum;
+		};
+		struct gotomark {
+			mark m;
 			std::string name;
 		};
+		struct ifmark {
+			mark start, another, end;
+			std::vector<mark> elseifs;
+		};
 		std::vector<gotomark> m_gotoMarks;
+		std::vector<ifmark> m_ifMarks;
 
 		bool m_PosLoaded;
 		std::streampos m_PosInLua;
@@ -32,6 +40,7 @@ namespace VNEngine {
 
 		void parseFile();
 		bool handleJump(const std::string& line);
+		bool handleIf(const std::string& line);
 		void goReadGoReadGo();
 
 	public:

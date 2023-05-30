@@ -21,38 +21,48 @@ namespace VNEngine {
 	void StoryTeller::parseFile() {
 		if (m_LuaFile.eof()) return;
 
-		size_t linenum = 0;
+		size_t linenum = 0, start = 0;
+		int nestedlvl = 0;
 		char buffer[256];
 		while (!m_LuaFile.eof() && m_LuaFile.getline(buffer, 256, '\n')) {
 			++linenum;
 			auto line = std::string(buffer);
 			if (line.empty()) continue;
-			if (int dots = (int)line.find("::") != std::string::npos) {
-				if (int dote = (int)line.find("::", dots + 3)) {
+			if (start = line.find("if") != std::string::npos &&
+				line.find("elseif") != start-4) {
+				++nestedlvl;
+				m_ifMarks.push_back({ {m_LuaFile.tellg(),linenum}});
+			}
+			if (start = line.find("else") != std::string::npos) {
+				m_ifMarks[m_ifMarks.size() - nestedlvl].another = { m_LuaFile.tellg(), linenum };
+			}
+			if (start = line.find("end") != std::string::npos) {
+				m_ifMarks[m_ifMarks.size() - nestedlvl].end = {m_LuaFile.tellg(), linenum};
+				--nestedlvl;
+			}
+			if (size_t dots = line.find("::") != std::string::npos) {
+				if (size_t dote = line.find("::", dots + 3)) {
 					auto mark = line.substr(dots+1, dote - dots - 1);
 					if (mark.empty()) continue;
-					m_gotoMarks.push_back({ m_LuaFile.tellg(),linenum, mark});
+					m_gotoMarks.push_back({ {m_LuaFile.tellg(),linenum}, mark });
 				}
 			}
 		}
+		if (nestedlvl) 
+			VN_LOGS_WARNING("Error on reading game script file, 'end' operand expected "
+				+ std::to_string(nestedlvl) + " more time(s)");
 		m_LuaFile.seekg(0);
 	}
 
 	bool StoryTeller::handleJump(const std::string& line) {
 		bool jumped = false;
-		if (int gotopos = (int)line.find("goto ") != std::string::npos) {
-			std::string mark;
-			int markendpos = (int)line.find(" ", gotopos+4);
-			if (markendpos == std::string::npos) {
-				mark = line.substr(gotopos + 4);
-			}
-			else {
-				mark = line.substr(gotopos + 4, markendpos - gotopos - 4);
-			}
+		size_t gotopos;
+		if ((gotopos = line.find("goto ")) != std::string::npos) {
+			std::string mark = line.substr(gotopos + 5);
 			for (const auto& m : m_gotoMarks) {
 				if (m.name == mark) {
-					m_LuaFile.seekg(m.pos);
-					m_PosInLua = m.linenum;
+					m_LuaFile.seekg(m.m.pos);
+					m_PosInLua = m.m.linenum;
 					jumped = true;
 				}
 			}
@@ -64,6 +74,58 @@ namespace VNEngine {
 		return jumped;
 	}
 
+	bool StoryTeller::handleIf(const std::string& line) {
+		bool status = false;
+		if (size_t pos = line.find("if") != std::string::npos) {
+			std::string condition;
+			ifmark* mark = nullptr;
+			for (auto& m : m_ifMarks) {
+				if (m.start.linenum == m_CurrentLine) {
+					mark = &m;
+					break;
+				}
+			}
+
+			size_t condstart, condend;
+			if (mark) {
+				if ((condstart = line.find("if")) != std::string::npos) {
+					if ((condend = line.find("then")) != std::string::npos) {
+
+						condition = line.substr(condstart+2, condend-condstart-2);
+						luaL_loadstring(L, (std::string("return ") + condition).c_str());
+						if (lua_pcall(L, 0, 1, 0)) {
+							VN_LOGS_WARNING("Error on condition for in in line " + std::to_string(mark->start.linenum));
+							return status;
+						}
+						bool result = lua_toboolean(L, -1);
+						lua_pop(L, 1);
+						if (result) {
+							m_LuaFile.seekg(mark->start.pos);
+							m_PosInLua = mark->start.pos;
+							m_CurrentLine = mark->start.linenum;
+							status = true;
+						}
+						else {
+							if (mark->another.pos != 0) {
+								m_LuaFile.seekg(mark->another.pos);
+								m_PosInLua = mark->another.pos;
+								m_CurrentLine = mark->another.linenum;
+								status = true;
+							}
+							else {
+								m_LuaFile.seekg(mark->end.pos);
+								m_PosInLua = mark->end.pos;
+								m_CurrentLine = mark->end.linenum;
+								status = true;
+							}
+						}
+					}
+				}
+			}
+		}
+		return status;
+	}
+
 	void StoryTeller::goReadGoReadGo() {
 		char buffer[256];
 		while (m_Go && !m_Choosing && m_LuaFile.getline(buffer, 256, '\n')) {
@@ -71,6 +133,8 @@ namespace VNEngine {
 			m_PosInLua = m_LuaFile.tellg();
 			auto error = luaL_dostring(L, buffer);
 			if (handleJump(std::string(buffer))) continue;
+			if (handleIf(std::string(buffer))) continue;
+
 			if (error) {
 				VN_LOGS_WARNING("Lua error in line below" <<
 					std::to_string(m_CurrentLine) + " | " + buffer);
