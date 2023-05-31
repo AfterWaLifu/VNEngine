@@ -27,22 +27,37 @@ namespace VNEngine {
 		while (!m_LuaFile.eof() && m_LuaFile.getline(buffer, 256, '\n')) {
 			++linenum;
 			auto line = std::string(buffer);
+
 			if (line.empty()) continue;
 			if (start = line.find("if") != std::string::npos &&
-				line.find("elseif") != start-4) {
+				line.find("elseif") != start - 4) {
 				++nestedlvl;
-				m_ifMarks.push_back({ {m_LuaFile.tellg(),linenum}});
+				m_ifMarks.push_back({ {m_LuaFile.tellg(),linenum} });
+			}
+			{
+			size_t onemoreelseifinline = 0;
+			elseifcheck:
+				if (start = line.find("elseif", onemoreelseifinline) != std::string::npos) {
+					if (nestedlvl) {
+						m_ifMarks[m_ifMarks.size() - nestedlvl].elseifs.push_back({ m_LuaFile.tellg(),linenum });
+						onemoreelseifinline = line.find("then", start + 6);
+						goto elseifcheck;
+					}
+					else {
+						VN_LOGS_WARNING("Extra 'elseif' without 'if' at line " + std::to_string(linenum));
+					}
+				}
 			}
 			if (start = line.find("else") != std::string::npos) {
 				m_ifMarks[m_ifMarks.size() - nestedlvl].another = { m_LuaFile.tellg(), linenum };
 			}
 			if (start = line.find("end") != std::string::npos) {
-				m_ifMarks[m_ifMarks.size() - nestedlvl].end = {m_LuaFile.tellg(), linenum};
+				m_ifMarks[m_ifMarks.size() - nestedlvl].end = { m_LuaFile.tellg(), linenum };
 				--nestedlvl;
 			}
 			if (size_t dots = line.find("::") != std::string::npos) {
 				if (size_t dote = line.find("::", dots + 3)) {
-					auto mark = line.substr(dots+1, dote - dots - 1);
+					auto mark = line.substr(dots + 1, dote - dots - 1);
 					if (mark.empty()) continue;
 					m_gotoMarks.push_back({ {m_LuaFile.tellg(),linenum}, mark });
 				}
@@ -63,7 +78,9 @@ namespace VNEngine {
 				if (m.name == mark) {
 					m_LuaFile.seekg(m.m.pos);
 					m_PosInLua = m.m.linenum;
+					m_CurrentLine = m.m.linenum;
 					jumped = true;
+					break;
 				}
 			}
 			if (!jumped) {
@@ -75,55 +92,133 @@ namespace VNEngine {
 	}
 
 	bool StoryTeller::handleIf(const std::string& line) {
-		bool status = false;
-		if (size_t pos = line.find("if") != std::string::npos) {
-			std::string condition;
-			ifmark* mark = nullptr;
-			for (auto& m : m_ifMarks) {
-				if (m.start.linenum == m_CurrentLine) {
+		bool jumped = false;
+		size_t pos;
+		ifmark* mark = nullptr;
+		uint8_t what = 0;
+		bool found = false;
+
+		for (auto& m : m_ifMarks) {
+			if (m.start.linenum == m_CurrentLine) {
+				mark = &m;
+				what = 255;
+				break;
+			}
+			if (m.another.linenum == m_CurrentLine) {
+				mark = &m;
+				what = 254;
+				break;
+			}
+			if (m.end.linenum == m_CurrentLine) {
+				mark = &m;
+				what = 253;
+				break;
+			}
+			if (m.elseifs.size() == 0) continue;
+			for (uint8_t i = 0; i < m.elseifs.size() && i < 253; ++i) {
+				if (m.elseifs[i].linenum == m_CurrentLine) {
 					mark = &m;
+					what = i;
+					found = true;
 					break;
 				}
 			}
+			if (found) { found = false; break; }
+		}
 
-			size_t condstart, condend;
-			if (mark) {
-				if ((condstart = line.find("if")) != std::string::npos) {
-					if ((condend = line.find("then")) != std::string::npos) {
-
-						condition = line.substr(condstart+2, condend-condstart-2);
-						luaL_loadstring(L, (std::string("return ") + condition).c_str());
-						if (lua_pcall(L, 0, 1, 0)) {
-							VN_LOGS_WARNING("Error on condition for in in line " + std::to_string(mark->start.linenum));
-							return status;
-						}
-						bool result = lua_toboolean(L, -1);
-						lua_pop(L, 1);
-						if (result) {
-							m_LuaFile.seekg(mark->start.pos);
-							m_PosInLua = mark->start.pos;
-							m_CurrentLine = mark->start.linenum;
-							status = true;
+		if (mark) {
+			if (what == 255) {
+				std::string condition = "";
+				size_t thenpos = 0;
+				pos = line.find("if");
+				thenpos = line.find("then", pos + 2);
+				if (thenpos - pos <= 2) goto end;
+				condition = line.substr(pos + 2, thenpos - pos - 2);
+				luaL_loadstring(L, (std::string("return ") + condition).c_str());
+				if (lua_pcall(L, 0, 1, 0)) {
+					VN_LOGS_WARNING("Error on condition for in in line " + std::to_string(mark->start.linenum));
+					VN_LOGS_WARNING(lua_tostring(L, -1));
+					lua_pop(L, 1);
+					goto end;
+				}
+				bool result = lua_toboolean(L, -1);
+				lua_pop(L, 1);
+				if (result) {
+					if (mark->end.linenum == mark->start.linenum) {
+						if (mark->elseifs.size()) {
+							pos = line.find("else", thenpos);
 						}
 						else {
-							if (mark->another.pos != 0) {
-								m_LuaFile.seekg(mark->another.pos);
-								m_PosInLua = mark->another.pos;
-								m_CurrentLine = mark->another.linenum;
-								status = true;
-							}
-							else {
-								m_LuaFile.seekg(mark->end.pos);
-								m_PosInLua = mark->end.pos;
-								m_CurrentLine = mark->end.linenum;
-								status = true;
-							}
+							pos = line.find("end", thenpos);
 						}
+						condition = line.substr(thenpos + 4, pos - thenpos - 4);
+						luaL_dostring(L, condition.c_str());
+						m_LuaFile.seekg(mark->end.pos);
+						m_PosInLua = mark->end.pos;
+						m_CurrentLine = mark->end.linenum;
+						jumped = true;
+						goto end;
+					}
+					else {
+						m_LuaFile.seekg(mark->start.pos);
+						m_PosInLua = mark->start.pos;
+						m_CurrentLine = mark->start.linenum;
+						jumped = true;
+						goto end;
+					}
+				}
+				else if (mark->elseifs.size()) {
+					goto luaelsemark;
+				}
+				else {
+				luaelsemark:
+					if (mark->another.pos == 0) {
+						m_LuaFile.seekg(mark->end.pos);
+						m_PosInLua = mark->end.pos;
+						m_CurrentLine = mark->end.linenum;
+						jumped = true;
+						goto end;
+					};
+					if (mark->another.linenum == mark->start.linenum) {
+						pos = line.find("end", thenpos);
+						condition = line.substr(thenpos + 4, pos - thenpos - 4);
+						luaL_dostring(L, condition.c_str());
+						m_LuaFile.seekg(mark->end.pos);
+						m_PosInLua = mark->end.pos;
+						m_CurrentLine = mark->end.linenum;
+						jumped = true;
+						goto end;
+					}
+					else {
+						m_LuaFile.seekg(mark->another.pos);
+						m_PosInLua = mark->another.pos;
+						m_CurrentLine = mark->another.linenum;
+						jumped = true;
+						goto end;
 					}
 				}
 			}
+			else if (what == 254) {
+				m_LuaFile.seekg(mark->another.pos);
+				m_PosInLua = mark->another.pos;
+				m_CurrentLine = mark->another.linenum;
+				jumped = true;
+				goto end;
+			}
+			else if (what == 253) {
+				m_LuaFile.seekg(mark->end.pos);
+				m_PosInLua = mark->end.pos;
+				m_CurrentLine = mark->end.linenum;
+				jumped = true;
+				goto end;
+			}
+			else {
+
+			}
 		}
-		return status;
+
+	end:
+		return jumped;
 	}
 
 	void StoryTeller::goReadGoReadGo() {
