@@ -36,31 +36,19 @@ q = {"yes", "no"}
 choose("result", q)
 
 if result == 1 then
-	goto yes
-elseif result == 2
-	goto no
+	who("Зелёный")
+	say("согласен")
+	
+	Game.StopDrawing("g")
+	Game.StopDrawing("r")
+elseif result == 2 then 
+	who("Зелёный")
+	say("niht")
+	
+	Game.StopDrawing("g")
+	Game.StopDrawing("r")
+	Game.DrawCenter("g")
 end
-
-::yes::
-
-who("Зелёный")
-say("согласен")
-
-Game.StopDrawing("g")
-Game.StopDrawing("r")
-
-goto finale
-
-::no::
-
-who("Зелёный")
-say("niht")
-
-Game.StopDrawing("g")
-Game.StopDrawing("r")
-Game.DrawCenter("g")
-
-::finale::
 
 who("Рассказчик")
 say("ВСЁ")
