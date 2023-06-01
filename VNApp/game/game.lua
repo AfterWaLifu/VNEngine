@@ -43,7 +43,7 @@ if result == 1 then
 	
 	Game.StopDrawing("g")
 	Game.StopDrawing("r")
-elseif result == 2 then 
+elseif result == 2 then
 	who("Зелёный")
 	say("niht")
 	

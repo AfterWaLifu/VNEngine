@@ -30,7 +30,7 @@ namespace VNEngine {
 			size_t onemoreelseifinline = 0;
 
 			if (line.empty()) continue;
-			if (start = line.find("if") != std::string::npos &&
+			if ((start = line.find("if")) != std::string::npos &&
 				line.find("elseif") != start - 4) {
 				++nestedlvl;
 				m_ifMarks.push_back({ {m_LuaFile.tellg(),linenum} });
@@ -48,16 +48,16 @@ namespace VNEngine {
 					}
 				}
 			}
-			if (start = line.find("else", onemoreelseifinline) != std::string::npos) {
+			if ((start = line.find("else", onemoreelseifinline)) != std::string::npos) {
 				m_ifMarks[m_ifMarks.size() - nestedlvl].another = { m_LuaFile.tellg(), linenum };
 			}
-			if (start = line.find("end") != std::string::npos) {
+			if ((start = line.find("end")) != std::string::npos) {
 				m_ifMarks[m_ifMarks.size() - nestedlvl].end = { m_LuaFile.tellg(), linenum };
 				--nestedlvl;
 			}
-			if (size_t dots = line.find("::") != std::string::npos) {
-				if (size_t dote = line.find("::", dots + 3)) {
-					auto mark = line.substr(dots + 1, dote - dots - 1);
+			if ((start = line.find("::")) != std::string::npos) {
+				if (size_t dote = line.find("::", start + 3)) {
+					auto mark = line.substr(start + 1, dote - start - 1);
 					if (mark.empty()) continue;
 					m_gotoMarks.push_back({ {m_LuaFile.tellg(),linenum}, mark });
 				}
@@ -123,12 +123,11 @@ namespace VNEngine {
 					break;
 				}
 			}
-			if (found) { found = false; break; }
+			if (found) { break; }
 		}
 
 		if (mark) {
 			auto pos_before_anything = m_LuaFile.tellg();
-			bool came_as_it_is = true;
 			if (what == 255) {
 				std::string condition = "";
 				size_t thenpos = 0;
@@ -173,7 +172,7 @@ namespace VNEngine {
 				}
 				else if (mark->elseifs.size()) {
 				samelineelseifcheck:
-					came_as_it_is = false;
+					found = true;
 					pos = line.find("elseif", pos);
 					if (pos == std::string::npos) goto luaelsemark;
 					thenpos = line.find("then", pos+6);
@@ -239,9 +238,9 @@ namespace VNEngine {
 					else {
 						for (const auto m : mark->elseifs) {
 							if (m.m.linenum > m_CurrentLine) {
-								m_LuaFile.seekg((size_t)m.m.pos - m.length);
+								m_LuaFile.seekg((size_t)m.m.pos - m.length - 2);
 								m_PosInLua = m_LuaFile.tellg();
-								m_CurrentLine = m.m.linenum;
+								m_CurrentLine = m.m.linenum - 1;
 								jumped = true;
 								goto end;
 							}
@@ -265,7 +264,7 @@ namespace VNEngine {
 				goto end;
 			}
 			else {
-				if (came_as_it_is) goto handleendofif;
+				if (!found) goto handleendofif;
 				std::string condition = "";
 				size_t thenpos = 0;
 				pos = line.find("elseif");
