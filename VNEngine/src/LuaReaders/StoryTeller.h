@@ -41,6 +41,7 @@ namespace VNEngine {
 		bool m_Skip;
 		bool m_Choosing;
 		bool m_Completed;
+		bool m_OnTheComment;
 
 		void parseFile();
 		bool handleJump(const std::string& line);

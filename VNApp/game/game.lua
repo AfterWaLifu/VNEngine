@@ -1,4 +1,6 @@
--- this file is bad with comments so do it shorly not --[[]]
+--[[
+	Main game script file
+]]
 
 Game.SetBackgroundColor({0,0,0,255})
 

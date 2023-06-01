@@ -7,7 +7,7 @@
 namespace VNEngine {
 
 	StoryTeller::StoryTeller()
-		: m_CurrentFile(""), m_CurrentLine(0), m_Go(true), m_Skip(false), m_PosLoaded(false)
+		: m_CurrentFile(""), m_CurrentLine(0), m_Go(true), m_Skip(false), m_PosLoaded(false), m_OnTheComment(false)
 	{
 		RegisterInterfaceFunctions();
 		RegisterSettingsFunctons();
@@ -321,13 +321,40 @@ namespace VNEngine {
 
 	void StoryTeller::goReadGoReadGo() {
 		char buffer[256];
+		size_t pos = -1;
 		while (m_Go && !m_Choosing && m_LuaFile.getline(buffer, 256, '\n')) {
  			++m_CurrentLine;
 			m_PosInLua = m_LuaFile.tellg();
-			auto error = luaL_dostring(L, buffer);
+			std::string line(buffer);
+			if ((pos = line.find("--")) != std::string::npos &&
+				(pos != line.find("--[["))) {
+				line = line.substr(0, pos);
+				memset(buffer, 0, strlen(buffer));
+				memcpy(buffer, line.data(), line.size());
+			}
+			else if (!m_OnTheComment) {
+				if ((pos = line.find("--[[")) != std::string::npos) {
+					m_OnTheComment = true;
+					line = line.substr(0, pos);
+					memset(buffer, 0, strlen(buffer));
+					memcpy(buffer, line.data(), line.size());
+					m_OnTheComment = true;
+				}
+			}
+			if (m_OnTheComment) {
+				if (size_t pos = line.find("]]") != std::string::npos) {
+					line = line.substr(pos+1);
+					memset(buffer, 0, strlen(buffer));
+					memcpy(buffer, line.data(), line.size());
+					m_OnTheComment = false;
+				}
+				else continue;
+			}
 			if (handleJump(std::string(buffer))) continue;
 			if (handleIf(std::string(buffer))) continue;
 
+			if (line.empty()) continue;
+			auto error = luaL_dostring(L, buffer);
 			if (error) {
 				VN_LOGS_WARNING("Lua error in line below" <<
 					std::to_string(m_CurrentLine) + " | " + buffer);
