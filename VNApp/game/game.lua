@@ -37,7 +37,7 @@ choose("result", q)
 
 if result == 1 then
 	goto yes
-else
+elseif result == 2
 	goto no
 end
 

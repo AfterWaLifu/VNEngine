@@ -23,9 +23,13 @@ namespace VNEngine {
 			mark m;
 			std::string name;
 		};
+		struct elseifmark {
+			mark m;
+			size_t length;
+		};
 		struct ifmark {
 			mark start, another, end;
-			std::vector<mark> elseifs;
+			std::vector<elseifmark> elseifs;
 		};
 		std::vector<gotomark> m_gotoMarks;
 		std::vector<ifmark> m_ifMarks;

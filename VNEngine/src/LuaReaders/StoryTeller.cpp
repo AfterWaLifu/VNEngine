@@ -39,7 +39,7 @@ namespace VNEngine {
 			elseifcheck:
 				if (start = line.find("elseif", onemoreelseifinline) != std::string::npos) {
 					if (nestedlvl) {
-						m_ifMarks[m_ifMarks.size() - nestedlvl].elseifs.push_back({ m_LuaFile.tellg(),linenum });
+						m_ifMarks[m_ifMarks.size() - nestedlvl].elseifs.push_back({ { m_LuaFile.tellg(),linenum }, line.length()});
 						onemoreelseifinline = line.find("then", start + 6);
 						goto elseifcheck;
 					}
@@ -116,7 +116,7 @@ namespace VNEngine {
 			}
 			if (m.elseifs.size() == 0) continue;
 			for (uint8_t i = 0; i < m.elseifs.size() && i < 253; ++i) {
-				if (m.elseifs[i].linenum == m_CurrentLine) {
+				if (m.elseifs[i].m.linenum == m_CurrentLine) {
 					mark = &m;
 					what = i;
 					found = true;
@@ -213,7 +213,38 @@ namespace VNEngine {
 				goto end;
 			}
 			else {
-
+				std::string condition = "";
+				size_t thenpos = 0;
+				pos = line.find("elseif");
+				thenpos = line.find("then", pos + 6);
+				if (thenpos - pos <= 2) goto end;
+				condition = line.substr(pos + 6, thenpos - pos - 6);
+				luaL_loadstring(L, (std::string("return ") + condition).c_str());
+				if (lua_pcall(L, 0, 1, 0)) {
+					VN_LOGS_WARNING("Error on condition for in in line " + std::to_string(mark->start.linenum));
+					VN_LOGS_WARNING(lua_tostring(L, -1));
+					lua_pop(L, 1);
+					goto end;
+				}
+				bool result = lua_toboolean(L, -1);
+				lua_pop(L, 1);
+				if (result) {
+					m_LuaFile.seekg(mark->elseifs[what].m.pos);
+					m_PosInLua = mark->elseifs[what].m.pos;
+					m_CurrentLine = mark->elseifs[what].m.linenum;
+					jumped = true;
+					goto end;
+				}
+				else {
+					if (mark->elseifs.size() > what) {
+						auto pos = (size_t)mark->elseifs[what + 1].m.pos - mark->elseifs[what + 1].length;
+						m_LuaFile.seekg(pos);
+						m_PosInLua = pos;
+						m_CurrentLine = mark->elseifs[what+1].m.linenum;
+						jumped = true;
+						goto end;
+					}
+				}
 			}
 		}
 
