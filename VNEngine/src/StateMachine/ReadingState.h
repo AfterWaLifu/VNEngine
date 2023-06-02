@@ -34,5 +34,6 @@ namespace VNEngine {
 
 		std::streampos GetReaderPos();
 		void SetReaderPos(std::streampos pos);
+		lua_State* GetLState();
 	};
 }

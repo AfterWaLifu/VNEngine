@@ -108,6 +108,29 @@ namespace VNEngine {
 		}
 		return sp;
 	}
+
+	void StateMachine::SetTopReaderPos(size_t pos) {
+		auto back = m_States.end();
+		while (back != m_States.begin() || (*back)->GetStateId() != "reading") {
+			--back;
+		}
+		if ((*back)->GetStateId() == "reading") {
+			ReadingState* r = dynamic_cast<ReadingState*>(*back);
+			r->SetReaderPos(pos);
+		}
+	}
+
+	lua_State* StateMachine::GetTopReaderState() {
+		auto back = m_States.end();
+		while (back != m_States.begin() || (*back)->GetStateId() != "reading") {
+			--back;
+		}
+		if ((*back)->GetStateId() == "reading") {
+			ReadingState* r = dynamic_cast<ReadingState*>(*back);
+			return r->GetLState();
+		}
+		else return nullptr;
+	}
 	
 	std::string StateMachine::GetTopStateID() {
 		if (m_States.empty()) return "";

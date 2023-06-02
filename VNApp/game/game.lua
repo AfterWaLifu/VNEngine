@@ -2,6 +2,8 @@
 	Main game script file
 ]]
 
+save = {}
+
 Game.SetBackgroundColor({0,0,0,255})
 
 Game.AddPicture("red.png","r", 1,1)
@@ -37,13 +39,15 @@ say("уходим")
 q = {"yes", "no"}
 choose("result", q)
 
-if result == 1 then
+save.result = result
+
+if save.result == 1 then
 	who("Зелёный")
 	say("согласен")
 	
 	Game.StopDrawing("g")
 	Game.StopDrawing("r")
-elseif result == 2 then
+elseif save.result == 2 then
 	who("Зелёный")
 	say("niht")
 	

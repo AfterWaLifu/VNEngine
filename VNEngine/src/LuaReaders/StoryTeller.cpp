@@ -57,7 +57,7 @@ namespace VNEngine {
 			}
 			if ((start = line.find("::")) != std::string::npos) {
 				if (size_t dote = line.find("::", start + 3)) {
-					auto mark = line.substr(start + 1, dote - start - 1);
+					auto mark = line.substr(start + 2, dote - start - 2);
 					if (mark.empty()) continue;
 					m_gotoMarks.push_back({ {m_LuaFile.tellg(),linenum}, mark });
 				}
@@ -107,6 +107,7 @@ namespace VNEngine {
 			if (m.another.linenum == m_CurrentLine) {
 				mark = &m;
 				what = 254;
+				found = true;
 				break;
 			}
 			if (m.end.linenum == m_CurrentLine) {
@@ -145,6 +146,7 @@ namespace VNEngine {
 				bool result = lua_toboolean(L, -1);
 				lua_pop(L, 1);
 				if (result) {
+					m_OnTheIf.push_back(true);
 					if (mark->end.linenum == mark->start.linenum) {
 						if (mark->elseifs.size()) {
 							pos = line.find("else", thenpos);
@@ -158,6 +160,7 @@ namespace VNEngine {
 							m_LuaFile.seekg(mark->end.pos);
 							m_PosInLua = mark->end.pos;
 							m_CurrentLine = mark->end.linenum;
+							if (!m_OnTheIf.empty()) m_OnTheIf.pop_back();
 						}
 						jumped = true;
 						goto end;
@@ -188,6 +191,7 @@ namespace VNEngine {
 					bool result = lua_toboolean(L,-1);
 					lua_pop(L, 1);
 					if (result) {
+						m_OnTheIf.push_back(true);
 						pos = line.find("else", thenpos);
 						if (pos == -1) pos = line.find("end", thenpos);
 						if (pos == -1) {
@@ -216,6 +220,7 @@ namespace VNEngine {
 						m_PosInLua = mark->end.pos;
 						m_CurrentLine = mark->end.linenum;
 						jumped = true;
+						if (!m_OnTheIf.empty()) m_OnTheIf.pop_back();
 						goto end;
 					};
 					if (mark->another.linenum == mark->start.linenum) {
@@ -226,6 +231,7 @@ namespace VNEngine {
 						m_PosInLua = mark->end.pos;
 						m_CurrentLine = mark->end.linenum;
 						jumped = true;
+						if (!m_OnTheIf.empty()) m_OnTheIf.pop_back();
 						goto end;
 					}
 					else if (mark->another.pos != 0){
@@ -233,6 +239,7 @@ namespace VNEngine {
 						m_PosInLua = mark->another.pos;
 						m_CurrentLine = mark->another.linenum;
 						jumped = true;
+						m_OnTheIf.push_back(true);
 						goto end;
 					}
 					else {
@@ -249,10 +256,12 @@ namespace VNEngine {
 				}
 			}
 			else if (what == 254) {
+				if (!found || (!m_OnTheIf.empty() && m_OnTheIf.back())) goto handleendofif;
 				m_LuaFile.seekg(mark->another.pos);
 				m_PosInLua = mark->another.pos;
 				m_CurrentLine = mark->another.linenum;
 				jumped = true;
+				m_OnTheIf.push_back(true);
 				goto end;
 			}
 			else if (what == 253) {
@@ -261,10 +270,11 @@ namespace VNEngine {
 				m_PosInLua = mark->end.pos;
 				m_CurrentLine = mark->end.linenum;
 				jumped = true;
+				if (!m_OnTheIf.empty()) m_OnTheIf.pop_back();
 				goto end;
 			}
 			else {
-				if (!found) goto handleendofif;
+				if (!found || (!m_OnTheIf.empty() && m_OnTheIf.back())) goto handleendofif;
 				std::string condition = "";
 				size_t thenpos = 0;
 				pos = line.find("elseif");
@@ -281,6 +291,7 @@ namespace VNEngine {
 				bool result = lua_toboolean(L, -1);
 				lua_pop(L, 1);
 				if (result) {
+					m_OnTheIf.push_back(true);
 					m_LuaFile.seekg(mark->elseifs[what].m.pos);
 					m_PosInLua = mark->elseifs[what].m.pos;
 					m_CurrentLine = mark->elseifs[what].m.linenum;
@@ -301,6 +312,7 @@ namespace VNEngine {
 						m_PosInLua = mark->another.pos;
 						m_CurrentLine = mark->another.linenum;
 						jumped = true;
+						m_OnTheIf.push_back(true);
 						goto end;
 					}
 					else {
@@ -308,6 +320,7 @@ namespace VNEngine {
 						m_PosInLua = mark->end.pos;
 						m_CurrentLine = mark->end.linenum;
 						jumped = true;
+						if (!m_OnTheIf.empty()) m_OnTheIf.pop_back();
 						goto end;
 					}
 				}
@@ -447,7 +460,20 @@ namespace VNEngine {
 	}
 	
 	void StoryTeller::SetCurrentPos(std::streampos pos) {
-		m_PosLoaded = true;
-		m_PosInLua = pos;
+		m_CurrentLine = 0;
+		m_PosInLua = 0;
+		std::streampos temp = 0;
+		char buffer[256];
+		while (m_LuaFile.tellg() < pos) {
+			temp = m_LuaFile.tellg();
+			++m_CurrentLine;
+			m_LuaFile.getline(buffer, 256, '\n');
+		}
+		m_LuaFile.seekg(temp);
+		Go();
+	}
+	
+	lua_State* StoryTeller::getl() {
+		return L;
 	}
 }

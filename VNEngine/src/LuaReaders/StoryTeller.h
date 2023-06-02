@@ -42,6 +42,7 @@ namespace VNEngine {
 		bool m_Choosing;
 		bool m_Completed;
 		bool m_OnTheComment;
+		std::vector<bool> m_OnTheIf;
 
 		void parseFile();
 		bool handleJump(const std::string& line);
@@ -72,5 +73,7 @@ namespace VNEngine {
 
 		std::streampos GetCurrentPos();
 		void SetCurrentPos(std::streampos pos);
+
+		lua_State* getl();
 	};
 }

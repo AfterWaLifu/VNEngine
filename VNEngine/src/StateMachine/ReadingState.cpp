@@ -92,4 +92,8 @@ namespace VNEngine {
 	void ReadingState::SetReaderPos(std::streampos pos) {
 		m_ST.SetCurrentPos(pos);
 	}
+	
+	lua_State* ReadingState::GetLState() {
+		return m_ST.getl();
+	}
 }

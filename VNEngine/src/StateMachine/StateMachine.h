@@ -5,6 +5,8 @@
 #include <vector>
 #include <fstream>
 
+struct lua_State;
+
 namespace VNEngine {
 
 	class StateMachine {
@@ -30,6 +32,8 @@ namespace VNEngine {
 		bool isThereAReading();
 
 		std::streampos GetTopReaderPos();
+		void SetTopReaderPos(size_t pos);
+		lua_State* GetTopReaderState();
 
 		std::string GetTopStateID();
 		Artist* GetCurrentDrawer();

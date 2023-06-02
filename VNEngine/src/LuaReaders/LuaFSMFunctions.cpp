@@ -10,14 +10,15 @@ namespace VNEngine {
 	namespace LSM {
 		
 		void Save(int num) {
-			SaveLoad::Save(num, SM_INSTANCE.GetCurrentDrawer());
+			SaveLoad::Save(num, SM_INSTANCE.GetCurrentDrawer(), SM_INSTANCE.GetTopReaderState());
 		}
 
 		void Load(int num) {
 			SM_INSTANCE.WipeStates();
-			int pos = SaveLoad::Load(num, SM_INSTANCE.GetCurrentDrawer());
-			if (pos < 0) return;
-			SM_INSTANCE.PushState(new ReadingState(pos));
+			SM_INSTANCE.PushState(new ReadingState());
+			size_t pos = SaveLoad::Load(num, SM_INSTANCE.GetCurrentDrawer(), SM_INSTANCE.GetTopReaderState());
+			if (pos == SIZE_MAX) return;
+			SM_INSTANCE.SetTopReaderPos(pos);
 		}
 
 		void ToMenu(std::string menuState) {

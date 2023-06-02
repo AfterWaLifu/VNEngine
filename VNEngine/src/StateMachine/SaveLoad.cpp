@@ -9,6 +9,8 @@
 
 #include <tinyxml2.h>
 #include <SDL2/SDL_image.h>
+#include <lua.hpp>
+#include <LuaBridge/LuaBridge.h>
 
 #include <filesystem>
 
@@ -61,6 +63,73 @@ namespace VNEngine {
 			(uint8_t)atoi(elem->FirstChildElement("a")->GetText())
 		};
 		return color;
+	}
+	void luaintoxml(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* t, luabridge::LuaRef table) {
+		namespace tx = tinyxml2;
+		namespace lb = luabridge;
+
+		for (lb::Iterator i(table); !i.isNil(); ++i) {
+			tx::XMLElement* le;
+			if (i.value().isTable()) {
+				le = doc.NewElement(i.key());
+				luaintoxml(doc, le, i.value());
+				t->InsertEndChild(le);
+				continue;
+			}
+			le = doc.NewElement("a");
+			tx::XMLElement* key = doc.NewElement("key");
+			tx::XMLElement* type = doc.NewElement("type");
+			tx::XMLElement* val = doc.NewElement("value");
+			key->SetText(i.key().tostring().c_str());
+			type->SetText(i.value().type());
+			val->SetText(i.value().tostring().c_str());
+			le->InsertFirstChild(key);
+			le->InsertEndChild(type);
+			le->InsertEndChild(val);
+			t->InsertEndChild(le);
+		}
+	}
+	void xmlintolua(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* t, lua_State* L, std::string tablename="") {
+		namespace tx = tinyxml2;
+		namespace lb = luabridge;
+
+		for (tx::XMLElement* le = t->FirstChildElement(); le; le = le->NextSiblingElement()) {
+			lb::LuaRef element(L);
+			if (strcmp(le->Name(), "a")) {
+				if (tablename.empty()) {
+					xmlintolua(doc, le, L, le->Name());
+				} else {
+					xmlintolua(doc, le, L, tablename + le->Name());
+				}
+				continue;
+			}
+			int type = atoi(le->FirstChildElement("type")->GetText());
+			switch (type) {
+			case LUA_TNUMBER:
+				if (strstr(le->FirstChildElement("value")->GetText(), ".")) {
+					element = atof(le->FirstChildElement("value")->GetText());
+				}
+				else {
+					element = atoi(le->FirstChildElement("value")->GetText());
+				}
+				break;
+			case LUA_TBOOLEAN:
+				if (strcmp(le->FirstChildElement("value")->GetText(), "true")) element = true;
+				else element = false;
+				break;
+			case LUA_TSTRING:
+				element = le->FirstChildElement("value")->GetText();
+				break;
+			default:
+				break;
+			}
+			if (tablename.empty()) {
+				lb::setGlobal(L, element, (std::string("save.") + le->FirstChildElement("key")->GetText()).c_str());
+			}
+			else {
+				lb::setGlobal(L, element, (std::string("save.") + tablename + "." + le->FirstChildElement("key")->GetText()).c_str());
+			}
+		}
 	}
 
 	void dealWithAudio(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root) {
@@ -359,7 +428,21 @@ namespace VNEngine {
 		root->InsertEndChild(widgets);
 	}
 
-	void SaveLoad::Save(int number, Artist* partist) {
+	void dealWithLua(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root, lua_State* L) {
+		namespace tx = tinyxml2;
+		namespace lb = luabridge;
+
+		if (L) {
+			tx::XMLElement* lua = doc.NewElement("Lua");
+			lb::LuaRef t = lb::getGlobal(L, "save");
+			if (t.isTable()) {
+				luaintoxml(doc, lua, t);
+			}
+			root->InsertEndChild(lua);
+		}
+	}
+
+	void SaveLoad::Save(int number, Artist* partist, lua_State* L) {
 		using namespace tinyxml2;
 
 		if (!SM_INSTANCE.isThereAReading()) return;
@@ -377,6 +460,7 @@ namespace VNEngine {
 		dealWithAudio(doc, root);
 		dealWithGraphic(doc,root,partist);
 		dealWithWidgets(doc, root);
+		dealWithLua(doc, root, L);
 
 		XMLElement* readingpos = doc.NewElement("ReadingPos");
 		readingpos->SetText(sp);
@@ -585,7 +669,17 @@ namespace VNEngine {
 		WM_INSTANCE.Load(wd);
 	}
 
-	int SaveLoad::Load(int number, Artist* partist) {
+	void undealWithLua(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root, lua_State* L) {
+		namespace tx = tinyxml2;
+		namespace lb = luabridge;
+
+		if (L) {
+			tx::XMLElement* lua = root->FirstChildElement("Lua");
+			xmlintolua(doc, lua, L);
+		}
+	}
+
+	size_t SaveLoad::Load(int number, Artist* partist, lua_State* L) {
 		using namespace tinyxml2;
 
 		if (!(std::filesystem::exists(sSaveDir + std::to_string(number) + ".vns"))) return -1;
@@ -597,9 +691,16 @@ namespace VNEngine {
 		undealWithAudio(doc, root);
 		undealWithGraphic(doc, root, partist);
 		undealWithWidgets(doc, root);
+		undealWithLua(doc,root,L);
 
-		std::string sps = root->FirstChildElement("ReadingPos")->GetText();
-		int sp = atoi(sps.c_str());
+		std::string sps="";
+		size_t sp = SIZE_MAX;
+		if (root->FirstChildElement("ReadingPos")->GetText()) {
+			sps = root->FirstChildElement("ReadingPos")->GetText();
+		}
+		if (!sps.empty()) {
+			sp = atoi(sps.c_str());
+		}
 
 		return sp;
 	}
