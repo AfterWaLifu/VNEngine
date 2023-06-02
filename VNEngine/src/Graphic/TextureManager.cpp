@@ -80,6 +80,7 @@ namespace VNEngine {
 
 	bool TextureManager::delTexture(const std::string& key)
 	{
+		SDL_ClearError();
 		if (m_Textures.empty()) return false;
 		if (m_Textures.find(key) != m_Textures.end()) {
 			RemoveFromDumpList(key);
@@ -87,8 +88,8 @@ namespace VNEngine {
 			m_Textures.erase(key);
 		}
 		
-		if (strcmp(SDL_GetError(), "\0")) {
-			VN_LOGS_WARNING("Something went wrong on deleting texture '" << key << "'");
+		if (strcmp(SDL_GetError(), "")) {
+			VN_LOGS_WARNING("Something went wrong on deleting texture below" << key);
 			VN_LOGS_WARNING(SDL_GetError());
 		}
 		return true;

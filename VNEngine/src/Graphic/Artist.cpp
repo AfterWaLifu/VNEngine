@@ -308,19 +308,11 @@ namespace VNEngine {
 				break;
 			}
 		}
-
-		if (counter == 0) {
-			VN_LOGS_WARNING("While stopping drawing by key '" << key <<
-				"', not a single texture stopped drawing");
-		}
 	}
 	void Artist::StopDrawing(const uint32_t id) {
 		auto find = m_Queue.find(id);
 		if (find != m_Queue.end()) {
 			m_Queue.erase(id);
-		}
-		else {
-			VN_LOGS_WARNING("Attemp to stop drawing a non-drawn texture w/ id '" << id << "'");
 		}
 	}
 
@@ -337,6 +329,12 @@ namespace VNEngine {
 	}
 
 	void Artist::DeleteTexture(const std::string& key) {
+		if (m_Queue.size()) {
+			for (auto i = m_Queue.begin(); i != m_Queue.end(); ++i) {
+				if (i->second.texture->key == key) m_Queue.erase(i);
+				if (m_Queue.empty()) break;
+			}
+		}
 		TM_INSTANCE.delTexture(key);
 	}
 

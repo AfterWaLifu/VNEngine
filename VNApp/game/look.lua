@@ -71,6 +71,7 @@ function save()
 		end
 		saveButton.func = function()
 				Game.Save(i)
+				Game.StopDrawing("savescreennumber"..i)
 				Game.DelPicture("savescreennumber"..i)
 				Game.AddPicture("savescreens/"..i..".png","savescreennumber"..i,1,1)
 				Widget.Update({type="text",name="save"..i,backPic="savescreennumber"..i })

@@ -213,12 +213,18 @@ namespace VNEngine {
 	
 	void WidgetsManager::Load(const dump& d) {
 		for (auto ts : d.ts) {
+			auto search = m_Widgets.m_AllTexts.find(ts.first);
+			if (search != m_Widgets.m_AllTexts.end()) continue;
 			AddWidget(ts.first, new Text(ts.second));
 		}
 		for (auto bs : d.bs) {
+			auto search = m_Widgets.m_AllTexts.find(bs.first);
+			if (search != m_Widgets.m_AllTexts.end()) continue;
 			AddWidget(bs.first, new Button(bs.second));
 		}
 		for (auto tbs : d.tbs) {
+			auto search = m_Widgets.m_AllTexts.find(tbs.first);
+			if (search != m_Widgets.m_AllTexts.end()) continue;
 			AddWidget(tbs.first, new TextBox(tbs.second));
 		}
 	}

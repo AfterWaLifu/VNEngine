@@ -63,9 +63,10 @@ namespace VNEngine {
 				}
 			}
 		}
-		if (nestedlvl) 
+		if (nestedlvl) {
 			VN_LOGS_WARNING("Error on reading game script file, 'end' operand expected "
 				+ std::to_string(nestedlvl) + " more time(s)");
+		}
 		m_LuaFile.seekg(0);
 	}
 
@@ -464,12 +465,14 @@ namespace VNEngine {
 		m_PosInLua = 0;
 		std::streampos temp = 0;
 		char buffer[256];
+		m_LuaFile.seekg(0);
 		while (m_LuaFile.tellg() < pos) {
 			temp = m_LuaFile.tellg();
 			++m_CurrentLine;
 			m_LuaFile.getline(buffer, 256, '\n');
 		}
 		m_LuaFile.seekg(temp);
+		--m_CurrentLine;
 		Go();
 	}
 	
