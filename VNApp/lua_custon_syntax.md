@@ -1,9 +1,9 @@
-##Lua custom syntax
+## Lua custom syntax
 
 _____________________
 
 
-####Game functions
+#### Game functions
 
 ```
 say(STRING)		---> changing text in say-box
@@ -16,7 +16,7 @@ choose(STRING, TABLE)	---> creates a var named STRING with result of choosing,
 
 _____________________
 
-####Widget functions
+#### Widget functions
 
 Located in Widget namespace
 
@@ -32,7 +32,7 @@ _____________________
 
 Everything else is located in a Game namespace
 
-####State machine functions
+#### State machine functions
 
 ```
 Game.Save(NUMBER)		---> saves game into a NUMBER slot
@@ -43,7 +43,7 @@ Game.IsThereReading()	---> returns true/false if there is a reading state on a s
 Game.WipeStates()		---> clears all the states
 ```
 
-####Audioplayer functions
+#### Audioplayer functions
 
 ```
 Game.AddAudio(FILENAME, KEY)	---> add to game an FILENAME file with a key KEY
@@ -62,7 +62,7 @@ Game.Unmute()                   ---> unmutes them
 Game.IsMuted()                  ---> returns true if muted and false if not
 ```
 
-####Graphic functions
+#### Graphic functions
 
 ```
 Game.AddPicture(FILENAME, KEY, ROWS,COLLUMNS)---> adds a pic FILENAME to game with a name KEY, thinking in has exactly ROWS and COLLUMNS (1/1 default)
@@ -88,7 +88,7 @@ Game.SetWindowSize(TABLE)           ---> changes window size to TABLE of 2 (x,y)
 Game.GetWindowSize()                ---> returns window size as TABLE of 2 (x,y)
 ```
 
-####Some utilities functions
+#### Some utilities functions
 
 ```
 Game.FontAdd(KEY, FILENAME, SIZE)---> adds a font from FILENAME with a size of SIZE and gives it a name KEY
@@ -100,12 +100,12 @@ Game.SetWindowTitle(STRING)		---> changes window title to STRING
 Game.Exit()                     ---> shut game down
 ```
 
-####Used data-types
+#### Used data-types
 
-KEY - string
-COLOR - table of four elements between 0 and 255 in RGBA
-STRING - string, lol
-TILE, ROW, COLLUMN - just numbers
+KEY - string\
+COLOR - table of four elements between 0 and 255 in RGBA\
+STRING - string, lol\
+TILE, ROW, COLLUMN - just numbers\
 NAME or TYPE - strings, which you used in a TABLE below
 
 TABLE - for widgets - it's a table with:
