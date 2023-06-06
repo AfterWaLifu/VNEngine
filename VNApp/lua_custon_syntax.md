@@ -104,6 +104,7 @@ Game.Exit()                     ---> shut game down
 
 KEY - string\
 COLOR - table of four elements between 0 and 255 in RGBA\
+GEOMETRY - table of four elements with first x and y and last width and height\
 STRING - string, lol\
 TILE, ROW, COLLUMN - just numbers\
 NAME or TYPE - strings, which you used in a TABLE below
@@ -111,6 +112,7 @@ NAME or TYPE - strings, which you used in a TABLE below
 TABLE - for widgets - it's a table with:
 - type - "text", "button", "textbox"
 - name - a name used in a game ("say" and "who" a reserved by engine in-game (menu is ok))
+- geometry - place on the screen and size
 - text - text in a widget
 - shown - bool, true if shown and false is hiden
 - font - KEY of font
