@@ -50,7 +50,7 @@ Game.AddAudio(FILENAME, KEY)	---> add to game an FILENAME file with a key KEY
 Game.DeleteAudio(KEY)			---> removes from game a KEY audio
 Game.PlayMusic(KEY)             ---> plays on repeat a KEY audio
 Game.PauseMusic()               ---> pauses a music
-Game.StopMysic()                ---> completely stops music (if started will play from the very beging)
+Game.StopMusic()                ---> completely stops music (if started will play from the very beging)
 Game.PlaySound(KEY)             ---> plays a KEY audio once
 Game.StopSound()                ---> stops playing sound
 Game.SetMusicVolume(FLOAT)      ---> sets a volume of music on a FLOAT (num between 0.0 and 1.0)
