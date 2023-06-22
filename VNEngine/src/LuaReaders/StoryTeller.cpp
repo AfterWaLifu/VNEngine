@@ -176,7 +176,6 @@ namespace VNEngine {
 				}
 				else if (mark->elseifs.size()) {
 				samelineelseifcheck:
-					found = true;
 					pos = line.find("elseif", pos);
 					if (pos == std::string::npos) goto luaelsemark;
 					thenpos = line.find("then", pos+6);
@@ -257,7 +256,7 @@ namespace VNEngine {
 				}
 			}
 			else if (what == 254) {
-				if (!found || (!m_OnTheIf.empty() && m_OnTheIf.back())) goto handleendofif;
+				if (found || (!m_OnTheIf.empty() && m_OnTheIf.back())) goto handleendofif;
 				m_LuaFile.seekg(mark->another.pos);
 				m_PosInLua = mark->another.pos;
 				m_CurrentLine = mark->another.linenum;
@@ -275,7 +274,7 @@ namespace VNEngine {
 				goto end;
 			}
 			else {
-				if (!found || (!m_OnTheIf.empty() && m_OnTheIf.back())) goto handleendofif;
+				if (m_OnTheIf.size()) goto handleendofif;
 				std::string condition = "";
 				size_t thenpos = 0;
 				pos = line.find("elseif");
