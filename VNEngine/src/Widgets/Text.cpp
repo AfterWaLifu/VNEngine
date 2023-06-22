@@ -110,25 +110,23 @@ namespace VNEngine {
 
 	void Text::windowResized() {
 		if (Widget::sWD.renderer == nullptr) return;
+		float relatex, relatey;
 		if (*Widget::sWD.stretching == 2) { /*stretching*/
-			auto backgrPrev = *Widget::sWD.backgrSizePrev;
-			if (backgrPrev.x == -1 && backgrPrev.y == -1 && backgrPrev.w == 1 && backgrPrev.h == 1) return;
-			float wratio = (float)Widget::sWD.backgrSizeCurr->w / (float)backgrPrev.w;
-			float hratio = (float)Widget::sWD.backgrSizeCurr->h / (float)backgrPrev.h;
-			m_Geometry.x = Widget::sWD.backgrSizeCurr->x + (int)((float)m_GeometryStart.x * wratio);
-			m_Geometry.y = Widget::sWD.backgrSizeCurr->y + (int)((float)m_GeometryStart.y * wratio);
-			m_Geometry.w = (int)((float)m_GeometryStart.w * wratio);
-			m_Geometry.h = (int)((float)m_GeometryStart.h * wratio);
+			relatex = (float)Widget::sWD.backgrSizeCurr->w / (float)Widget::sWD.windowSizeBase->x;
+			relatey = (float)Widget::sWD.backgrSizeCurr->h / (float)Widget::sWD.windowSizeBase->y;
+			m_Geometry.x = Widget::sWD.backgrSizeCurr->x + (int)((float)m_GeometryStart.x * relatex);
+			m_Geometry.y = Widget::sWD.backgrSizeCurr->y + (int)((float)m_GeometryStart.y * relatey);
+			m_Geometry.w = (int)((float)m_GeometryStart.w * relatex);
+			m_Geometry.h = (int)((float)m_GeometryStart.h * relatey);
 		}
 		else {/*everything else*/
-			float vertRation = (float)Widget::sWD.windowSizeCurr->y / (float)Widget::sWD.windowSizePrev->y;
-			float horzRation = (float)Widget::sWD.windowSizeCurr->x / (float)Widget::sWD.windowSizePrev->x;
-			m_Geometry = {
-				(int)round((float)m_GeometryStart.x * horzRation),
-				(int)round((float)m_GeometryStart.y * vertRation),
-				(int)round((float)m_GeometryStart.w * horzRation),
-				(int)round((float)m_GeometryStart.h * vertRation)
-			};
+			relatex = (float)Widget::sWD.windowSizeCurr->x / (float)Widget::sWD.windowSizePrev->x;
+			relatey = (float)Widget::sWD.windowSizeCurr->y / (float)Widget::sWD.windowSizePrev->y;
+			if (relatex == 1.0f && relatey == 1.0f) return;
+			m_Geometry.x = (int)((float)m_GeometryStart.x * relatex);
+			m_Geometry.y = (int)((float)m_GeometryStart.y * relatey);
+			m_Geometry.w = (int)((float)m_GeometryStart.w * relatex);
+			m_Geometry.h = (int)((float)m_GeometryStart.h * relatey);
 		}
 		SetAlign(m_Alignment);
 	}

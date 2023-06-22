@@ -367,6 +367,7 @@ namespace VNEngine {
 
 			float wratio = (float)m_Background.dest.w / (float)m_PrevBackgroundSize.w;
 			float hratio = (float)m_Background.dest.h / (float)m_PrevBackgroundSize.h;
+			if (wratio == 1.0f && hratio == 1.0f) return;
 
 			for (auto texturePair = m_Queue.begin();
 				texturePair != m_Queue.end();
@@ -387,6 +388,7 @@ namespace VNEngine {
 		else {
 			float verticalRation = (float)m_WindowSize.y / m_PrevWindowSize.y;
 			float horizontRation = (float)m_WindowSize.x / m_PrevWindowSize.x;
+			if (verticalRation == 1.0f && horizontRation == 1.0f) return;
 			for (auto texturePair = m_Queue.begin();
 				texturePair != m_Queue.end();
 				++texturePair) {
@@ -445,10 +447,9 @@ namespace VNEngine {
 			IH_INSTANCE.setIfWindowResized(true);
 		}
 		else {
-			if (m_PrevWindowSize.x == 0 && m_PrevWindowSize.y == 0) return;
+			if (m_PrevWindowSize.x == 0 && m_PrevWindowSize.y == 0) m_PrevWindowSize = m_BaseWindowSize;
 			SDL_SetWindowFullscreen(m_pWindow, 0);
 			SetWindowSize(m_PrevWindowSize);
-			IH_INSTANCE.setIfWindowResized(true);
 		}
 	}
 
