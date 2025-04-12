@@ -1,101 +1,98 @@
-#include "LuaReader.h"
-#include "vnepch.h"
+#include <VNEngine/LuaReaders/LuaReader.hpp>
 
-#include "Core/Logger.h"
-#include "LuaReaders/LuaWidgetFunctions.h"
-#include "LuaReaders/LuaSetsFunctions.h"
-#include "LuaReaders/LuaFSMFunctions.h"
+#include <VNEngine/Core/Logger.hpp>
+#include <VNEngine/LuaReaders/LuaFSMFunctions.hpp>
+#include <VNEngine/LuaReaders/LuaSetsFunctions.hpp>
+#include <VNEngine/LuaReaders/LuaWidgetFunctions.hpp>
 
 #include <LuaBridge/LuaBridge.h>
 
 namespace VNEngine {
-	
-	LuaReader::LuaReader() {
-		L = luaL_newstate();
 
-		if (!L) {
-			VN_LOGS_ERROR("Can't init Lua state, can't work >.<");
-			return;
-		}
-		
-		luaL_openlibs(L);
-	}
+LuaReader::LuaReader() {
+    L = luaL_newstate();
 
-	LuaReader::~LuaReader() {
-		lua_close(L);
-	}
+    if (!L) {
+        VN_LOGS_ERROR("Can't init Lua state, can't work >.<");
+        return;
+    }
 
-	void LuaReader::RegisterInterfaceFunctions() {
-		using namespace luabridge;
-
-		getGlobalNamespace(L).
-			beginNamespace("Widget").
-			addFunction("Add",				LW::WidgetAdding).
-			addFunction("Update",			LW::WidgetUpdate).
-			addFunction("GetState",			LW::WidgetGetState).
-			addFunction("Remove",			LW::WidgetRemove).
-			addFunction("GetButtonClicked",	LW::WidgetButtonClicked).
-			addFunction("GetButtonFocused",	LW::WidgetButtonFocused).
-			addFunction("GetTextboxValue",	LW::WidgetTextboxValue).
-			endNamespace();
-	}
-
-	void LuaReader::RegisterSettingsFunctons() {
-		using namespace luabridge;
-
-		getGlobalNamespace(L).
-			beginNamespace("Game").
-			addFunction("AddAudio", LS::AddAudio).
-			addFunction("DeleteAudio", LS::DelAudio).
-			addFunction("PlayMusic", LS::PlayMusic).
-			addFunction("PauseMusic", LS::PauseMusic).
-			addFunction("StopMysic", LS::StopMusic).
-			addFunction("PlaySound", LS::PlaySound).
-			addFunction("StopSound", LS::StopSound).
-			addFunction("SetMusicVolume", LS::SetMusicVolume).
-			addFunction("SetSoundVolume", LS::SetSoundVolume).
-			addFunction("GetMusicVolume", LS::GetMusicVolume).
-			addFunction("GetSoundVolume", LS::GetSoundVolume).
-			addFunction("Mute", LS::Mute).
-			addFunction("Unmute", LS::Unmute).
-			addFunction("IsMuted", LS::IsMuted).
-			addFunction("AddPicture", LS::AddPicture).
-			addFunction("DelPicture", LS::DelPicture).
-			addFunction("SetBackgroundColor", LS::SetBackgroundColor).
-			addFunction("SetBackgroundPicture", LS::SetBackgroundPicture).
-			addFunction("SetUsingBackgroundPic", LS::SetUsingBackgroundPic).
-			addFunction("GetBackgroundColor", LS::GetBackgroundColor).
-			addFunction("GetBackgroundPicture", LS::GetBackgroundPicture).
-			addFunction("GetDrawingBackPicture", LS::GetDrawingBackPicture).
-			addFunction("Draw", LS::Draw).
-			addFunction("DrawLeft", LS::DrawLeft).
-			addFunction("DrawCenter", LS::DrawCenter).
-			addFunction("DrawRight", LS::DrawRight).
-			addFunction("StopDrawing", LS::StopDrawing).
-			addFunction("StopDrawingById", LS::StopDrawingID).
-			addFunction("WipeScreen", LS::WipeScreen).
-			addFunction("SetWindowTitle", LS::SetWindowTitle).
-			addFunction("SetWindowSize", LS::SetWindowSize).
-			addFunction("GetWindowSize", LS::GetWindowSize).
-			addFunction("Screenshot", LS::SaveScreenshot).
-			addFunction("FontAdd", LS::FontAdd).
-			addFunction("FontDel", LS::FontDel).
-			addFunction("FontExist", LS::FontExist).
-			addFunction("SetDefChoiseButton", LW::SetDefaultChoiseButton).
-			addFunction("Exit", LS::ExitWithIH).
-			endNamespace();
-	}
-	
-	void LuaReader::RegisterFSMFunctuins() {
-		using namespace luabridge;
-		getGlobalNamespace(L).
-			beginNamespace("Game").
-			addFunction("Save", LSM::Save).
-			addFunction("Load", LSM::Load).
-			addFunction("ToMenu", LSM::ToMenu).
-			addFunction("ToGame", LSM::GameStart).
-			addFunction("IsThereReading", LSM::GetIfReadingExist).
-			addFunction("WipeStates", LSM::WipeStates).
-			endNamespace();
-	}
+    luaL_openlibs(L);
 }
+
+LuaReader::~LuaReader() { lua_close(L); }
+
+void LuaReader::RegisterInterfaceFunctions() {
+    using namespace luabridge;
+
+    getGlobalNamespace(L)
+        .beginNamespace("Widget")
+        .addFunction("Add", LW::WidgetAdding)
+        .addFunction("Update", LW::WidgetUpdate)
+        .addFunction("GetState", LW::WidgetGetState)
+        .addFunction("Remove", LW::WidgetRemove)
+        .addFunction("GetButtonClicked", LW::WidgetButtonClicked)
+        .addFunction("GetButtonFocused", LW::WidgetButtonFocused)
+        .addFunction("GetTextboxValue", LW::WidgetTextboxValue)
+        .endNamespace();
+}
+
+void LuaReader::RegisterSettingsFunctons() {
+    using namespace luabridge;
+
+    getGlobalNamespace(L)
+        .beginNamespace("Game")
+        .addFunction("AddAudio", LS::AddAudio)
+        .addFunction("DeleteAudio", LS::DelAudio)
+        .addFunction("PlayMusic", LS::PlayMusic)
+        .addFunction("PauseMusic", LS::PauseMusic)
+        .addFunction("StopMysic", LS::StopMusic)
+        .addFunction("PlaySound", LS::PlaySound)
+        .addFunction("StopSound", LS::StopSound)
+        .addFunction("SetMusicVolume", LS::SetMusicVolume)
+        .addFunction("SetSoundVolume", LS::SetSoundVolume)
+        .addFunction("GetMusicVolume", LS::GetMusicVolume)
+        .addFunction("GetSoundVolume", LS::GetSoundVolume)
+        .addFunction("Mute", LS::Mute)
+        .addFunction("Unmute", LS::Unmute)
+        .addFunction("IsMuted", LS::IsMuted)
+        .addFunction("AddPicture", LS::AddPicture)
+        .addFunction("DelPicture", LS::DelPicture)
+        .addFunction("SetBackgroundColor", LS::SetBackgroundColor)
+        .addFunction("SetBackgroundPicture", LS::SetBackgroundPicture)
+        .addFunction("SetUsingBackgroundPic", LS::SetUsingBackgroundPic)
+        .addFunction("GetBackgroundColor", LS::GetBackgroundColor)
+        .addFunction("GetBackgroundPicture", LS::GetBackgroundPicture)
+        .addFunction("GetDrawingBackPicture", LS::GetDrawingBackPicture)
+        .addFunction("Draw", LS::Draw)
+        .addFunction("DrawLeft", LS::DrawLeft)
+        .addFunction("DrawCenter", LS::DrawCenter)
+        .addFunction("DrawRight", LS::DrawRight)
+        .addFunction("StopDrawing", LS::StopDrawing)
+        .addFunction("StopDrawingById", LS::StopDrawingID)
+        .addFunction("WipeScreen", LS::WipeScreen)
+        .addFunction("SetWindowTitle", LS::SetWindowTitle)
+        .addFunction("SetWindowSize", LS::SetWindowSize)
+        .addFunction("GetWindowSize", LS::GetWindowSize)
+        .addFunction("Screenshot", LS::SaveScreenshot)
+        .addFunction("FontAdd", LS::FontAdd)
+        .addFunction("FontDel", LS::FontDel)
+        .addFunction("FontExist", LS::FontExist)
+        .addFunction("SetDefChoiseButton", LW::SetDefaultChoiseButton)
+        .addFunction("Exit", LS::ExitWithIH)
+        .endNamespace();
+}
+
+void LuaReader::RegisterFSMFunctuins() {
+    using namespace luabridge;
+    getGlobalNamespace(L)
+        .beginNamespace("Game")
+        .addFunction("Save", LSM::Save)
+        .addFunction("Load", LSM::Load)
+        .addFunction("ToMenu", LSM::ToMenu)
+        .addFunction("ToGame", LSM::GameStart)
+        .addFunction("IsThereReading", LSM::GetIfReadingExist)
+        .addFunction("WipeStates", LSM::WipeStates)
+        .endNamespace();
+}
+} // namespace VNEngine

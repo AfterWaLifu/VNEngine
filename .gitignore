@@ -1,6 +1,7 @@
 build/
 build-int/
 logs.txt
+.vscode
 *.ini
 *.ttf
 *.jpg

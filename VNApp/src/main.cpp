@@ -1,17 +1,18 @@
-#include <iostream>
-
-#include "VNEngine.h"
+#include <VNEngine/Core/App.hpp>
 
 class Game : public VNEngine::App {
 public:
-	Game() : VNEngine::App() {  }
+    Game() : VNEngine::App() {}
+
 private:
 };
 
-int main(int argc, char* argv[]) {
-	
-	Game game = Game();
-	game.Run();
+int main(int argc, char** args) {
+    (void)argc;
+    (void)args;
 
-	return 0;
+    Game game = Game();
+    game.Run();
+
+    return 0;
 }

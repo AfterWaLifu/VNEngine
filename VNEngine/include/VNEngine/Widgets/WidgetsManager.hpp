@@ -1,0 +1,71 @@
+#pragma once
+
+#include <VNEngine/Widgets/Button.hpp>
+#include <VNEngine/Widgets/Text.hpp>
+#include <VNEngine/Widgets/TextBox.hpp>
+#include <VNEngine/Widgets/Widget.hpp>
+
+namespace VNEngine {
+
+class WidgetsManager {
+
+    struct widgets {
+        std::unordered_map<std::string, std::shared_ptr<Text>> m_AllTexts;
+        std::unordered_map<std::string, std::shared_ptr<Button>> m_AllButtons;
+        std::unordered_map<std::string, std::shared_ptr<TextBox>> m_AllTextBoxs;
+    };
+
+    static inline WidgetsManager* s_pInstance;
+    static inline std::vector<widgets> m_Screens;
+
+    widgets m_Widgets;
+
+    bool m_AllHiden;
+    bool m_Wiped;
+    bool m_ButtonDeleted;
+
+    WidgetsManager();
+    ~WidgetsManager();
+
+public:
+    static WidgetsManager& Instance();
+
+    enum WidgetType : uint8_t { WIDGET_TEXT = 0, WIDGET_BUTTON, WIDGET_TEXTBOX };
+
+    void AddWidget(const std::string& key, Text* text);
+    void AddWidget(const std::string& key, Button* button);
+    void AddWidget(const std::string& key, TextBox* textbox);
+
+    void RemoveWidget(WidgetType type, const std::string& key);
+    void WipeWidgets();
+
+    Text* GetText(const std::string& key);
+    Button* GetButton(const std::string& key);
+    TextBox* GetTextBox(const std::string& key);
+
+    bool ExistsText(const std::string key);
+    bool ExistsButton(const std::string key);
+    bool ExistsTextBox(const std::string key);
+
+    void Draw();
+    void Handle();
+
+    void SetHiden(bool hide);
+    bool GetHiden();
+
+    void SaveScreen();
+    void PopScreen();
+    void WipeScreens();
+
+    struct dump {
+        std::vector<std::pair<std::string, textState>> ts;
+        std::vector<std::pair<std::string, buttonState>> bs;
+        std::vector<std::pair<std::string, textboxState>> tbs;
+    };
+    dump Dump();
+    void Load(const dump& d);
+};
+
+#define WM_INSTANCE WidgetsManager::Instance()
+
+} // namespace VNEngine
