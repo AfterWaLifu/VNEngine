@@ -5,61 +5,55 @@
 
 namespace VNEngine {
 
-/**
- * @brief	Logger class, used as singletone
- * Logs everything you need (or not) into logs.txt file.
- * Writes also timestamps and labels for every line
- */
 class Logger {
-    std::ofstream* logs; /// Logs file
-
-    time_t rawTime;       /// Time in secs
-    struct tm notRawTime; /// Default C time struct
-
-    std::string meta = "[INFO]"; /// Meta string like INFO, WARNING, ERROR or whtwr u want
-
-    Logger(std::string NameOfLogFile); /// Private constructor, don't touch that
-    ~Logger();
-    static Logger* s_pInstance; /// The only instance of the logger (its ptr)
-
 public:
-    /**
-     * @brief	Sets 'meta' string
-     * @param	newMeta	New meta, that will be written into logs
-     */
-    void setMeta(std::string newMeta);
-    std::string getMeta(); ///	Returns current 'meta' state
+    void setTag(std::string newMeta);
+    std::string tag();
 
-    static Logger& Instance(); ///	The only way to get an access to the logger
-    static void Terminate();   ///	Function, closing logger (and file)
+    static Logger& instance();
 
-    /**
-     * @brief	Template method for logging like into casual stream
-     * @param	logIt	Whatever it is - log it, please
-     */
     template <class type>
     Logger& operator<<(type logIt) {
-        time(&rawTime); // getting time
+        auto logFile = std::ofstream(logFilePath_);
+        if (!logFile) {
+            return *this;
+        }
+
+        time(&rawTime);
+        tm notRawTime;
         localtime_s(&notRawTime, &rawTime);
-        *logs << "[" << notRawTime.tm_hour << ":" << notRawTime.tm_min <<    /*writting time*/
-            ":" << notRawTime.tm_sec << "]" << meta << " " << logIt << "\n"; // writting meta&logs
+
+        logFile << "[" << notRawTime.tm_hour << ":" << notRawTime.tm_min <<  /*writting time*/
+            ":" << notRawTime.tm_sec << "]" << tag_ << " " << logIt << "\n"; // writting meta&logs
+
+        logFile.close();
+
         return *this;
     }
+
+private:
+    Logger(std::string NameOfLogFile);
+
+    std::string logFilePath_;
+
+    time_t rawTime;
+
+    std::string tag_ = "[INFO]";
+
+    static std::shared_ptr<Logger> instance_;
 };
+
 } // namespace VNEngine
 
-//	This things are used to log smth in easier way
-
 #define VN_LOGS_INFO(x)                                                                                                \
-    if (Logger::Instance().getMeta() != "INFO")                                                                        \
-        Logger::Instance().setMeta("INFO");                                                                            \
-    Logger::Instance() << x;
+    if (Logger::instance().tag() != "INFO")                                                                            \
+        Logger::instance().setTag("INFO");                                                                             \
+    Logger::instance() << x;
 #define VN_LOGS_ERROR(x)                                                                                               \
-    if (Logger::Instance().getMeta() != "ERROR")                                                                       \
-        Logger::Instance().setMeta("ERROR");                                                                           \
-    Logger::Instance() << x;                                                                                           \
-    Logger::Terminate();
+    if (Logger::instance().tag() != "ERROR")                                                                           \
+        Logger::instance().setTag("ERROR");                                                                            \
+    Logger::instance() << x;
 #define VN_LOGS_WARNING(x)                                                                                             \
-    if (Logger::Instance().getMeta() != "WARNING")                                                                     \
-        Logger::Instance().setMeta("WARNING");                                                                         \
-    Logger::Instance() << x;
+    if (Logger::instance().tag() != "WARNING")                                                                         \
+        Logger::instance().setTag("WARNING");                                                                          \
+    Logger::instance() << x;

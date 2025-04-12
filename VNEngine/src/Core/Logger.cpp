@@ -2,27 +2,19 @@
 
 namespace VNEngine {
 
-Logger* Logger::s_pInstance = nullptr;
+std::shared_ptr<Logger> Logger::instance_ = nullptr;
 
-Logger::Logger(std::string NameOfLogFile) : rawTime(0), notRawTime({}) {
-    logs = new std::ofstream(NameOfLogFile);
-    if (!logs)
-        exit(1);
-}
+Logger::Logger(std::string NameOfLogFile) : logFilePath_(std::move(NameOfLogFile)), rawTime(0) {}
 
-Logger::~Logger() {
-    if (logs) {
-        logs->close();
+void Logger::setTag(std::string newMeta) { tag_ = "[" + newMeta + "]"; }
+
+std::string Logger::tag() { return tag_; }
+
+Logger& Logger::instance() {
+    if (!instance_) {
+        instance_ = std::shared_ptr<Logger>(new Logger("logs.txt"));
     }
+    return *instance_;
 }
 
-void Logger::setMeta(std::string newMeta) { meta = "[" + newMeta + "]"; }
-
-std::string Logger::getMeta() { return meta; }
-
-Logger& Logger::Instance() { return s_pInstance ? *s_pInstance : *(s_pInstance = new Logger("logs.txt")); }
-void Logger::Terminate() {
-    Logger* logs = &Logger::Instance();
-    logs->logs->close();
-}
 } // namespace VNEngine
