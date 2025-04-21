@@ -23,7 +23,5 @@ protected:
     virtual void update();
     void handleEvents();
     void draw();
-
-    bool isRunning_;
 };
 } // namespace VNEngine

@@ -6,8 +6,6 @@
 
 namespace VNEngine {
 
-std::shared_ptr<AudioPlayer> AudioPlayer::instance_ = nullptr;
-
 AudioPlayer::AudioPlayer()
     : audiofilesPath_(""), audioList_(), device_(nullptr), context_(nullptr), musicSource_(0), soundSource_(0),
       musicBuffer_(0), soundBuffer_(0), musicVolume_(1.0f), soundVolume_(1.0f), isMute_(false) {

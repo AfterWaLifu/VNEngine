@@ -74,7 +74,7 @@ private:
     void resumeSource(std::uint32_t source);
     void stopSource(std::uint32_t source);
 
-    static std::shared_ptr<AudioPlayer> instance_;
+    static inline std::shared_ptr<AudioPlayer> instance_ = nullptr;
 
     std::string audiofilesPath_;
 

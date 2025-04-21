@@ -7,11 +7,9 @@
 
 namespace VNEngine {
 
-App::App() : drawer_(nullptr), isRunning_(false) {
+App::App() : drawer_(nullptr) {
     Loader l = Loader(this);
     l.Load();
-
-    isRunning_ = true;
 
     load();
 }
@@ -23,7 +21,7 @@ App::~App() {
 
 void App::run() {
     uint64_t ticks, diff;
-    while (isRunning_) {
+    while (IH_INSTANCE.isRunning()) {
         ticks = SDL_GetTicks64();
         update();
         handleEvents();
@@ -39,7 +37,7 @@ void App::load() { SM_INSTANCE.ChangeState(new MenuState("mainmenu")); }
 void App::update() {}
 
 void App::handleEvents() {
-    IH_INSTANCE.Update();
+    IH_INSTANCE.update();
     WM_INSTANCE.Handle();
     SM_INSTANCE.Update();
 }

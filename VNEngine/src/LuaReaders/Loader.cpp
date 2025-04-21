@@ -95,11 +95,11 @@ void Loader::readSettings() {
                 stretching = stretchFromXML;
         }
     }
-    m_pApp->m_Drawer = std::make_unique<Artist>(title, bwidth, bheight, foolscreen);
+    m_pApp->drawer_ = std::make_unique<Artist>(title, bwidth, bheight, foolscreen);
     if (width != bwidth || height != bheight)
-        m_pApp->m_Drawer->SetWindowSize({width, height});
-    m_pApp->m_Drawer->SetWindowResizable(resizable);
-    m_pApp->m_Drawer->SetStretchingState((Stretching)stretching);
+        m_pApp->drawer_->SetWindowSize({width, height});
+    m_pApp->drawer_->SetWindowResizable(resizable);
+    m_pApp->drawer_->SetStretchingState((Stretching)stretching);
 
     XMLElement* audio = root->FirstChildElement("Audio");
     if (audio) {
@@ -135,20 +135,20 @@ void Loader::writeSettings() {
     XMLElement* resizable = doc.NewElement("Resizable");
     XMLElement* stretching = doc.NewElement("Stretching");
 
-    title->SetText(m_pApp->m_Drawer->GetWindowTitle().c_str());
-    auto sizevec = m_pApp->m_Drawer->GetWindowSize();
+    title->SetText(m_pApp->drawer_->GetWindowTitle().c_str());
+    auto sizevec = m_pApp->drawer_->GetWindowSize();
     sizex->SetText(sizevec.x);
     sizey->SetText(sizevec.y);
     size->InsertFirstChild(sizex);
     size->InsertEndChild(sizey);
-    auto basesizevec = m_pApp->m_Drawer->GetBaseWinSize();
+    auto basesizevec = m_pApp->drawer_->GetBaseWinSize();
     basesizex->SetText(basesizevec.x);
     basesizey->SetText(basesizevec.y);
     basesize->InsertFirstChild(basesizex);
     basesize->InsertEndChild(basesizey);
-    fullscreen->SetText(m_pApp->m_Drawer->GetWindowFullscreen());
-    resizable->SetText(m_pApp->m_Drawer->GetWindowResizable());
-    stretching->SetText((int)m_pApp->m_Drawer->GetStretchingState());
+    fullscreen->SetText(m_pApp->drawer_->GetWindowFullscreen());
+    resizable->SetText(m_pApp->drawer_->GetWindowResizable());
+    stretching->SetText((int)m_pApp->drawer_->GetStretchingState());
     window->InsertFirstChild(title);
     window->InsertEndChild(size);
     window->InsertEndChild(basesize);
@@ -180,7 +180,7 @@ void Loader::preload() {
         VN_LOGS_WARNING(lua_tostring(L, -1));
         lua_pop(L, 1);
     }
-    LG::SetDrawwerToGetWindowSize(m_pApp->m_Drawer.get());
+    LG::SetDrawwerToGetWindowSize(m_pApp->drawer_.get());
 }
 
 Loader::Loader(App* app) : LuaReader() {
@@ -191,11 +191,10 @@ Loader::Loader(App* app) : LuaReader() {
 Loader::~Loader() {}
 
 void Loader::Load() {
-    InputHandler::InputHandlerInit(&(m_pApp->m_IsRunning));
     readPresets();
     readSettings();
-    State::InitDrawingForStates(m_pApp->m_Drawer.get());
-    LS::InitDrawingForLua(m_pApp->m_Drawer.get());
+    State::InitDrawingForStates(m_pApp->drawer_.get());
+    LS::InitDrawingForLua(m_pApp->drawer_.get());
     preload();
 }
 

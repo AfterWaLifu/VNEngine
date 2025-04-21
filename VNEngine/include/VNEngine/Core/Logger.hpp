@@ -40,7 +40,7 @@ private:
 
     std::string tag_ = "[INFO]";
 
-    static std::shared_ptr<Logger> instance_;
+    static inline std::shared_ptr<Logger> instance_ = nullptr;
 };
 
 } // namespace VNEngine

@@ -2,8 +2,6 @@
 
 namespace VNEngine {
 
-std::shared_ptr<Logger> Logger::instance_ = nullptr;
-
 Logger::Logger(std::string NameOfLogFile) : logFilePath_(std::move(NameOfLogFile)), rawTime(0) {}
 
 void Logger::setTag(std::string newMeta) { tag_ = "[" + newMeta + "]"; }

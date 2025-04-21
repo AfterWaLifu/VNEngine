@@ -1,8 +1,9 @@
 #pragma once
 
-#include <SDL2/SDL.h>
+#include <SDL2/SDL_scancode.h>
 
-#include <stdint.h>
+#include <array>
+#include <cstdint>
 #include <string>
 #include <vector>
 
@@ -11,25 +12,57 @@
 
 namespace VNEngine {
 
+// NOT "enum class" because is being used to access std::array
 enum MouseButtons : uint8_t { LEFT = 0, MIDDLE = 1, RIGHT = 2 };
 
-/**
- * @brief Class to handle all the input from keyboard or mouse in the app
- * Implemented as singletone to have an a access from anywhere.
- */
+// Singletone handler for either keyboard & mouth
 class InputHandler {
 
-    static inline InputHandler* s_pInstance;
+public:
+    static InputHandler& instance();
 
-    bool* m_isRunningPointer;
-    std::vector<bool> m_mouseButtonStates;
-    vec2 m_mousePos;
-    int32_t m_mouseScrollAmount;
-    uint8_t* m_keystates;
-    std::vector<SDL_Scancode> m_keysPressed;
-    bool m_windowResized;
-    bool m_textInputEnabled;
-    std::string m_textInputText;
+    const bool& isRunning();
+    void update();
+
+    bool mouseButtonClicked(MouseButtons button);
+    bool mouseButtonHeld(MouseButtons button);
+    const vec2& mousePos();
+
+    // returns amount of pixels scrolled (positive=up, negative=down)
+    std::int32_t mouseScrollAmount();
+
+    // true if pressed AND not held
+    bool isKeyPressed(const std::string& key);
+
+    // TODO: check is it truly "only"?
+    // true ONLY when held
+    bool isKeyHeld(const std::string& key);
+
+    void setWindowResized(bool resized);
+    bool windowResized();
+
+    const std::string& getTextInput();
+
+    void setTextInputState(bool state);
+    bool textInputState();
+
+    void exit();
+
+private:
+    InputHandler();
+    ~InputHandler();
+
+    static inline std::shared_ptr<InputHandler> instance_ = nullptr;
+
+    bool isRunning_;
+    std::array<bool, 3> mouseButtonStates_;
+    vec2 mousePos_;
+    std::int32_t mouseScrollAmount_;
+    std::uint8_t* keyStates_;
+    std::vector<SDL_Scancode> keysPressed_;
+    bool windowResized_;
+    bool textInputEnabled_;
+    std::string textInputText_;
 
     void onKeyDown(SDL_Event& event);
     void onKeyUp(SDL_Event& event);
@@ -39,83 +72,7 @@ class InputHandler {
     void onMouseWheelEvent(SDL_Event& event);
     void onWindowEvent(SDL_Event& event);
     void onTextInput(SDL_Event& event);
-
-    InputHandler(bool* isRunnzing);
-    ~InputHandler();
-
-public:
-    static InputHandler& Instance();
-    static void InputHandlerInit(bool* isRunning);
-
-    void Update();
-
-    /**
-     * @brief Function to get a state of mouse button
-     * @param button A member of enum MouseButtons
-     * @return True if preesed and false if not
-     */
-    bool getMouseButtonClicked(MouseButtons button);
-
-    /**
-     * @brief Function to get a state of mouse button w/out reseting
-     * @param button A member of enum MouseButtons
-     * @return True if held and false if not
-     */
-    bool getMouseButtonHeld(MouseButtons button);
-
-    /**
-     * @brief Function to get a mouse cursor position
-     * @return Vector of 2 coordinates x and y
-     */
-    const vec2& getMousePos();
-
-    /**
-     * @brief Mouse scroll event use
-     * @return Amount of pixels scrolled (positive=up, negative=down)
-     */
-    int32_t getMouseScrollAmount();
-
-    /**
-     * @brief Function to get a pressed of a keyboard button
-     * @param key Button sign or name (check Keys.h)
-     * @return True if pressed (and not holded)
-     */
-    bool isKeyPressed(const std::string& key);
-
-    /**
-     * @brief To get if key being held
-     * @param key Button sign or name (check Keys.h)
-     * @return True if pressed
-     */
-    bool isKeyHeld(const std::string& key);
-
-    /**
-     * @brief Cheching for state of window size
-     * @return True if window size changed
-     */
-    bool getIfWindowResized();
-    /**
-     * @brief Function to set resized flag (needed for scaling)
-     * @param key True if resized
-     */
-    void setIfWindowResized(bool resized);
-
-    /**
-     * @brief Gives an access to the string of text input
-     * @return Pointer to the string
-     */
-    std::string* getTextInput();
-
-    /**
-     * @brief Turns on/off inputing text
-     * @param state True or false to ON/OFF accordingly
-     */
-    void setTextInputState(bool state);
-
-    bool getTextInputState();
-
-    void exit();
 };
 
-#define IH_INSTANCE InputHandler::Instance()
+#define IH_INSTANCE InputHandler::instance()
 } // namespace VNEngine
