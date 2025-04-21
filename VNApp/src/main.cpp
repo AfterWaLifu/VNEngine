@@ -5,7 +5,7 @@ int main(int argc, char** args) {
     (void)args;
 
     auto game = VNEngine::App();
-    game.Run();
+    game.run();
 
     return 0;
 }
