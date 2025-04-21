@@ -20,15 +20,16 @@ App::~App() {
 }
 
 void App::run() {
-    uint64_t ticks, diff;
+    std::uint64_t ticks = 0, diff = 0;
     while (IH_INSTANCE.isRunning()) {
         ticks = SDL_GetTicks64();
         update();
         handleEvents();
         draw();
         diff = ticks = SDL_GetTicks64();
-        if (diff < 16)
-            SDL_Delay((uint32_t)(16 - diff));
+        if (diff < 16) {
+            SDL_Delay(static_cast<uint32_t>(16 - diff));
+        }
     }
 }
 
