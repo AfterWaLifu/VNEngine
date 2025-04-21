@@ -4,132 +4,102 @@
 
 #include <VNEngine/Audio/AudioList.hpp>
 
+#include <memory>
+#include <optional>
 #include <vector>
 
 namespace VNEngine {
 
-/**
- * @brief Audio player class, plays audiofiles
- */
 class AudioPlayer {
-public:
-    static AudioPlayer& Instance();
-
-    /**
-     * @brief Plays audio on repeat
-     * @param trackName Keycode of added audio
-     */
-    void PlayMusic(const std::string& trackName);
-    void PauseMusic();  /// Pauses music, may be resumed
-    void ResumeMusic(); /// Resumes paused music
-    void StopMusic();   /// *holy music stops* and returns to the begining of audio
-    /**
-     * @brief Plays a sound once
-     * @param trackName Keycode of added audio
-     */
-    void PlaySound(const std::string& trackName);
-    void PauseSound();  /// Pauses sound, may be resumed
-    void ResumeSoune(); /// Resumes paused sound
-    void StopSound();   /// Stops sound
-
-    /**
-     * @brief Adds new audio to the app
-     * @param filename	The path + name of the file
-     * @param key		Keyword to get an access to this audio
-     */
-    void AddAudio(const std::string& filename, const std::string& key);
-    /**
-     * @brief Removing audio from the dictionary
-     * @param key		Keyword of audio to remove
-     */
-    void RemoveAudio(const std::string& key);
-
-    /**
-     * @brief Set a new volume value for music
-     * @param volume	Value in range [0.0;1.0]
-     */
-    void SetMusicVolume(float volume);
-    /**
-     * @brief Set a new volume value for sounds
-     * @param volume	Value in range [0.0;1.0]
-     */
-    void SetSoundVolume(float volume);
-    /**
-     * @brief Retuns a current volume value for music
-     * @return Current volume value for music
-     */
-    float GetMusicVolume();
-    /**
-     * @brief Retuns a current volume value for sounds
-     * @return Current volume value for sounds
-     */
-    float GetSoundVolume();
-
-    void Mute();      /// Mute all the sounds/musics
-    void Unmute();    /// Unmute all the sounds/musics
-    bool GetIfMute(); ///	Returns true if muted
-
-    std::string GetCurrentMusic(); /// Returns a key of current music
-    std::string GetCurrentSound(); /// Returns a key of current sound
-    bool GetIfMusicPlays();        /// Returns true if music plays
-    bool GetIfSoundPlays();        /// Returns true is sound plays
-
-    void PushState();
-    void PopState();
-    void WipeStates();
-
-    void SetAudiofilePath(std::string path);
-    std::string GetAudiofilePath();
-
-    struct state {
-        std::string mkey;
-        std::string skey;
-        bool mplays;
-        bool splays;
-    };
-    struct dump {
-        std::vector<std::pair<std::string, std::string>> list;
-        state s;
-    };
-    dump Dump();
 
 private:
-    static inline AudioPlayer* s_pInstance;
-
-    std::string m_AudiofilesPath;
-
-    /**
-     * @brief	Constructors, inits it, needed
-     */
     AudioPlayer();
-    /**
-     * @brief	Destructor, also needed, but less =)
-     */
     ~AudioPlayer();
 
-    AudioList m_AudioList; /// Manages audiofiles
+public:
+    static AudioPlayer& instance();
+
+    // Plays audio on repeat
+    void playMusic(const std::string& trackName);
+    // Pauses music, may be resumed
+    void pauseMusic();
+    void resumeMusic();
+    // *holy music stops* and returns to the begining of audio
+    void stopMusic();
+
+    // Plays a sound once
+    void playSound(const std::string& trackName);
+    void pauseSound();
+    void resumeSound();
+    // stops and returns to the begining of audio
+    void stopSound();
+
+    void addAudio(const std::string& filename, const std::string& key);
+    void removeAudio(const std::string& key);
+
+    // Value in range [0.0;1.0]
+    void setMusicVolume(float volume);
+    void setSoundVolume(float volume);
+
+    float musicVolume();
+    float soundVolume();
+
+    void mute();
+    void unmute();
+    bool isMute();
+
+    std::optional<std::string> currentMusic();
+    std::optional<std::string> currentSound();
+
+    void pushState();
+    void popState();
+    void wipeStates();
+
+    void setAudiofilePath(const std::string& path);
+
+    struct State {
+        std::optional<std::string> music;
+        std::optional<std::string> sound;
+    };
+    struct Dump {
+        std::unordered_map<std::string, std::string> listDump;
+        State playerState;
+    };
+    Dump createDump();
+
+private:
+    void playSource(std::uint32_t source, std::uint32_t& buffer, std::optional<std::string>& current,
+                    const std::string& trackName);
+    void pauseSource(std::uint32_t source);
+    void resumeSource(std::uint32_t source);
+    void stopSource(std::uint32_t source);
+
+    static std::shared_ptr<AudioPlayer> instance_;
+
+    std::string audiofilesPath_;
+
+    AudioList audioList_;
 
     // OPENAL THINGS BELOW, DONT TOUCH THAT
-    ALCdevice* m_pDevice;
-    ALCcontext* m_pContext;
+    ALCdevice* device_;
+    ALCcontext* context_;
 
-    uint32_t m_MusicSource;
-    uint32_t m_SoundSource;
+    std::uint32_t musicSource_;
+    std::uint32_t soundSource_;
 
-    uint32_t m_MusicBuffer;
-    uint32_t m_SoundBuffer;
+    std::uint32_t musicBuffer_;
+    std::uint32_t soundBuffer_;
     // END OF OPENAL THINGS
 
-    float m_MusicVolume; /// Music volume
-    float m_SoundVolume; /// Sound volume
-    bool m_Mute;         /// Mute state
+    float musicVolume_;
+    float soundVolume_;
+    bool isMute_;
 
-    std::string m_CurrentMusic; /// current music key
-    std::string m_CurrentSound; /// current sound key
-    bool m_musicPlays;          /// music is currently playing
+    std::optional<std::string> currentMusic_;
+    std::optional<std::string> currentSound_;
 
-    std::vector<state> m_States;
+    std::vector<State> states_;
 };
 
-#define AP_INSTANCE AudioPlayer::Instance()
+#define AP_INSTANCE AudioPlayer::instance()
 } // namespace VNEngine

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <string>
 #include <unordered_map>
 
@@ -7,36 +8,22 @@ namespace VNEngine {
 
 class AudioList {
 public:
-    AudioList();
+    AudioList() = default;
     ~AudioList();
 
-    /**
-     * @brief Adding a new audiofile to the dictionary of its
-     * @param filename	The path + name of the file
-     * @param key		Keyword to get an access to this audio
-     * @return True if added and everything is fine
-     */
-    bool AddAudio(std::string filename, std::string key);
-    /**
-     * @brief Removing audio from the dictionary
-     * @param key		Keyword of audio to remove
-     * @return True if added and everything is fine
-     */
-    bool RemoveAudio(std::string key);
+    bool addAudio(const std::string& filepath, const std::string& key);
+    bool removeAudio(const std::string& key);
 
-    /**
-     * @brief Being used to get an access to the added audio by key
-     * @param key		Keyword of needed audio
-     */
-    uint32_t GetAudio(std::string key);
+    // TODO: change to optional
+    std::optional<std::uint32_t> getAudio(const std::string& key);
 
-    std::vector<std::pair<std::string, std::string>> Dump();
+    std::unordered_map<std::string, std::string> dump();
 
 private:
-    /// Dictionary of all the added audio (pairs keyword - internal openal code)
-    std::unordered_map<std::string, uint32_t> m_SoundBufferList;
+    std::unordered_map<std::string, std::uint32_t> soundBufferList_;
 
-    void RemoveFromDumpList(const std::string& key);
-    std::vector<std::pair<std::string, std::string>> m_ListOfPathes; ///	To save current state of list
+    void removeFromDumpList(const std::string& key);
+    std::unordered_map<std::string, std::string> listOfPathes_;
 };
+
 } // namespace VNEngine

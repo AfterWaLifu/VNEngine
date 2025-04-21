@@ -8,23 +8,32 @@
 
 namespace VNEngine {
 
-AudioList::AudioList() {}
-
 AudioList::~AudioList() {
-    if (m_SoundBufferList.size() == 0)
+    if (soundBufferList_.empty()) {
         return;
-
-    std::vector<unsigned int> buffers;
-    for (auto start = m_SoundBufferList.begin(); start != m_SoundBufferList.end(); ++start) {
-        buffers.push_back((*start).second);
     }
-    alDeleteBuffers((ALsizei)buffers.size(), buffers.data());
-    m_SoundBufferList.clear();
+
+    std::vector<std::uint32_t> buffers;
+    for (auto it = soundBufferList_.begin(); it != soundBufferList_.end(); ++it) {
+        buffers.push_back(it->second);
+    }
+    alDeleteBuffers(static_cast<ALsizei>(buffers.size()), buffers.data());
 }
 
-bool AudioList::AddAudio(std::string filename, std::string key) {
-    if (!m_SoundBufferList.empty() && m_SoundBufferList.find(key) != m_SoundBufferList.end())
-        return true;
+bool AudioList::addAudio(const std::string& filepath, const std::string& key) {
+    if (soundBufferList_.find(key) != soundBufferList_.end()) {
+        auto it = listOfPathes_.find(filepath);
+        if (it != listOfPathes_.end() && it->second == key) {
+            // already added = success
+            return true;
+        }
+        VN_LOGS_ERROR("Can't add audio - key already taken");
+        return false;
+    }
+
+    // SNDFILE LIB usage from example as it is, with C-style casts, didn't touch on purpose
+
+    // TODO: UB on adding approximately 2^32 audio files (buffers in uint32), gonna check what sndfile does with it
 
     ALenum err, format;
     ALuint buffer;
@@ -34,13 +43,13 @@ bool AudioList::AddAudio(std::string filename, std::string key) {
     sf_count_t num_frames;
     ALsizei num_bytes;
 
-    sndfile = sf_open(filename.c_str(), SFM_READ, &sfinfo);
+    sndfile = sf_open(filepath.c_str(), SFM_READ, &sfinfo);
     if (!sndfile) {
-        VN_LOGS_WARNING("Could not open audio in" + filename + " (" + sf_strerror(sndfile) + ")");
+        VN_LOGS_ERROR("Could not open audio in" + filepath + " (" + sf_strerror(sndfile) + ")");
         return false;
     }
     if (sfinfo.frames < 1 || sfinfo.frames > (sf_count_t)(INT_MAX / sizeof(short)) / sfinfo.channels) {
-        VN_LOGS_WARNING("Bad sample count in " + filename + "(" + (const char*)sfinfo.frames + ")");
+        VN_LOGS_ERROR("Bad sample count in " + filepath + "(" + (const char*)sfinfo.frames + ")");
         sf_close(sndfile);
         return false;
     }
@@ -58,7 +67,7 @@ bool AudioList::AddAudio(std::string filename, std::string key) {
             format = AL_FORMAT_BFORMAT3D_16;
     }
     if (!format) {
-        VN_LOGS_WARNING("Unsupported channel count: " << sfinfo.channels << "(" << filename << ")");
+        VN_LOGS_ERROR("Unsupported channel count: " << sfinfo.channels << "(" << filepath << ")");
         sf_close(sndfile);
         return false;
     }
@@ -69,7 +78,7 @@ bool AudioList::AddAudio(std::string filename, std::string key) {
     if (num_frames < 1) {
         free(membuf);
         sf_close(sndfile);
-        VN_LOGS_WARNING("Failed to read samples in " + filename + " (" + (const char*)num_frames + ")");
+        VN_LOGS_ERROR("Failed to read samples in " + filepath + " (" + (const char*)num_frames + ")");
         return false;
     }
     num_bytes = (ALsizei)(num_frames * sfinfo.channels) * (ALsizei)sizeof(short);
@@ -85,49 +94,48 @@ bool AudioList::AddAudio(std::string filename, std::string key) {
     if (err != AL_NO_ERROR) {
         const std::string message = "OpenAL Error: ";
         const char* error = alGetString(err);
-        VN_LOGS_WARNING(message + error);
+        VN_LOGS_ERROR(message + error);
         if (buffer && alIsBuffer(buffer))
             alDeleteBuffers(1, &buffer);
         return false;
     }
 
-    m_SoundBufferList[key] = buffer;
-    m_ListOfPathes.push_back({filename, key});
+    soundBufferList_.insert({key, buffer});
+    listOfPathes_.insert({filepath, key});
     return true;
 }
 
-uint32_t AudioList::GetAudio(std::string key) {
-    if (m_SoundBufferList.find(key) == m_SoundBufferList.end()) {
-        return UINT32_MAX;
+std::optional<std::uint32_t> AudioList::getAudio(const std::string& key) {
+    if (soundBufferList_.find(key) == soundBufferList_.end()) {
+        return std::nullopt;
     } else {
-        return m_SoundBufferList[key];
+        return soundBufferList_[key];
     }
 }
 
-std::vector<std::pair<std::string, std::string>> AudioList::Dump() { return m_ListOfPathes; }
+std::unordered_map<std::string, std::string> AudioList::dump() { return listOfPathes_; }
 
-void AudioList::RemoveFromDumpList(const std::string& key) {
-    auto it = m_ListOfPathes.begin();
-    while (it != m_ListOfPathes.end()) {
+void AudioList::removeFromDumpList(const std::string& key) {
+    auto it = listOfPathes_.begin();
+    while (it != listOfPathes_.end()) {
         if ((*it).second == key) {
-            m_ListOfPathes.erase(it);
+            listOfPathes_.erase(it);
             return;
         }
         ++it;
     }
 }
 
-bool AudioList::RemoveAudio(std::string key) {
-    if (m_ListOfPathes.empty())
-        return false;
-    auto search = m_SoundBufferList.find(key);
-    if (search == m_SoundBufferList.end())
-        return false;
-    else {
-        RemoveFromDumpList(key);
-        alDeleteBuffers(1, &((*search).second));
-        m_SoundBufferList.erase(search);
+bool AudioList::removeAudio(const std::string& key) {
+    if (listOfPathes_.empty()) {
+        return true;
+    }
 
+    auto it = soundBufferList_.find(key);
+    if (it != soundBufferList_.end()) {
+        removeFromDumpList(key);
+        alDeleteBuffers(1, &(it->second));
+        soundBufferList_.erase(it);
         return true;
     }
 
