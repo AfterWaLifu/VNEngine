@@ -1,41 +1,18 @@
-#include "Logger.h"
-#include "vnepch.h"
+#include <VNEngine/Core/Logger.hpp>
 
 namespace VNEngine {
 
-	Logger* Logger::s_pInstance = nullptr;
+Logger::Logger(std::string NameOfLogFile) : logFilePath_(std::move(NameOfLogFile)), rawTime(0) {}
 
-	Logger::Logger(std::string NameOfLogFile)
-		: rawTime(0), notRawTime({})
-	{
-		logs = new std::ofstream(NameOfLogFile);
-		if (!logs) exit(1);
-	}
+void Logger::setTag(std::string newMeta) { tag_ = "[" + newMeta + "]"; }
 
-	Logger::~Logger()
-	{
-		if (logs) {
-			logs->close();
-		}
-	}
+std::string Logger::tag() { return tag_; }
 
-	void Logger::setMeta(std::string newMeta)
-	{
-		meta = "[" + newMeta + "]";
-	}
-
-	std::string Logger::getMeta()
-	{
-		return meta;
-	}
-
-	Logger& Logger::Instance()
-	{
-		return s_pInstance ? *s_pInstance : *(s_pInstance = new Logger("logs.txt"));
-	}
-	void Logger::Terminate()
-	{
-		Logger* logs = &Logger::Instance();
-		logs->logs->close();
-	}
+Logger& Logger::instance() {
+    if (!instance_) {
+        instance_ = std::shared_ptr<Logger>(new Logger("logs.txt"));
+    }
+    return *instance_;
 }
+
+} // namespace VNEngine
