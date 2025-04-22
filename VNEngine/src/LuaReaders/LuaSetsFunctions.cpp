@@ -25,7 +25,7 @@ luabridge::LuaRef vecIntoTable(vec4u8 vec, lua_State* L) {
 bool tableIntoVec(vec4& vec, luabridge::LuaRef lr) {
     using namespace luabridge;
     if (lr.isTable() && lr[1].isNumber() && lr[2].isNumber() && lr[3].isNumber() && lr[4].isNumber()) {
-        vec = {{lr[1].cast<int>(), lr[2].cast<int>(), lr[3].cast<int>(), lr[4].cast<int>()}};
+        vec = {lr[1].cast<int>(), lr[2].cast<int>(), lr[3].cast<int>(), lr[4].cast<int>()};
         return true;
     }
     return false;
@@ -119,7 +119,7 @@ uint32_t Draw(luabridge::LuaRef key, luabridge::LuaRef destination, luabridge::L
                 return s_ArtistToDraw->DrawR(key.tostring(), tileOrRow.cast<int>(), dest4);
             }
         } else if (destination[1].isNumber() && destination[2].isNumber()) {
-            dest2 = {{destination[1].cast<int>(), destination[2].cast<int>(), {}, {}}};
+            dest2 = {destination[1].cast<int>(), destination[2].cast<int>(), {}, {}};
             auto t = TM_INSTANCE.getTexture(key.tostring());
             if (!t)
                 return UINT32_MAX;
@@ -147,9 +147,9 @@ uint32_t DrawLeft(luabridge::LuaRef key, luabridge::LuaRef tileOrRow, luabridge:
     if (key.isString()) {
         auto winsize = s_ArtistToDraw->GetWindowSize();
         auto t = TM_INSTANCE.getTexture(key.tostring());
-        vec4 dest = {{(winsize.x / 2 - (t->w / t->c)) / 2,
-                      (t->h < winsize.y / 4) ? winsize.y * 3 - (t->h / t->r) / 4 : winsize.y - (t->h / t->r),
-                      t->w / t->c, t->h / t->r}};
+        vec4 dest = {(winsize.x / 2 - (t->w / t->c)) / 2,
+                     (t->h < winsize.y / 4) ? winsize.y * 3 - (t->h / t->r) / 4 : winsize.y - (t->h / t->r),
+                     t->w / t->c, t->h / t->r};
         if (tileOrRow.isNil() && collumnOrNil.isNil()) {
             return s_ArtistToDraw->DrawR(key.tostring(), 0, dest);
         }
@@ -171,9 +171,9 @@ uint32_t DrawCenter(luabridge::LuaRef key, luabridge::LuaRef tileOrRow, luabridg
     if (key.isString()) {
         auto winsize = s_ArtistToDraw->GetWindowSize();
         auto t = TM_INSTANCE.getTexture(key.tostring());
-        vec4 dest = {{(winsize.x - (t->w / t->c)) / 2,
-                      (t->h < winsize.y / 4) ? winsize.y * 3 - (t->h / t->r) / 4 : winsize.y - (t->h / t->r),
-                      t->w / t->c, t->h / t->r}};
+        vec4 dest = {(winsize.x - (t->w / t->c)) / 2,
+                     (t->h < winsize.y / 4) ? winsize.y * 3 - (t->h / t->r) / 4 : winsize.y - (t->h / t->r),
+                     t->w / t->c, t->h / t->r};
         if (tileOrRow.isNil() && collumnOrNil.isNil()) {
             return s_ArtistToDraw->DrawR(key.tostring(), 0, dest);
         }
@@ -195,9 +195,9 @@ uint32_t DrawRight(luabridge::LuaRef key, luabridge::LuaRef tileOrRow, luabridge
     if (key.isString()) {
         auto winsize = s_ArtistToDraw->GetWindowSize();
         auto t = TM_INSTANCE.getTexture(key.tostring());
-        vec4 dest = {{(winsize.x * 3 / 2 - (t->w / (t->c))) / 2,
-                      (t->h < winsize.y / 4) ? winsize.y * 3 - (t->h / t->r) / 4 : winsize.y - (t->h / t->r),
-                      t->w / t->c, t->h / t->r}};
+        vec4 dest = {(winsize.x * 3 / 2 - (t->w / (t->c))) / 2,
+                     (t->h < winsize.y / 4) ? winsize.y * 3 - (t->h / t->r) / 4 : winsize.y - (t->h / t->r),
+                     t->w / t->c, t->h / t->r};
         if (tileOrRow.isNil() && collumnOrNil.isNil()) {
             return s_ArtistToDraw->DrawR(key.tostring(), 0, dest);
         }

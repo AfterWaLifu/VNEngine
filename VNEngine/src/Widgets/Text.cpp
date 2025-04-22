@@ -53,8 +53,8 @@ Text::Text(vec4 geometry, std::wstring text, vec4u8 textColor, const std::string
     m_Image = nullptr;
 
     m_TextTexture = nullptr;
-    m_TextNativeGeometry = {{0, 0, 0, 0}};
-    m_TextDestination = {{0, 0, 0, 0}};
+    m_TextNativeGeometry = {0, 0, 0, 0};
+    m_TextDestination = {0, 0, 0, 0};
     m_IndentHorizontal = 3;
     m_IndentVertical = 3;
     SetFont(fontKey);
@@ -167,7 +167,7 @@ void Text::SetText(std::wstring text) {
         return;
     }
 
-    m_TextNativeGeometry = {{0, 0, textSurface->w, textSurface->h}};
+    m_TextNativeGeometry = {0, 0, textSurface->w, textSurface->h};
 
     SetAlign(m_Alignment);
 
@@ -301,7 +301,7 @@ void Text::SetGeometry(vec4 geometry) {
 
 vec4 Text::GetGeometry() { return m_Geometry; }
 
-void Text::Move(vec2 coords) { SetGeometry({{coords.x, coords.y, m_Geometry.w, m_Geometry.h}}); }
+void Text::Move(vec2 coords) { SetGeometry({coords.x, coords.y, m_Geometry.w, m_Geometry.h}); }
 
 void Text::Draw() {
     if (!m_IsShown)
@@ -326,7 +326,7 @@ void Text::Draw() {
         SDL_SetRenderDrawColor(Widget::sWD.renderer, m_BorderColor.r, m_BorderColor.g, m_BorderColor.b,
                                m_BorderColor.a);
         SDL_RenderDrawRect(Widget::sWD.renderer, (SDL_Rect*)&m_Geometry);
-        vec4 inner = {{m_Geometry.x + 1, m_Geometry.y + 1, m_Geometry.w - 2, m_Geometry.h - 2}};
+        vec4 inner = {m_Geometry.x + 1, m_Geometry.y + 1, m_Geometry.w - 2, m_Geometry.h - 2};
         SDL_RenderDrawRect(Widget::sWD.renderer, (SDL_Rect*)&inner);
     }
 }

@@ -32,7 +32,7 @@ luabridge::LuaRef vecIntoTable(vec4u8 vec, lua_State* L) {
 bool tableIntoVec(vec4& vec, luabridge::LuaRef lr) {
     using namespace luabridge;
     if (lr.isTable() && lr[1].isNumber() && lr[2].isNumber() && lr[3].isNumber() && lr[4].isNumber()) {
-        vec = {{lr[1].cast<int>(), lr[2].cast<int>(), lr[3].cast<int>(), lr[4].cast<int>()}};
+        vec = {lr[1].cast<int>(), lr[2].cast<int>(), lr[3].cast<int>(), lr[4].cast<int>()};
         return true;
     }
     return false;
@@ -53,7 +53,7 @@ void WidgetAdding(luabridge::LuaRef t) {
         LuaRef geomTable = t["geometry"];
         vec4 geometry = {};
         if (!tableIntoVec(geometry, geomTable)) {
-            geometry = {{0, 0, 100, 100}};
+            geometry = {0, 0, 100, 100};
         }
 
         std::string codename = "";
@@ -61,7 +61,7 @@ void WidgetAdding(luabridge::LuaRef t) {
             codename = t["name"].tostring();
 
         if (t["type"].tostring() == "text") {
-            textState ts = {{{0, 0, 100, 100}},
+            textState ts = {{0, 0, 100, 100},
                             "",
                             FM_INSTANCE.GetDefaultFont(),
                             "",
@@ -129,7 +129,7 @@ void WidgetAdding(luabridge::LuaRef t) {
 
             WM_INSTANCE.AddWidget(codename, new Text(ts));
         } else if (t["type"].tostring() == "button") {
-            buttonState bs = {{{{0, 0, 100, 100}},
+            buttonState bs = {{{0, 0, 100, 100},
                                "",
                                FM_INSTANCE.GetDefaultFont(),
                                "",
@@ -212,7 +212,7 @@ void WidgetAdding(luabridge::LuaRef t) {
 
             WM_INSTANCE.AddWidget(codename, new Button(bs));
         } else if (t["type"].tostring() == "textbox") {
-            textboxState tbs = {{{{0, 0, 100, 100}},
+            textboxState tbs = {{{0, 0, 100, 100},
                                  "",
                                  FM_INSTANCE.GetDefaultFont(),
                                  "",
@@ -541,7 +541,7 @@ bool WidgetButtonFocused(std::string name) { return WM_INSTANCE.GetButton(name)-
 std::string WidgetTextboxValue(std::string name) { return WM_INSTANCE.GetTextBox(name)->Value(); }
 
 void SetDefaultChoiseButton(luabridge::LuaRef t) {
-    buttonState bs = {{{{0, 0, 0, 0}},
+    buttonState bs = {{{0, 0, 0, 0},
                        "",
                        FM_INSTANCE.GetDefaultFont(),
                        "",

@@ -47,8 +47,8 @@ void vectoxml(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* elem, vec4u8 vec
     elem->InsertEndChild(a);
 }
 vec4 xmltovec(tinyxml2::XMLElement* elem) {
-    vec4 geom = {{atoi(elem->FirstChildElement("x")->GetText()), atoi(elem->FirstChildElement("y")->GetText()),
-                  atoi(elem->FirstChildElement("w")->GetText()), atoi(elem->FirstChildElement("h")->GetText())}};
+    vec4 geom = {atoi(elem->FirstChildElement("x")->GetText()), atoi(elem->FirstChildElement("y")->GetText()),
+                 atoi(elem->FirstChildElement("w")->GetText()), atoi(elem->FirstChildElement("h")->GetText())};
     return geom;
 }
 vec4u8 xmltouvec(tinyxml2::XMLElement* elem) {

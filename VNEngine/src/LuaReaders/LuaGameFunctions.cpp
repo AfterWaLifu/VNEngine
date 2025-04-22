@@ -12,7 +12,7 @@ namespace VNEngine {
 namespace LG {
 
 static StoryTeller* s_ST;
-static buttonState s_bs = {{{{0, 0, 0, 0}},
+static buttonState s_bs = {{{0, 0, 0, 0},
                             "",
                             "",
                             "",

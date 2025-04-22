@@ -97,10 +97,10 @@ public:
      * @brief Adding sprite to the queue on drawing
      * @return ID of drawn texture, so if you use a lot of the same texture, you can control it easily
      */
-    uint32_t Draw(const std::string& key, int tileNum = 0, vec4 destination = vec4{{0, 0, 100, 100}});
-    uint32_t Draw(const std::string& key, int row = 0, int collumn = 0, vec4 destination = {{0, 0, 100, 100}});
-    uint32_t DrawR(const std::string& key, int tileNum = 0, vec4 destination = {{0, 0, 100, 100}});
-    uint32_t DrawR(const std::string& key, int row = 0, int collumn = 0, vec4 destination = {{0, 0, 100, 100}});
+    uint32_t Draw(const std::string& key, int tileNum = 0, vec4 destination = vec4{0, 0, 100, 100});
+    uint32_t Draw(const std::string& key, int row = 0, int collumn = 0, vec4 destination = {0, 0, 100, 100});
+    uint32_t DrawR(const std::string& key, int tileNum = 0, vec4 destination = {0, 0, 100, 100});
+    uint32_t DrawR(const std::string& key, int row = 0, int collumn = 0, vec4 destination = {0, 0, 100, 100});
     void StopDrawing(const std::string& key);
     /**
      * @brief Removing sprite from the queue on drawing

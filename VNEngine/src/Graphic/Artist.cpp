@@ -10,7 +10,7 @@
 namespace VNEngine {
 
 vec4 GetTileRect(const Texture* t, const int tile, const std::string& key) {
-    vec4 source = {{0, 0, 1, 1}};
+    vec4 source = {0, 0, 1, 1};
     if (t->r * t->c > tile) {
         source.w = t->w / t->c;
         source.h = t->h / t->r;
@@ -22,7 +22,7 @@ vec4 GetTileRect(const Texture* t, const int tile, const std::string& key) {
     return source;
 }
 vec4 GetTileRect(const Texture* t, const int row, const int collumn, const std::string& key) {
-    vec4 source = {{0, 0, 1, 1}};
+    vec4 source = {0, 0, 1, 1};
     if (t->r > row || t->c > collumn) {
         source.w = t->w / t->c;
         source.h = t->h / t->r;
@@ -37,7 +37,7 @@ vec4 GetTileRect(const Texture* t, const int row, const int collumn, const std::
 Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
     : m_pWindow(nullptr), m_pRenderer(nullptr), m_GameScreen(nullptr), m_WindowTitle(title),
       m_BaseWindowSize({width, height}), m_WindowSize({width, height}), m_PrevWindowSize({0, 0}),
-      m_PrevBackgroundSize({{0, 0, 0, 0}}), m_Fullscreen(fullscreen), m_Resizable(true), m_DrawId(0), m_Background({}) {
+      m_PrevBackgroundSize({0, 0, 0, 0}), m_Fullscreen(fullscreen), m_Resizable(true), m_DrawId(0), m_Background({}) {
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
         VN_LOGS_ERROR("SDL initialization error");
@@ -72,7 +72,7 @@ Artist::Artist(const std::string& title, int width, int height, bool fullscreen)
 
     SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_BLEND);
 
-    m_Background = {{0, 0, 0, 255}, nullptr, "", false, false, {{-1, -1, 1, 1}}, Stretching::STRETCHED};
+    m_Background = {{0, 0, 0, 255}, nullptr, "", false, false, {-1, -1, 1, 1}, Stretching::STRETCHED};
 
     if (fullscreen)
         SetWindowFullscreen(fullscreen);
@@ -100,12 +100,12 @@ void Artist::Perform() {
     SDL_RenderClear(m_pRenderer);
 
     if (m_Background.drawBackPic) {
-        vec4 source = {{0, 0, m_Background.ptexture->w, m_Background.ptexture->h}};
+        vec4 source = {0, 0, m_Background.ptexture->w, m_Background.ptexture->h};
         SDL_RenderCopy(m_pRenderer, m_Background.ptexture->sdl_texture, (SDL_Rect*)(&source),
                        (SDL_Rect*)&(m_Background.dest));
     }
 
-    for (const std::pair<uint32_t, DrawnData>& pair : m_Queue) {
+    for (const auto& pair : m_Queue) {
         auto d = &(pair.second);
         SDL_RenderCopy(m_pRenderer, d->texture->sdl_texture, (SDL_Rect*)(&d->source), (SDL_Rect*)(&d->destination));
     }
@@ -140,7 +140,7 @@ void Artist::SetStretchingState(Stretching state) {
         vec2 source = {m_Background.ptexture->w, m_Background.ptexture->h};
         switch (m_Background.stretchState) {
         case CENTERED:
-            m_Background.dest = {{0, 0, source.x, source.y}};
+            m_Background.dest = {0, 0, source.x, source.y};
             m_Background.dest.x = (m_WindowSize.x - m_Background.dest.w) / 2;
             m_Background.dest.y = (m_WindowSize.y - m_Background.dest.h) / 2;
             break;
@@ -177,7 +177,7 @@ void Artist::SetStretchingState(Stretching state) {
 
         case FULLSCREENED:
         default:
-            m_Background.dest = {{0, 0, m_WindowSize.x, m_WindowSize.y}};
+            m_Background.dest = {0, 0, m_WindowSize.x, m_WindowSize.y};
         }
     }
 }
