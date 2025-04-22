@@ -7,6 +7,7 @@
 #include <VNEngine/Graphic/TextureManager.hpp>
 #include <VNEngine/LuaReaders/StoryTeller.hpp>
 #include <VNEngine/StateMachine/SaveLoad.hpp>
+#include <VNEngine/StateMachine/State.hpp>
 #include <VNEngine/Widgets/FontManager.hpp>
 
 #include <VNEngine/LuaReaders/LuaGameFunctions.hpp>
@@ -43,11 +44,11 @@ void Loader::readPresets() {
     }
     t = lb::getGlobal(L, "audio");
     if (t.isString()) {
-        AP_INSTANCE.SetAudiofilePath(t.tostring());
+        AP_INSTANCE.setAudiofilePath(t.tostring());
     }
     t = lb::getGlobal(L, "saves");
     if (t.isString()) {
-        SaveLoad::SetSaveDir(t.tostring());
+        SaveLoad::setSaveDir(t.tostring());
     }
 }
 
@@ -105,12 +106,12 @@ void Loader::readSettings() {
     if (audio) {
         XMLElement* temp;
         if ((temp = audio->FirstChildElement("MusicVolume")))
-            AP_INSTANCE.SetMusicVolume((float)atof(temp->GetText()) / 100.0f);
+            AP_INSTANCE.setMusicVolume((float)atof(temp->GetText()) / 100.0f);
         if ((temp = audio->FirstChildElement("SoundVolume")))
-            AP_INSTANCE.SetSoundVolume((float)atof(temp->GetText()) / 100.0f);
+            AP_INSTANCE.setSoundVolume((float)atof(temp->GetText()) / 100.0f);
         if ((temp = audio->FirstChildElement("Muted"))) {
             if (std::string(temp->GetText()) == "true")
-                AP_INSTANCE.Mute();
+                AP_INSTANCE.mute();
         }
     }
 }
@@ -160,9 +161,9 @@ void Loader::writeSettings() {
     XMLElement* musicv = doc.NewElement("MusicVolume");
     XMLElement* soundv = doc.NewElement("SoundVolume");
     XMLElement* muted = doc.NewElement("Muted");
-    musicv->SetText(AP_INSTANCE.GetMusicVolume() * 100.0f);
-    soundv->SetText(AP_INSTANCE.GetSoundVolume() * 100.0f);
-    muted->SetText(AP_INSTANCE.GetIfMute());
+    musicv->SetText(AP_INSTANCE.musicVolume() * 100.0f);
+    soundv->SetText(AP_INSTANCE.soundVolume() * 100.0f);
+    muted->SetText(AP_INSTANCE.isMute());
     audio->InsertFirstChild(musicv);
     audio->InsertEndChild(soundv);
     audio->InsertEndChild(muted);
@@ -193,10 +194,11 @@ Loader::~Loader() {}
 void Loader::Load() {
     readPresets();
     readSettings();
-    State::InitDrawingForStates(m_pApp->drawer_.get());
+    State::setStatesDrawer(m_pApp->drawer_.get());
     LS::InitDrawingForLua(m_pApp->drawer_.get());
     preload();
 }
 
 void Loader::Save() { writeSettings(); }
+
 } // namespace VNEngine

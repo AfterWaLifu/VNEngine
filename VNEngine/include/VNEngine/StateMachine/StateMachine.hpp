@@ -2,39 +2,39 @@
 
 #include <VNEngine/StateMachine/State.hpp>
 
+#include <memory>
+
 struct lua_State;
 
 namespace VNEngine {
 
 class StateMachine {
 
-    StateMachine();
-    ~StateMachine() = default;
-
-    std::vector<State*> m_States;
-
-    static inline StateMachine* s_StateMachine;
-
 public:
-    static StateMachine& Instance();
+    static StateMachine& instance();
 
-    void PushState(State* state);
-    void ChangeState(State* state);
-    void PopState();
-    void WipeStates();
+    void pushState(std::shared_ptr<State>&& state);
+    void changeState(std::shared_ptr<State>&& state);
+    void popState();
+    void wipeStates();
 
-    void Update();
-    void Draw();
+    void update();
+    void draw();
 
-    bool isThereAReading();
+    bool readingExists();
 
-    std::streampos GetTopReaderPos();
-    void SetTopReaderPos(size_t pos);
-    lua_State* GetTopReaderState();
+    std::streampos topReaderPos();
+    void setTopReaderPos(std::size_t pos);
+    lua_State* topReaderState();
 
-    std::string GetTopStateID();
-    Artist* GetCurrentDrawer();
+    std::string topStateID();
+    Artist* currentDrawer();
+
+private:
+    std::vector<std::shared_ptr<State>> states_;
+
+    static inline std::shared_ptr<StateMachine> instance_ = nullptr;
 };
 
-#define SM_INSTANCE StateMachine::Instance()
+#define SM_INSTANCE StateMachine::instance()
 } // namespace VNEngine

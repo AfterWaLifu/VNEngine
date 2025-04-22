@@ -21,7 +21,9 @@ TextBox::TextBox(vec4 geometry, std::wstring text, uint32_t maxCharNumber, vec4u
 
     IH_INSTANCE.setTextInputState(true);
 
-    s_InputString ? 0 : s_InputString = IH_INSTANCE.getTextInput();
+    if (!s_InputString) {
+        s_InputString = IH_INSTANCE.textInput();
+    }
 }
 
 TextBox::TextBox(const textboxState& tbs) : Text(tbs.ts) {
@@ -34,37 +36,49 @@ TextBox::TextBox(const textboxState& tbs) : Text(tbs.ts) {
     s_ActiveTextBox = this;
 
     IH_INSTANCE.setTextInputState(true);
-    s_InputString ? 0 : s_InputString = IH_INSTANCE.getTextInput();
+    if (!s_InputString) {
+        s_InputString = IH_INSTANCE.textInput();
+    }
 }
 
 TextBox::~TextBox() { IH_INSTANCE.setTextInputState(false); }
 
 void TextBox::Check() {
-    if (IH_INSTANCE.getMouseButtonClicked(LEFT)) {
-        vec2 mousepos = IH_INSTANCE.getMousePos();
+    if (IH_INSTANCE.mouseButtonClicked(LEFT)) {
+        vec2 mousepos = IH_INSTANCE.mousePos();
 
         if (mousepos.x >= m_Geometry.x && mousepos.y >= m_Geometry.y && mousepos.x <= m_Geometry.x + m_Geometry.w &&
             mousepos.y <= m_Geometry.y + m_Geometry.h) {
 
             s_ActiveTextBox = this;
 
-            if (IH_INSTANCE.getTextInputState() == false)
+            if (IH_INSTANCE.textInputState() == false) {
                 IH_INSTANCE.setTextInputState(true);
+            }
 
             if (s_InputString) {
-                m_CurrentString.empty() ? * s_InputString = "" : * s_InputString = m_CurrentString;
+                auto& inputString = s_InputString->get();
+                if (m_CurrentString.empty()) {
+                    inputString = "";
+                } else {
+                    inputString = m_CurrentString;
+                }
             }
         }
     }
 
-    if (this == s_ActiveTextBox && s_InputString) {
-        s_InputString->empty() ? m_CurrentString = "" : m_CurrentString = *s_InputString;
-        s_ActiveTextBox->SetText(m_CurrentString);
-    }
+    if (s_InputString) {
+        auto& inputString = s_InputString->get();
 
-    if (m_CurrentString.length() > m_MaxCharNumber) {
-        s_InputString->pop_back();
-        m_CurrentString.pop_back();
+        if (this == s_ActiveTextBox) {
+            inputString.empty() ? m_CurrentString = "" : m_CurrentString = inputString;
+            s_ActiveTextBox->SetText(m_CurrentString);
+        }
+
+        if (m_CurrentString.length() > m_MaxCharNumber) {
+            inputString.pop_back();
+            m_CurrentString.pop_back();
+        }
     }
 }
 
@@ -95,8 +109,9 @@ std::string TextBox::Value() { return m_CurrentString; }
 
 void TextBox::SetValue(const std::string& str) {
     m_CurrentString = str;
-    if (s_ActiveTextBox == this)
-        *s_InputString = str;
+    if (s_InputString && s_ActiveTextBox == this) {
+        (*s_InputString).get() = str;
+    }
     SetText(str);
 }
 

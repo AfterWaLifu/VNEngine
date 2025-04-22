@@ -41,7 +41,7 @@ public:
     void setWindowResized(bool resized);
     bool windowResized();
 
-    const std::string& getTextInput();
+    std::string& textInput();
 
     void setTextInputState(bool state);
     bool textInputState();
@@ -50,7 +50,6 @@ public:
 
 private:
     InputHandler();
-    ~InputHandler();
 
     static inline std::shared_ptr<InputHandler> instance_ = nullptr;
 

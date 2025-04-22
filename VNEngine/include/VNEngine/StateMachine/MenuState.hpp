@@ -7,22 +7,24 @@
 namespace VNEngine {
 
 class MenuState : public State {
-    std::string m_MenuState = "menu";
-    std::string m_ScreenToStart;
-
-    InterfaceCreator m_ic;
-
 public:
     MenuState(const std::string& screen);
-    void Redraw(const MenuState& state);
 
-    void Handle() override;
-    void Update() override;
-    void Render() override;
+    void redraw(const MenuState& state);
+
+    void handle() override;
+    void update() override;
+    void render() override;
 
     bool onEnter() override;
     bool onExit() override;
 
-    std::string GetStateId() const override;
+    std::string stateId() const override;
+
+private:
+    std::string menuState_ = "menu";
+    std::string screenToStart_;
+
+    InterfaceCreator ic_;
 };
 } // namespace VNEngine

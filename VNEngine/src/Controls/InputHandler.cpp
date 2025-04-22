@@ -8,12 +8,10 @@ InputHandler::InputHandler()
     mouseButtonStates_ = {false, false, false};
 }
 
-InputHandler::~InputHandler() {}
-
 InputHandler& InputHandler::instance() {
 
     if (!instance_) {
-        instance_ = std::make_shared<InputHandler>();
+        instance_ = std::shared_ptr<InputHandler>(new InputHandler());
     }
     return *instance_;
 }
@@ -111,7 +109,7 @@ bool InputHandler::windowResized() { return windowResized_; }
 
 void InputHandler::setWindowResized(bool resized) { windowResized_ = resized; }
 
-const std::string& InputHandler::getTextInput() { return textInputText_; }
+std::string& InputHandler::textInput() { return textInputText_; }
 
 void InputHandler::setTextInputState(bool state) {
     textInputEnabled_ = state;

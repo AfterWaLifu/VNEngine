@@ -8,135 +8,151 @@
 
 namespace VNEngine {
 
-StateMachine::StateMachine() { m_States = std::vector<State*>(); }
-
-StateMachine& StateMachine::Instance() {
-    return (s_StateMachine) ? *s_StateMachine : *(s_StateMachine = new StateMachine());
+StateMachine& StateMachine::instance() {
+    if (!instance_) {
+        instance_ = std::make_shared<StateMachine>();
+    }
+    return *instance_;
 }
 
-void StateMachine::PushState(State* state) {
-    if (!m_States.empty()) {
+void StateMachine::pushState(std::shared_ptr<State>&& state) {
+    if (!states_.empty()) {
         WM_INSTANCE.SaveScreen();
-        State::s_pDrawer->SaveScreen();
-        AP_INSTANCE.PushState();
+        State::drawer_->SaveScreen();
+        AP_INSTANCE.pushState();
     }
 
-    m_States.push_back(state);
-    if (!(m_States.back()->onEnter())) {
-        VN_LOGS_WARNING("Something wrong on entering " << m_States.back()->GetStateId() << " state");
+    states_.push_back(std::move(state));
+    if (!(states_.back()->onEnter())) {
+        VN_LOGS_WARNING("Something wrong on entering " << states_.back()->stateId() << " state");
     }
 }
 
-void StateMachine::ChangeState(State* state) {
-    if (!m_States.empty()) {
+void StateMachine::changeState(std::shared_ptr<State>&& state) {
+    if (!states_.empty()) {
+        auto backState = states_.back();
 
-        if (m_States.back()->GetStateId() == "menu" && state->GetStateId() == "menu") {
-            ((MenuState*)m_States.back())->Redraw(*((MenuState*)state));
-            delete state;
+        if (backState->stateId() == "menu" && state->stateId() == "menu") {
+            auto menuState = std::static_pointer_cast<MenuState>(backState);
+
+            menuState->redraw(*std::static_pointer_cast<MenuState>(state));
             return;
         }
 
-        if (m_States.back()->onExit()) {
-            delete m_States.back();
-            m_States.pop_back();
+        if (backState->onExit()) {
+            auto&& temp = std::move(states_.back());
+            // let it be removed (hopefuly)
+            (void)temp;
+            states_.pop_back();
         } else {
-            VN_LOGS_WARNING("Something wrong on exiting " << m_States.back()->GetStateId() << " state");
+            VN_LOGS_WARNING("Something wrong on exiting " << backState->stateId() << " state");
         }
     }
 
-    PushState(state);
+    pushState(std::move(state));
 }
 
-void StateMachine::PopState() {
-    if (!m_States.empty()) {
-        if (!(m_States.back()->onExit())) {
-            VN_LOGS_WARNING("Something wrong on exiting " << m_States.back()->GetStateId() << " state");
-        } else {
-            delete m_States.back();
-            m_States.pop_back();
-        }
+void StateMachine::popState() {
+    if (states_.empty()) {
+        return;
     }
 
-    if (!m_States.empty()) {
-        WM_INSTANCE.PopScreen();
-        State::s_pDrawer->PopScreen();
-        AP_INSTANCE.PopState();
+    auto&& backState = std::move(states_.back());
+
+    if (!(backState->onExit())) {
+        VN_LOGS_WARNING("Something wrong on exiting " << backState->stateId() << " state");
+    } else {
+        states_.pop_back();
     }
+
+    WM_INSTANCE.PopScreen();
+    State::drawer_->PopScreen();
+    AP_INSTANCE.popState();
 }
 
-void StateMachine::WipeStates() {
-    while (!m_States.empty())
-        PopState();
+void StateMachine::wipeStates() {
+    while (!states_.empty()) {
+        popState();
+    }
     WM_INSTANCE.WipeScreens();
-    State::s_pDrawer->WipeScreens();
-    AP_INSTANCE.WipeStates();
+    State::drawer_->WipeScreens();
+    AP_INSTANCE.wipeStates();
 }
 
-void StateMachine::Update() {
-    if (!(m_States.empty())) {
-        m_States.back()->Handle();
-        m_States.back()->Update();
+void StateMachine::update() {
+    if (states_.empty()) {
+        return;
     }
+
+    states_.back()->handle();
+    states_.back()->update();
 }
 
-void StateMachine::Draw() {
-    if (!(m_States.empty())) {
-        m_States.back()->Render();
+void StateMachine::draw() {
+    if (states_.empty()) {
+        return;
     }
+    states_.back()->render();
 }
 
-bool StateMachine::isThereAReading() {
-    if (m_States.empty())
+bool StateMachine::readingExists() {
+    if (states_.empty()) {
         return false;
-    for (auto s : m_States) {
-        if (s->GetStateId() == "reading")
+    }
+
+    for (auto s : states_) {
+        if (s->stateId() == "reading") {
             return true;
+        }
     }
     return false;
 }
 
-std::streampos StateMachine::GetTopReaderPos() {
-    auto back = m_States.end();
+std::streampos StateMachine::topReaderPos() {
     std::streampos sp(0);
-    while (back != m_States.begin() || (*back)->GetStateId() != "reading") {
-        --back;
+
+    auto it = states_.end();
+    while (it != states_.begin() || (*it)->stateId() != "reading") {
+        --it;
     }
-    if ((*back)->GetStateId() == "reading") {
-        ReadingState* r = dynamic_cast<ReadingState*>(*back);
+    if ((*it)->stateId() == "reading") {
+        auto r = std::static_pointer_cast<ReadingState>(*it);
         sp = r->GetReaderPos();
     }
     return sp;
 }
 
-void StateMachine::SetTopReaderPos(size_t pos) {
-    auto back = m_States.end();
-    while (back != m_States.begin() || (*back)->GetStateId() != "reading") {
+void StateMachine::setTopReaderPos(size_t pos) {
+    auto back = states_.end();
+    while (back != states_.begin() || (*back)->stateId() != "reading") {
         --back;
     }
-    if ((*back)->GetStateId() == "reading") {
-        ReadingState* r = dynamic_cast<ReadingState*>(*back);
+    if ((*back)->stateId() == "reading") {
+        auto r = std::static_pointer_cast<ReadingState>(*back);
         r->SetReaderPos(pos);
     }
 }
 
-lua_State* StateMachine::GetTopReaderState() {
-    auto back = m_States.end();
-    while (back != m_States.begin() || (*back)->GetStateId() != "reading") {
+lua_State* StateMachine::topReaderState() {
+    auto back = states_.end();
+    while (back != states_.begin() || (*back)->stateId() != "reading") {
         --back;
     }
-    if ((*back)->GetStateId() == "reading") {
-        ReadingState* r = dynamic_cast<ReadingState*>(*back);
+    if ((*back)->stateId() == "reading") {
+        auto r = std::static_pointer_cast<ReadingState>(*back);
         return r->GetLState();
-    } else
+    } else {
         return nullptr;
+    }
 }
 
-std::string StateMachine::GetTopStateID() {
-    if (m_States.empty())
+std::string StateMachine::topStateID() {
+    if (states_.empty())
         return "";
     else
-        return m_States.back()->GetStateId();
+        return states_.back()->stateId();
 }
 
-Artist* StateMachine::GetCurrentDrawer() { return State::s_pDrawer; }
+Artist* StateMachine::currentDrawer() { return State::drawer_; }
+
 } // namespace VNEngine

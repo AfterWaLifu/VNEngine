@@ -2,6 +2,8 @@
 
 #include <VNEngine/Widgets/Text.hpp>
 
+#include <optional>
+
 namespace VNEngine {
 
 struct textboxState {
@@ -13,7 +15,7 @@ struct textboxState {
 class TextBox : public Text {
 
     static inline TextBox* s_ActiveTextBox;
-    static inline std::string* s_InputString;
+    static inline std::optional<std::reference_wrapper<std::string>> s_InputString;
 
     std::string m_CurrentString;
     uint32_t m_MaxCharNumber;

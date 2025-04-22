@@ -8,24 +8,24 @@
 namespace VNEngine {
 namespace LSM {
 
-void Save(int num) { SaveLoad::Save(num, SM_INSTANCE.GetCurrentDrawer(), SM_INSTANCE.GetTopReaderState()); }
+void Save(int num) { SaveLoad::save(num, SM_INSTANCE.currentDrawer(), SM_INSTANCE.topReaderState()); }
 
 void Load(int num) {
-    SM_INSTANCE.WipeStates();
-    SM_INSTANCE.PushState(new ReadingState());
-    size_t pos = SaveLoad::Load(num, SM_INSTANCE.GetCurrentDrawer(), SM_INSTANCE.GetTopReaderState());
+    SM_INSTANCE.wipeStates();
+    SM_INSTANCE.pushState(std::make_shared<ReadingState>());
+    size_t pos = SaveLoad::load(num, SM_INSTANCE.currentDrawer(), SM_INSTANCE.topReaderState());
     if (pos == SIZE_MAX)
         return;
-    SM_INSTANCE.SetTopReaderPos(pos);
+    SM_INSTANCE.setTopReaderPos(pos);
 }
 
-void ToMenu(std::string menuState) { SM_INSTANCE.ChangeState(new MenuState(menuState)); }
+void ToMenu(std::string menuState) { SM_INSTANCE.changeState(std::make_shared<MenuState>(menuState)); }
 
-void GameStart() { SM_INSTANCE.ChangeState(new ReadingState()); }
+void GameStart() { SM_INSTANCE.changeState(std::make_shared<ReadingState>()); }
 
-void WipeStates() { SM_INSTANCE.WipeStates(); }
+void WipeStates() { SM_INSTANCE.wipeStates(); }
 
-bool GetIfReadingExist() { return SM_INSTANCE.isThereAReading(); }
+bool GetIfReadingExist() { return SM_INSTANCE.readingExists(); }
 
 } // namespace LSM
 } // namespace VNEngine

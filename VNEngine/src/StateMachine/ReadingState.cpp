@@ -10,36 +10,37 @@
 
 namespace VNEngine {
 
-ReadingState::ReadingState(std::streampos startPos) : m_Loaded(false) {
+ReadingState::ReadingState(std::streampos startPos) : loaded_(false) {
     if (startPos != 0) {
-        m_Loaded = true;
+        loaded_ = true;
         SetReaderPos(startPos);
     }
 }
 
-void ReadingState::Handle() {
-    if (IH_INSTANCE.getMouseButtonClicked(RIGHT) || IH_INSTANCE.isKeyPressed("escape")) {
-        SM_INSTANCE.PushState(new MenuState("save"));
+void ReadingState::handle() {
+    if (IH_INSTANCE.mouseButtonClicked(RIGHT) || IH_INSTANCE.isKeyPressed("escape")) {
+        SM_INSTANCE.pushState(std::make_shared<MenuState>("save"));
     }
 
-    if (IH_INSTANCE.getMouseButtonClicked(LEFT) || IH_INSTANCE.isKeyPressed("space") ||
+    if (IH_INSTANCE.mouseButtonClicked(LEFT) || IH_INSTANCE.isKeyPressed("space") ||
         IH_INSTANCE.isKeyPressed("enter")) {
 
         if (WM_INSTANCE.GetHiden()) {
             WM_INSTANCE.SetHiden(false);
         } else {
-            m_ST.Go();
+            st_.Go();
         }
 
-        if (m_ST.GetCompleted()) {
-            SM_INSTANCE.WipeStates();
-            SM_INSTANCE.ChangeState(new MenuState("mainmenu"));
+        if (st_.GetCompleted()) {
+            SM_INSTANCE.wipeStates();
+            SM_INSTANCE.changeState(std::make_shared<MenuState>("mainmenu"));
             return;
         }
     }
 
-    if (IH_INSTANCE.isKeyHeld("lctrl") || IH_INSTANCE.isKeyHeld("rctrl"))
-        m_ST.SetSkip(true);
+    if (IH_INSTANCE.isKeyHeld("lctrl") || IH_INSTANCE.isKeyHeld("rctrl")) {
+        st_.SetSkip(true);
+    }
 
     if (IH_INSTANCE.isKeyPressed("h")) {
         WM_INSTANCE.SetHiden(!(WM_INSTANCE.GetHiden()));
@@ -47,40 +48,41 @@ void ReadingState::Handle() {
 
     if (IH_INSTANCE.isKeyPressed("f") ||
         ((IH_INSTANCE.isKeyHeld("lalt") || IH_INSTANCE.isKeyHeld("ralt")) && IH_INSTANCE.isKeyPressed("enter"))) {
-        auto f = State::s_pDrawer->GetWindowFullscreen();
-        State::s_pDrawer->SetWindowFullscreen(!f);
+        auto f = State::drawer_->GetWindowFullscreen();
+        State::drawer_->SetWindowFullscreen(!f);
     }
 
-    if (IH_INSTANCE.isKeyPressed("s"))
-        State::s_pDrawer->SaveScreenshot();
+    if (IH_INSTANCE.isKeyPressed("s")) {
+        State::drawer_->SaveScreenshot();
+    }
 }
 
-void ReadingState::Update() {}
+void ReadingState::update() {}
 
-void ReadingState::Render() {}
+void ReadingState::render() {}
 
 bool ReadingState::onEnter() {
-    if (!m_Loaded) {
+    if (!loaded_) {
         InterfaceCreator ic;
         ic.Draw("game");
     }
-    m_ST.DoFile("game.lua");
+    st_.DoFile("game.lua");
 
     return true;
 }
 
 bool ReadingState::onExit() {
     WM_INSTANCE.WipeWidgets();
-    AP_INSTANCE.StopMusic();
-    s_pDrawer->WipeDrawing();
+    AP_INSTANCE.stopMusic();
+    drawer_->WipeDrawing();
     return true;
 }
 
-std::string ReadingState::GetStateId() const { return m_ReadingState; }
+std::string ReadingState::stateId() const { return readingState_; }
 
-std::streampos ReadingState::GetReaderPos() { return m_ST.GetCurrentPos(); }
+std::streampos ReadingState::GetReaderPos() { return st_.GetCurrentPos(); }
 
-void ReadingState::SetReaderPos(std::streampos pos) { m_ST.SetCurrentPos(pos); }
+void ReadingState::SetReaderPos(std::streampos pos) { st_.SetCurrentPos(pos); }
 
-lua_State* ReadingState::GetLState() { return m_ST.getl(); }
+lua_State* ReadingState::GetLState() { return st_.getl(); }
 } // namespace VNEngine

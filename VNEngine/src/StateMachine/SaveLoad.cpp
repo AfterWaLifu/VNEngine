@@ -14,6 +14,8 @@
 
 namespace VNEngine {
 
+namespace {
+
 void vectoxml(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* elem, const vec4& vec) {
     using namespace tinyxml2;
     XMLElement* x = doc.NewElement("x");
@@ -50,9 +52,11 @@ vec4 xmltovec(tinyxml2::XMLElement* elem) {
     return geom;
 }
 vec4u8 xmltouvec(tinyxml2::XMLElement* elem) {
-    vec4u8 color = {
-        (uint8_t)atoi(elem->FirstChildElement("r")->GetText()), (uint8_t)atoi(elem->FirstChildElement("g")->GetText()),
-        (uint8_t)atoi(elem->FirstChildElement("b")->GetText()), (uint8_t)atoi(elem->FirstChildElement("a")->GetText())};
+    vec4u8 color = {static_cast<std::uint8_t>(atoi(elem->FirstChildElement("r")->GetText())),
+                    static_cast<uint8_t>(atoi(elem->FirstChildElement("g")->GetText())),
+                    static_cast<std::uint8_t>(atoi(elem->FirstChildElement("b")->GetText())),
+                    static_cast<uint8_t>(atoi(elem->FirstChildElement("a")->GetText()))};
+
     return color;
 }
 void luaintoxml(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* t, luabridge::LuaRef table) {
@@ -127,19 +131,19 @@ void xmlintolua(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* t, lua_State* 
 void dealWithAudio(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root) {
     using namespace tinyxml2;
 
-    AudioPlayer::dump ad = AP_INSTANCE.Dump();
+    auto ad = AP_INSTANCE.createDump();
     XMLElement* audio = doc.NewElement("Audio");
 
     XMLElement* audioList = doc.NewElement("List");
-    for (std::size_t i = 0; i < ad.list.size(); ++i) {
+    for (auto it = ad.listDump.begin(); it != ad.listDump.end(); ++it) {
         XMLElement* listElem = doc.NewElement("a");
         XMLElement* filename = doc.NewElement("filename");
-        std::string f = ad.list[i].first;
+        std::string f = it->first;
         size_t offset = f.rfind("/");
         f = f.substr(offset + 1, f.size() - offset - 1);
         filename->SetText(f.c_str());
         XMLElement* key = doc.NewElement("key");
-        key->SetText(ad.list[i].second.c_str());
+        key->SetText(it->second.c_str());
         listElem->InsertFirstChild(filename);
         listElem->InsertEndChild(key);
         audioList->InsertEndChild(listElem);
@@ -149,10 +153,11 @@ void dealWithAudio(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root) {
     XMLElement* skey = doc.NewElement("skey");
     XMLElement* mplays = doc.NewElement("mplays");
     XMLElement* splays = doc.NewElement("splays");
-    mkey->SetText(ad.s.mkey.c_str());
-    skey->SetText(ad.s.skey.c_str());
-    mplays->SetText(ad.s.mplays);
-    splays->SetText(ad.s.splays);
+    // TODO: update this to for new dump
+    // mkey->SetText(ad.s.mkey.c_str());
+    // skey->SetText(ad.s.skey.c_str());
+    // mplays->SetText(ad.s.mplays);
+    // splays->SetText(ad.s.splays);
     audioState->InsertEndChild(mkey);
     audioState->InsertEndChild(skey);
     audioState->InsertEndChild(mplays);
@@ -434,58 +439,25 @@ void dealWithLua(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root, lua_Sta
     }
 }
 
-void SaveLoad::Save(int number, Artist* partist, lua_State* L) {
-    using namespace tinyxml2;
-
-    if (!SM_INSTANCE.isThereAReading())
-        return;
-
-    if (!(std::filesystem::exists(sSaveDir)))
-        std::filesystem::create_directory(sSaveDir);
-
-    XMLDocument doc;
-    XMLDeclaration* dec = doc.NewDeclaration();
-    doc.InsertFirstChild(dec);
-    XMLElement* root = doc.NewElement("VNEngine_Save");
-
-    size_t sp = (size_t)SM_INSTANCE.GetTopReaderPos();
-
-    dealWithAudio(doc, root);
-    dealWithGraphic(doc, root, partist);
-    dealWithWidgets(doc, root);
-    dealWithLua(doc, root, L);
-
-    XMLElement* readingpos = doc.NewElement("ReadingPos");
-    readingpos->SetText(sp);
-    root->InsertEndChild(readingpos);
-
-    doc.InsertEndChild(root);
-    doc.SaveFile((sSaveDir + std::to_string(number) + ".vns").c_str());
-
-    auto s = partist->GetWindowSize();
-    if (!(std::filesystem::exists(TM_INSTANCE.GetImagesPath() + "savescreens")))
-        std::filesystem::create_directory(TM_INSTANCE.GetImagesPath() + "savescreens");
-    auto savescreen = partist->GetScreenshot({s.x / 4, s.y / 4});
-    IMG_SavePNG(savescreen, (TM_INSTANCE.GetImagesPath() + "savescreens/" + std::to_string(number) + ".png").c_str());
-}
-
 void undealWithAudio(tinyxml2::XMLDocument&, tinyxml2::XMLElement* root) {
     using namespace tinyxml2;
 
-    AudioPlayer::dump d = {};
+    AudioPlayer::Dump d = {};
     XMLElement* audio = root->FirstChildElement("Audio");
 
     XMLElement* list = audio->FirstChildElement("List");
     for (XMLElement* le = list->FirstChildElement("a"); le; le = le->NextSiblingElement("a")) {
         XMLElement* f = le->FirstChildElement("filename");
         XMLElement* k = le->FirstChildElement("key");
-        AP_INSTANCE.AddAudio(f->GetText(), k->GetText());
+        AP_INSTANCE.addAudio(f->GetText(), k->GetText());
     }
 
     std::string m, s;
     XMLElement* state = audio->FirstChildElement("State");
     auto xm = state->FirstChildElement("mkey");
     auto xs = state->FirstChildElement("skey");
+
+    // TODO: update this to for new dump
     xm->GetText() ? m = xm->GetText() : m = "";
     xs->GetText() ? s = xs->GetText() : s = "";
     XMLElement* mp = state->FirstChildElement("mplays");
@@ -494,19 +466,19 @@ void undealWithAudio(tinyxml2::XMLDocument&, tinyxml2::XMLElement* root) {
     bool musicplays = std::string(mp->GetText()) == "true";
     bool soundplays = std::string(sp->GetText()) == "true";
 
-    bool notmuten = !(AP_INSTANCE.GetIfMute());
+    bool notmuten = !(AP_INSTANCE.isMute());
     if (notmuten)
-        AP_INSTANCE.Mute();
+        AP_INSTANCE.mute();
     if (!m.empty())
-        AP_INSTANCE.PlayMusic(m);
+        AP_INSTANCE.playMusic(m);
     if (!s.empty())
-        AP_INSTANCE.PlaySound(s);
+        AP_INSTANCE.playSound(s);
     if (!musicplays)
-        AP_INSTANCE.StopMusic();
+        AP_INSTANCE.stopMusic();
     if (!soundplays)
-        AP_INSTANCE.StopSound();
+        AP_INSTANCE.stopSound();
     if (notmuten)
-        AP_INSTANCE.Unmute();
+        AP_INSTANCE.unmute();
 }
 
 void undealWithGraphic(tinyxml2::XMLDocument&, tinyxml2::XMLElement* root, Artist* partist) {
@@ -523,7 +495,7 @@ void undealWithGraphic(tinyxml2::XMLDocument&, tinyxml2::XMLElement* root, Artis
                                atoi(le->FirstChildElement("collumns")->GetText()));
     }
 
-    std::unordered_map<uint32_t, DrawnData> q;
+    std::unordered_map<std::uint32_t, DrawnData> q;
     XMLElement* queue = screen->FirstChildElement("q");
     for (XMLElement* le = queue->FirstChildElement("a"); le; le = le->NextSiblingElement("a")) {
         q[(atoi(le->FirstChildElement("id")->GetText()))] = {
@@ -536,9 +508,9 @@ void undealWithGraphic(tinyxml2::XMLDocument&, tinyxml2::XMLElement* root, Artis
                         std::string(screen->FirstChildElement("drawBackPic")->GetText()) == "true",
                         std::string(screen->FirstChildElement("colorChanged")->GetText()) == "true",
                         xmltovec(screen->FirstChildElement("dest")),
-                        (Stretching)(uint8_t)atoi(screen->FirstChildElement("stretchState")->GetText()),
+                        static_cast<Stretching>(atoi(screen->FirstChildElement("stretchState")->GetText())),
                         q,
-                        (uint32_t)atoi(screen->FirstChildElement("id")->GetText())};
+                        static_cast<std::uint32_t>(atoi(screen->FirstChildElement("id")->GetText()))};
     partist->Load(s);
 }
 
@@ -669,11 +641,49 @@ void undealWithLua(tinyxml2::XMLDocument& doc, tinyxml2::XMLElement* root, lua_S
     }
 }
 
-size_t SaveLoad::Load(int number, Artist* partist, lua_State* L) {
+} // namespace
+
+void SaveLoad::save(int number, Artist* partist, lua_State* L) {
     using namespace tinyxml2;
 
-    if (!(std::filesystem::exists(sSaveDir + std::to_string(number) + ".vns")))
+    if (!SM_INSTANCE.readingExists())
+        return;
+
+    if (!(std::filesystem::exists(sSaveDir)))
+        std::filesystem::create_directory(sSaveDir);
+
+    XMLDocument doc;
+    XMLDeclaration* dec = doc.NewDeclaration();
+    doc.InsertFirstChild(dec);
+    XMLElement* root = doc.NewElement("VNEngine_Save");
+
+    size_t sp = static_cast<size_t>(SM_INSTANCE.topReaderPos());
+
+    dealWithAudio(doc, root);
+    dealWithGraphic(doc, root, partist);
+    dealWithWidgets(doc, root);
+    dealWithLua(doc, root, L);
+
+    XMLElement* readingpos = doc.NewElement("ReadingPos");
+    readingpos->SetText(sp);
+    root->InsertEndChild(readingpos);
+
+    doc.InsertEndChild(root);
+    doc.SaveFile((sSaveDir + std::to_string(number) + ".vns").c_str());
+
+    auto s = partist->GetWindowSize();
+    if (!(std::filesystem::exists(TM_INSTANCE.GetImagesPath() + "savescreens")))
+        std::filesystem::create_directory(TM_INSTANCE.GetImagesPath() + "savescreens");
+    auto savescreen = partist->GetScreenshot({s.x / 4, s.y / 4});
+    IMG_SavePNG(savescreen, (TM_INSTANCE.GetImagesPath() + "savescreens/" + std::to_string(number) + ".png").c_str());
+}
+
+std::size_t SaveLoad::load(int number, Artist* partist, lua_State* L) {
+    using namespace tinyxml2;
+
+    if (!(std::filesystem::exists(sSaveDir + std::to_string(number) + ".vns"))) {
         return -1;
+    }
 
     XMLDocument doc;
     doc.LoadFile((sSaveDir + std::to_string(number) + ".vns").c_str());
@@ -685,7 +695,7 @@ size_t SaveLoad::Load(int number, Artist* partist, lua_State* L) {
     undealWithLua(doc, root, L);
 
     std::string sps = "";
-    size_t sp = SIZE_MAX;
+    std::size_t sp = SIZE_MAX;
     if (root->FirstChildElement("ReadingPos")->GetText()) {
         sps = root->FirstChildElement("ReadingPos")->GetText();
     }
@@ -696,7 +706,8 @@ size_t SaveLoad::Load(int number, Artist* partist, lua_State* L) {
     return sp;
 }
 
-void SaveLoad::SetSaveDir(const std::string& path) { sSaveDir = path; }
+void SaveLoad::setSaveDir(const std::string& path) { sSaveDir = path; }
 
-std::string SaveLoad::GetSaveDir() { return sSaveDir; }
+std::string SaveLoad::getSaveDir() { return sSaveDir; }
+
 } // namespace VNEngine

@@ -12,27 +12,28 @@ namespace VNEngine {
 
 class ReadingState : public State {
 
-    std::string m_ReadingState = "reading";
-    bool m_Loaded;
-
-    StoryTeller m_ST;
-
 public:
     ReadingState(std::streampos startPos = std::streampos(0));
     ~ReadingState() = default;
 
-    void Handle() override;
-    void Update() override;
-    void Render() override;
+    void handle() override;
+    void update() override;
+    void render() override;
 
     bool onEnter() override;
     bool onExit() override;
 
-    std::string GetStateId() const override;
+    std::string stateId() const override;
 
     std::streampos GetReaderPos();
     void SetReaderPos(std::streampos pos);
     lua_State* GetLState();
+
+private:
+    std::string readingState_ = "reading";
+    bool loaded_;
+
+    StoryTeller st_;
 };
 
 } // namespace VNEngine

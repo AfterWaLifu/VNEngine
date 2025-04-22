@@ -9,42 +9,41 @@
 
 namespace VNEngine {
 
-MenuState::MenuState(const std::string& screen) : m_ScreenToStart(screen) {}
+MenuState::MenuState(const std::string& screen) : screenToStart_(screen) {}
 
-void MenuState::Handle() {
-    if ((IH_INSTANCE.getMouseButtonClicked(RIGHT) || IH_INSTANCE.isKeyPressed("escape")) &&
-        SM_INSTANCE.isThereAReading()) {
-        SM_INSTANCE.PopState();
+void MenuState::handle() {
+    if ((IH_INSTANCE.mouseButtonClicked(RIGHT) || IH_INSTANCE.isKeyPressed("escape")) && SM_INSTANCE.readingExists()) {
+        SM_INSTANCE.popState();
     }
     if (IH_INSTANCE.isKeyPressed("f") ||
         ((IH_INSTANCE.isKeyHeld("lalt") || IH_INSTANCE.isKeyHeld("ralt")) && IH_INSTANCE.isKeyPressed("enter"))) {
-        auto f = State::s_pDrawer->GetWindowFullscreen();
-        State::s_pDrawer->SetWindowFullscreen(!f);
+        auto f = State::drawer_->GetWindowFullscreen();
+        State::drawer_->SetWindowFullscreen(!f);
     }
 }
 
-void MenuState::Update() {}
+void MenuState::update() {}
 
-void MenuState::Render() {}
+void MenuState::render() {}
 
-void MenuState::Redraw(const MenuState& state) {
+void MenuState::redraw(const MenuState& state) {
     WM_INSTANCE.WipeWidgets();
-    m_ScreenToStart = state.m_ScreenToStart;
-    m_ic.Draw(m_ScreenToStart);
+    screenToStart_ = state.screenToStart_;
+    ic_.Draw(screenToStart_);
 }
 
 bool MenuState::onEnter() {
-    m_ic.Draw(m_ScreenToStart);
+    ic_.Draw(screenToStart_);
     return true;
 }
 
 bool MenuState::onExit() {
     WM_INSTANCE.WipeWidgets();
-    AP_INSTANCE.StopMusic();
-    s_pDrawer->WipeDrawing();
+    AP_INSTANCE.stopMusic();
+    drawer_->WipeDrawing();
     return true;
 }
 
-std::string MenuState::GetStateId() const { return m_MenuState; }
+std::string MenuState::stateId() const { return menuState_; }
 
 } // namespace VNEngine

@@ -92,7 +92,7 @@ Artist::~Artist() {
 }
 
 void Artist::Perform() {
-    if (IH_INSTANCE.getIfWindowResized())
+    if (IH_INSTANCE.windowResized())
         WindowResized();
 
     SDL_SetRenderDrawColor(m_pRenderer, m_Background.backgroundColor.r, m_Background.backgroundColor.g,
@@ -113,7 +113,7 @@ void Artist::Perform() {
 
 void Artist::DrawAkaFinale() {
     SDL_RenderPresent(m_pRenderer);
-    IH_INSTANCE.setIfWindowResized(false);
+    IH_INSTANCE.setWindowResized(false);
 }
 
 void Artist::SetBackground(vec4u8 color) { m_Background.backgroundColor = color; }
@@ -375,7 +375,7 @@ void Artist::SetWindowSize(vec2 size) {
     m_PrevWindowSize = m_WindowSize;
     m_WindowSize = size;
     SDL_SetWindowSize(m_pWindow, m_WindowSize.x, m_WindowSize.y);
-    IH_INSTANCE.setIfWindowResized(true);
+    IH_INSTANCE.setWindowResized(true);
 }
 
 vec2 Artist::GetWindowSize() { return m_WindowSize; }
@@ -396,7 +396,7 @@ void Artist::SetWindowFullscreen(bool fullscreen) {
     if (m_Fullscreen) {
         SDL_SetWindowFullscreen(m_pWindow, SDL_WINDOW_FULLSCREEN_DESKTOP);
         m_PrevWindowSize = m_WindowSize;
-        IH_INSTANCE.setIfWindowResized(true);
+        IH_INSTANCE.setWindowResized(true);
     } else {
         if (m_PrevWindowSize.x == 0 && m_PrevWindowSize.y == 0)
             m_PrevWindowSize = m_BaseWindowSize;

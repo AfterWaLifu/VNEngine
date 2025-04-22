@@ -9,14 +9,15 @@ namespace VNEngine {
 class Artist;
 
 class SaveLoad {
-    static inline std::string sSaveDir;
-
 public:
-    static void Save(int number, Artist* partist, lua_State* L);
-    static size_t Load(int number, Artist* partist, lua_State* L);
+    static void save(int number, Artist* partist, lua_State* L);
+    static std::size_t load(int number, Artist* partist, lua_State* L);
 
-    static void SetSaveDir(const std::string& path);
-    static std::string GetSaveDir();
+    static void setSaveDir(const std::string& path);
+    static std::string getSaveDir();
+
+private:
+    static inline std::string sSaveDir;
 };
 
 } // namespace VNEngine

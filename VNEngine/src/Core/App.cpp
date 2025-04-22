@@ -33,19 +33,19 @@ void App::run() {
     }
 }
 
-void App::load() { SM_INSTANCE.ChangeState(new MenuState("mainmenu")); }
+void App::load() { SM_INSTANCE.changeState(std::make_shared<MenuState>("mainmenu")); }
 
 void App::update() {}
 
 void App::handleEvents() {
     IH_INSTANCE.update();
     WM_INSTANCE.Handle();
-    SM_INSTANCE.Update();
+    SM_INSTANCE.update();
 }
 
 void App::draw() {
     drawer_->Perform();
-    SM_INSTANCE.Draw();
+    SM_INSTANCE.draw();
     WM_INSTANCE.Draw();
     drawer_->DrawAkaFinale();
 }

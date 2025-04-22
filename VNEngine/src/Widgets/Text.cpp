@@ -306,7 +306,7 @@ void Text::Move(vec2 coords) { SetGeometry({{coords.x, coords.y, m_Geometry.w, m
 void Text::Draw() {
     if (!m_IsShown)
         return;
-    if (IH_INSTANCE.getIfWindowResized())
+    if (IH_INSTANCE.windowResized())
         windowResized();
 
     if (m_BackgroundTurned) {

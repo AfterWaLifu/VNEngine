@@ -48,38 +48,33 @@ bool tableIntoVec(vec2& vec, luabridge::LuaRef lr) {
 
 void InitDrawingForLua(Artist* artist) { s_ArtistToDraw = artist; }
 
-void AddAudio(std::string filename, std::string key) { AP_INSTANCE.AddAudio(filename, key); }
+void AddAudio(std::string filename, std::string key) { AP_INSTANCE.addAudio(filename, key); }
 
-void DelAudio(std::string key) { AP_INSTANCE.RemoveAudio(key); }
+void DelAudio(std::string key) { AP_INSTANCE.removeAudio(key); }
 
-void PlayMusic(std::string key) {
-    if (AP_INSTANCE.GetIfMusicPlays() && AP_INSTANCE.GetCurrentMusic() == key) {
-        return;
-    }
-    AP_INSTANCE.PlayMusic(key);
-}
+void PlayMusic(std::string key) { AP_INSTANCE.playMusic(key); }
 
-void PauseMusic() { AP_INSTANCE.PauseMusic(); }
+void PauseMusic() { AP_INSTANCE.pauseMusic(); }
 
-void StopMusic() { AP_INSTANCE.StopMusic(); }
+void StopMusic() { AP_INSTANCE.stopMusic(); }
 
-void PlaySound(std::string key) { AP_INSTANCE.PlaySound(key); }
+void PlaySound(std::string key) { AP_INSTANCE.playSound(key); }
 
-void StopSound() { AP_INSTANCE.StopSound(); }
+void StopSound() { AP_INSTANCE.stopSound(); }
 
-void SetMusicVolume(float v) { AP_INSTANCE.SetMusicVolume(v); }
+void SetMusicVolume(float v) { AP_INSTANCE.setMusicVolume(v); }
 
-void SetSoundVolume(float v) { AP_INSTANCE.SetSoundVolume(v); }
+void SetSoundVolume(float v) { AP_INSTANCE.setSoundVolume(v); }
 
-float GetMusicVolume() { return AP_INSTANCE.GetMusicVolume(); }
+float GetMusicVolume() { return AP_INSTANCE.musicVolume(); }
 
-float GetSoundVolume() { return AP_INSTANCE.GetSoundVolume(); }
+float GetSoundVolume() { return AP_INSTANCE.soundVolume(); }
 
-void Mute() { AP_INSTANCE.Mute(); }
+void Mute() { AP_INSTANCE.mute(); }
 
-void Unmute() { AP_INSTANCE.Unmute(); }
+void Unmute() { AP_INSTANCE.unmute(); }
 
-bool IsMuted() { return AP_INSTANCE.GetIfMute(); }
+bool IsMuted() { return AP_INSTANCE.isMute(); }
 
 void AddPicture(std::string filename, std::string key, int rows, int collumns) {
     s_ArtistToDraw->AddTexture(key, filename, rows, collumns);

@@ -47,7 +47,7 @@ void Button::Bind(luabridge::LuaRef* onClick) {
 }
 
 void Button::Check() {
-    vec2 mousePos = IH_INSTANCE.getMousePos();
+    vec2 mousePos = IH_INSTANCE.mousePos();
 
     if (mousePos.x >= m_Geometry.x && mousePos.x < m_Geometry.x + m_Geometry.w && mousePos.y > m_Geometry.y &&
         mousePos.y < m_Geometry.y + m_Geometry.h) {
@@ -59,7 +59,7 @@ void Button::Check() {
     }
 
     if (m_Focused && (m_OnClickLua || m_OnClick)) {
-        if (IH_INSTANCE.getMouseButtonClicked(LEFT)) {
+        if (IH_INSTANCE.mouseButtonClicked(LEFT)) {
             if (m_OnClick)
                 m_OnClick();
             if (m_OnClickLua)
@@ -70,7 +70,7 @@ void Button::Check() {
 
 void Button::Draw() { Text::Draw(); }
 
-bool Button::Pressed() { return m_Focused && IH_INSTANCE.getMouseButtonClicked(LEFT); }
+bool Button::Pressed() { return m_Focused && IH_INSTANCE.mouseButtonClicked(LEFT); }
 
 bool Button::Focused() { return m_Focused; }
 
